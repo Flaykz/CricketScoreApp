@@ -1,0 +1,23 @@
+{
+  "name": "cricketscoreapp",
+  "version": "0.0.1",
+  "description": "WebApp alllowing to calculate score during a cricket party",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Flaykz/CricketWebApp.git"
+  },
+  "author": "BROUSTE David",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Flaykz/CricketWebApp/issues"
+  },
+  "homepage": "https://github.com/Flaykz/CricketWebApp#readme",
+  "dependencies": {
+    "express": "^4.16.2"
+  }
+}
