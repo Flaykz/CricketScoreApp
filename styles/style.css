@@ -1,0 +1,20 @@
+table {
+    margin: auto;
+    width: 100%;
+}
+
+table td {
+    vertical-align: middle !important;
+}
+
+table th {
+    vertical-align: middle !important;
+}
+
+
+input {
+    border: none;
+    background: transparent;
+    font-size:140%;
+    min-height: 50px;
+}

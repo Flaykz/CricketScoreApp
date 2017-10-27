@@ -1,0 +1,66 @@
+html
+  head
+    title=title
+    //link(href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css', rel='stylesheet')
+    link(href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css", rel='stylesheet')
+    link(href='/styles/style.css', rel='stylesheet')
+    script(src="https://code.jquery.com/jquery-3.2.1.slim.min.js")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js")
+    //script(src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js")
+    script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js")
+    script(src='controllers/controller.js')
+    script(src='models/model.js')
+  body
+    if win
+      div.alert.alert-success
+        span userWin won this party !!!
+    div.panel-group
+      div.panel.panel-default
+        div(id="menu").collapse.in.panel-collapse
+          div.panel-body.text-center
+            button.btn.btn-default(id="addPlayer") 
+              span.glyphicon.glyphicon-plus Add Player
+            button.btn.btn-default(id="deletePlayer") 
+              span.glyphicon.glyphicon-minus Delete Player
+        div.panel-heading
+          div.panel-footer(id="show")
+            p.text-center ^
+    div.table-responsive
+      table(border='1')
+        tbody
+          - var countItem = 0;
+          each item in pageData.item
+            tr
+              - var countName = 0;
+              each name in pageData.name
+                case countItem 
+                  when 0
+                    if countName > 0
+                      th
+                        div.text-center
+                          input(type="text", name="Joueur_#{countName}", value="#{name}", size="12").text-center
+                    else 
+                      th
+                        div.text-center
+                          h2.text-center #{item}
+                  when 1
+                    if countName > 0
+                      td
+                        div.text-center
+                          h1(id="Joueur_#{countName}") 0
+                    else 
+                      th
+                        div.text-center
+                          h2.text-center #{item}
+                  default
+                    if countName > 0
+                      td
+                        div.text-center
+                          button.btn.btn-default-outline.btn-block.case(idRow="#{item}", idColumn="Joueur_#{countName}")
+                            img.img-responsive-center(src="/images/0.svg")
+                    else 
+                      th
+                        div.text-center
+                          h2.text-center #{item}
+                - countName++;
+            - countItem++;
