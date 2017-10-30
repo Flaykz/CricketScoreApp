@@ -10,21 +10,36 @@ html
     script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js")
     script(src='controllers/controller.js')
     script(src='models/model.js')
+    meta(name="viewport", content="width=device-width, initial-scale=1")
   body
     if win
       div.alert.alert-success
         span userWin won this party !!!
-    div.panel-group
-      div.panel.panel-default
-        div(id="menu").collapse.in.panel-collapse
-          div.panel-body.text-center
+    //button.btn.btn-default(data-toggle="modal", data-target="#myModal") Open option
+    div.modal.fade(id="myModal", role="dialog")
+      div.modal-dialog.modal-sm
+        div.modal-content
+          div.modal-header
+            h4.modal-title Ajouter ou enlever des joueurs
+          div.modal-body
             button.btn.btn-default(id="addPlayer") 
               span.glyphicon.glyphicon-plus Add Player
             button.btn.btn-default(id="deletePlayer") 
               span.glyphicon.glyphicon-minus Delete Player
-        div.panel-heading
-          div.panel-footer(id="show")
-            p.text-center ^
+          div.modal-footer
+            button.btn.btn-default(data-dismiss="modal", id="startGame") Start game
+    // div.panel-group
+    //   div.panel.panel-default
+    //     div(id="menu").collapse.in.panel-collapse
+    //       div.panel-body.text-center
+            
+    //         button.btn.btn-default(id="addPlayer") 
+    //           span.glyphicon.glyphicon-plus Add Player
+    //         button.btn.btn-default(id="deletePlayer") 
+    //           span.glyphicon.glyphicon-minus Delete Player
+    //     div.panel-heading
+    //       div.panel-footer(id="show")
+    //         p.text-center ^
     div.table-responsive
       table(border='1')
         tbody
@@ -36,30 +51,31 @@ html
                 case countItem 
                   when 0
                     if countName > 0
-                      th
+                      th(class="Joueur_#{countName} Ligne_#{item}")
                         div.text-center
                           input(type="text", name="Joueur_#{countName}", value="#{name}", size="12").text-center
                     else 
-                      th
+                      th(class="Joueur_#{countName} Ligne_#{item}")
                         div.text-center
-                          h2.text-center #{item}
+                          button.btn.btn-danger.btn-block(id="next") Next Player
+                          h3.text-center(id="round") Round 1
                   when 1
                     if countName > 0
-                      td
+                      td(class="Joueur_#{countName} Ligne_#{item}")
                         div.text-center
                           h1(id="Joueur_#{countName}") 0
                     else 
-                      th
+                      th(class="Joueur_#{countName} Ligne_#{item}")
                         div.text-center
                           h2.text-center #{item}
                   default
                     if countName > 0
-                      td
+                      td(class="Joueur_#{countName} Ligne_#{item}")
                         div.text-center
                           button.btn.btn-default-outline.btn-block.case(idRow="#{item}", idColumn="Joueur_#{countName}")
                             img.img-responsive-center(src="/images/0.svg")
                     else 
-                      th
+                      th(class="Joueur_#{countName} Ligne_#{item}")
                         div.text-center
                           h2.text-center #{item}
                 - countName++;

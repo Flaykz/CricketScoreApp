@@ -8,7 +8,8 @@ $(function() {
     $('#addPlayer').click(function() {
         var tabScore = getTabScore();
         var nbJoueur = getNbJoueur();
-        var indexJoueur = nbJoueur; 
+        var indexJoueur = nbJoueur;
+        var chaineBefore = "Joueur_" + nbJoueur;
         nbJoueur = nbJoueur + 1;
         var chaine = "Joueur_" + nbJoueur;
         var monJoueur = new Joueur(chaine, [0], [0], [0], [0], [0], [0], [0], [0]);
@@ -21,13 +22,17 @@ $(function() {
         data.find("input").val(chaine);
         data.find("input").attr("name", chaine);
         data.find("input").attr("value", chaine);
+        temp = data.attr("class")
+        data.attr("class", temp.replace(chaineBefore, chaine));
         indexJoueur = indexJoueur - 1;
         
-        for (var i = 0; i < 9; i++) {
+        for (var i = 1; i < 9; i++) {
             var temp = "tbody tr:eq(" + i + ") td:eq(" + indexJoueur + ")";
             var data = $(temp).clone(true).insertAfter(temp);
             data.find("button").attr("idcolumn", chaine);
             data.find("h1").attr("id", chaine);
+            temp = data.attr("class")
+            data.attr("class", temp.replace(chaineBefore, chaine));
         }
     })
     
@@ -51,6 +56,39 @@ $(function() {
             alert("Sorry!! Can't remove first player!");
             console.log(nbJoueur);
         }
+    })
+    
+    $("#startGame").click(function() {
+        $(".Joueur_1").css({"background-color": "#FF8800"});
+        $(".Joueur_1 button").css({"background-color": "#FF8800"});
+        setLocalStorage("currentPlayer", "1");
+        setLocalStorage("currentRound", "1");
+    })
+    
+    $("#next").click(function() {
+        var currentPlayer = getLocalStorage("currentPlayer");
+        var nbJoueur = getNbJoueur();
+        var currentRound = parseInt(getLocalStorage("currentRound"), 10);
+        $(".Joueur_" + currentPlayer).css({"background-color": "#eeeeee"});
+        $(".Joueur_" + currentPlayer + " button").css({"background-color": "#eeeeee"});
+        
+        if (parseInt(currentPlayer, 10) == nbJoueur) {
+            currentPlayer = "1";
+            currentRound = currentRound + 1;
+            setLocalStorage("currentRound", currentRound);
+            if (currentRound == 21) {
+                finish();
+            }
+            else {
+                $("#round").text("Round " + currentRound);
+            }
+        }
+        else  {
+            currentPlayer = parseInt(currentPlayer, 10) + 1;
+        }
+        setLocalStorage("currentPlayer", currentPlayer);
+        $(".Joueur_" + currentPlayer).css({"background-color": "#FF8800"});
+        $(".Joueur_" + currentPlayer + " button").css({"background-color": "#FF8800"});
     })
     
     $("input").change(function() {
@@ -93,6 +131,13 @@ function init() {
     var tabScore = {"Joueur_1": monJoueur};
     setTabScore(tabScore);
     setNbJoueur("1");
+    $("#myModal").modal({backdrop: "static", keyboard: false});
+    $("tr").css({"background-color": "#eeeeee"});
+    $("tr button").css({"background-color": "#eeeeee"});
+}
+
+function finish() {
+    alert("finish");
 }
 
 function Joueur(nom, score, s20, s19, s18, s17, s16, s15, sbull) {
@@ -135,6 +180,14 @@ function setTabScore(tabScore) {
 
 function setNbJoueur(nbJoueur) {
     localStorage.setItem("nbJoueur", nbJoueur);
+}
+
+function setLocalStorage(nomVar, value) {
+    localStorage.setItem(nomVar, JSON.stringify(value));
+}
+
+function getLocalStorage(nomVar) {
+    return JSON.parse(localStorage.getItem(nomVar));
 }
 
 function updateScore(idRow, idColumn, point) {
