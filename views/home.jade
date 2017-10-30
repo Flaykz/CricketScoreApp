@@ -12,9 +12,6 @@ html
     script(src='models/model.js')
     meta(name="viewport", content="width=device-width, initial-scale=1")
   body
-    if win
-      div.alert.alert-success
-        span userWin won this party !!!
     //button.btn.btn-default(data-toggle="modal", data-target="#myModal") Open option
     div.modal.fade(id="myModal", role="dialog")
       div.modal-dialog.modal-sm
@@ -58,6 +55,7 @@ html
                       th(class="Joueur_#{countName} Ligne_#{item}")
                         div.text-center
                           button.btn.btn-danger.btn-block(id="next") Next Player
+                          button.btn.btn-primary.btn-block(id="undo") Annuler
                           h3.text-center(id="round") Round 1
                   when 1
                     if countName > 0
@@ -72,7 +70,7 @@ html
                     if countName > 0
                       td(class="Joueur_#{countName} Ligne_#{item}")
                         div.text-center
-                          button.btn.btn-default-outline.btn-block.case(idRow="#{item}", idColumn="Joueur_#{countName}")
+                          button.btn.btn-default-outline.btn-block.case(idRow="#{item}", idColumn="Joueur_#{countName}", id="#{item}_Joueur_#{countName}")
                             img.img-responsive-center(src="/images/0.svg")
                     else 
                       th(class="Joueur_#{countName} Ligne_#{item}")
