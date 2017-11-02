@@ -3,6 +3,10 @@ table {
     width: 100%;
 }
 
+table tr {
+    max-height: calc(100vh / 10);
+}
+
 table td {
     vertical-align: middle !important;
 }
@@ -11,6 +15,9 @@ table th {
     vertical-align: middle !important;
 }
 
+img[src$=".svg"] {
+    height: calc((100vh - 250px) / 7);
+}
 
 input {
     border: none;

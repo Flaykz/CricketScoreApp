@@ -18,7 +18,10 @@
   },
   "homepage": "https://github.com/Flaykz/CricketWebApp#readme",
   "dependencies": {
+    "compression": "^1.7.1",
     "express": "^4.16.2",
-    "jade": "^1.11.0"
+    "jade": "^1.11.0",
+    "memory-cache": "^0.2.0",
+    "morgan": "^1.9.0"
   }
 }

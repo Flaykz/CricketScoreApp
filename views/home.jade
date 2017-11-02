@@ -1,44 +1,38 @@
-html
+<!doctype html>
+html(lang="fr", dir="ltr")
   head
-    title=title
-    //link(href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css', rel='stylesheet')
-    link(href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css", rel='stylesheet')
-    link(href='/styles/style.css', rel='stylesheet')
-    script(src="https://code.jquery.com/jquery-3.2.1.slim.min.js")
-    script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js")
-    //script(src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js")
-    script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js")
-    script(src='controllers/controller.js')
-    script(src='models/model.js')
+    meta(charset="utf-8")
+    meta(http-equiv="x-ua-compatible", content="ie=edge")
     meta(name="viewport", content="width=device-width, initial-scale=1")
+    title=title
+    meta(name="description", content="App pour compter le score au Cricket cutthroat")
+    link(rel="icon", type="image/png", href="./favicon.png")
+    //link(rel="prefetch", href="./images/0.svg")
+    link(rel="prefetch", href="./images/1.svg")
+    link(rel="prefetch", href="./images/2.svg")
+    link(rel="prefetch", href="./images/3.svg")
+    script(defer, src="https://code.jquery.com/jquery-3.2.1.slim.min.js")
+    script(defer, src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js")
+    script(async, src='models/model.js')
+
+    
   body
-    //button.btn.btn-default(data-toggle="modal", data-target="#myModal") Open option
-    div.modal.fade(id="myModal", role="dialog")
-      div.modal-dialog.modal-sm
-        div.modal-content
-          div.modal-header
-            h4.modal-title Ajouter ou enlever des joueurs
-          div.modal-body
-            button.btn.btn-default(id="addPlayer") 
-              span.glyphicon.glyphicon-plus Add Player
-            button.btn.btn-default(id="deletePlayer") 
-              span.glyphicon.glyphicon-minus Delete Player
-          div.modal-footer
-            button.btn.btn-default(data-dismiss="modal", id="startGame") Start game
-    // div.panel-group
-    //   div.panel.panel-default
-    //     div(id="menu").collapse.in.panel-collapse
-    //       div.panel-body.text-center
-            
-    //         button.btn.btn-default(id="addPlayer") 
-    //           span.glyphicon.glyphicon-plus Add Player
-    //         button.btn.btn-default(id="deletePlayer") 
-    //           span.glyphicon.glyphicon-minus Delete Player
-    //     div.panel-heading
-    //       div.panel-footer(id="show")
-    //         p.text-center ^
+    header
+      //button.btn.btn-default(data-toggle="modal", data-target="#myModal") Open option
+      div.modal.fade(id="myModal", role="dialog")
+        div.modal-dialog.modal-sm
+          div.modal-content
+            div.modal-header
+              h4.modal-title Ajouter ou enlever des joueurs
+            div.modal-body
+              button.btn.btn-default(id="addPlayer") 
+                span.glyphicon.glyphicon-plus Add Player
+              button.btn.btn-default(id="deletePlayer") 
+                span.glyphicon.glyphicon-minus Delete Player
+            div.modal-footer
+              button.btn.btn-default(data-dismiss="modal", id="startGame") Start game
     div.table-responsive
-      table(border='1')
+      table.table-bordered
         tbody
           - var countItem = 0;
           each item in pageData.item
@@ -50,31 +44,46 @@ html
                     if countName > 0
                       th(class="Joueur_#{countName} Ligne_#{item}")
                         div.text-center
-                          input(type="text", name="Joueur_#{countName}", value="#{name}", size="12").text-center
+                          input(type="text", name="Joueur_#{countName}", value="#{name}").text-center
                     else 
                       th(class="Joueur_#{countName} Ligne_#{item}")
                         div.text-center
                           button.btn.btn-danger.btn-block(id="next") Next Player
                           button.btn.btn-primary.btn-block(id="undo") Annuler
-                          h3.text-center(id="round") Round 1
+                          span.text-center(id="round") Round 1
                   when 1
                     if countName > 0
                       td(class="Joueur_#{countName} Ligne_#{item}")
                         div.text-center
-                          h1(id="Joueur_#{countName}") 0
+                          span(id="Joueur_#{countName}") 0
                     else 
                       th(class="Joueur_#{countName} Ligne_#{item}")
                         div.text-center
-                          h2.text-center #{item}
+                          span.text-center #{item}
                   default
                     if countName > 0
                       td(class="Joueur_#{countName} Ligne_#{item}")
                         div.text-center
                           button.btn.btn-default-outline.btn-block.case(idRow="#{item}", idColumn="Joueur_#{countName}", id="#{item}_Joueur_#{countName}")
-                            img.img-responsive-center(src="/images/0.svg")
+                            img.img-fluid(src="/images/0.svg", alt="Responsive image")
                     else 
                       th(class="Joueur_#{countName} Ligne_#{item}")
                         div.text-center
-                          h2.text-center #{item}
+                          span.text-center #{item}
                 - countName++;
             - countItem++;
+    footer
+      script.
+        var css = document.createElement('link');
+        css.rel = 'stylesheet';
+        css.href = '/styles/style.css';
+        css.type = 'text/css';
+        var link = document.getElementsByTagName('link')[0];
+        link.parentNode.insertBefore(css, link);
+        
+        var css2 = document.createElement('link');
+        css2.rel = 'stylesheet';
+        css2.href = 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css';
+        css2.type = 'text/css';
+        var link2 = document.getElementsByTagName('link')[0];
+        link2.parentNode.insertBefore(css2, link2);
