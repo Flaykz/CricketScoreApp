@@ -9,30 +9,37 @@ $(function() {
 		var indexJoueur = nbJoueur;
 		var chaineBefore = "Joueur_" + nbJoueur;
 		nbJoueur = nbJoueur + 1;
-		var chaine = "Joueur_" + nbJoueur;
-		var monJoueur = new Joueur(chaine, [0], [0], [0], [0], [0], [0], [0], [0]);
-		tabScore[chaine] = monJoueur;
-		setTabScore(tabScore);
-		setNbJoueur(nbJoueur);
-		var temp = "tbody tr th:eq(" + indexJoueur + ")";
-		var data = $(temp).clone(true).insertAfter(temp);
-		data.find("input").val(chaine);
-		data.find("input").attr("name", chaine);
-		data.find("input").attr("value", chaine);
-		temp = data.attr("class");
-		data.attr("class", temp.replace(chaineBefore, chaine));
-		indexJoueur = indexJoueur - 1;
-		for (var i = 1; i < 9; i++) {
-			var temp = "tbody tr:eq(" + i + ") td:eq(" + indexJoueur + ")";
+		if (nbJoueur < 10) {
+			var chaine = "Joueur_" + nbJoueur;
+			var monJoueur = new Joueur(chaine, [0], [0], [0], [0], [0], [0], [0], [0]);
+			tabScore[chaine] = monJoueur;
+			setTabScore(tabScore);
+			setNbJoueur(nbJoueur);
+			var temp = "tbody tr th:eq(" + indexJoueur + ")";
 			var data = $(temp).clone(true).insertAfter(temp);
-			data.find("button").attr("idcolumn", chaine);
-			if (i > 1) {
-				var tempId = data.find("button").attr("id");
-				data.find("button").attr("id", tempId.replace(chaineBefore, chaine));
+			data.find("input").val(chaine);
+			data.find("input").attr("name", chaine);
+			data.find("input").attr("value", chaine);
+			temp = data.attr("class");
+			data.attr("class", temp.replace(chaineBefore, chaine));
+			$('.modal-title').text("Nombre de joueurs : " + nbJoueur);
+			indexJoueur = indexJoueur - 1;
+			for (var i = 1; i < 9; i++) {
+				var temp = "tbody tr:eq(" + i + ") td:eq(" + indexJoueur + ")";
+				var data = $(temp).clone(true).insertAfter(temp);
+				data.find("button").attr("idcolumn", chaine);
+				if (i > 1) {
+					var tempId = data.find("button").attr("id");
+					data.find("button").attr("id", tempId.replace(chaineBefore, chaine));
+				}
+				data.find("span").attr("id", chaine);
+				var tempClass = data.attr("class");
+				data.attr("class", tempClass.replace(chaineBefore, chaine));
 			}
-			data.find("span").attr("id", chaine);
-			var tempClass = data.attr("class");
-			data.attr("class", tempClass.replace(chaineBefore, chaine));
+			$('.joueur').css("max-width", 90 / nbJoueur + "vw");
+		}
+		else {
+			alert("Impossible d'ajouter plus de 9 joueurs");
 		}
 	})
 	$('#deletePlayer').click(function() {
@@ -43,6 +50,8 @@ $(function() {
 			var temp = "tbody tr th:eq(" + nbJoueur + ")";
 			var data = $(temp).remove();
 			nbJoueur = nbJoueur - 1;
+			$('.modal-title').text("Nombre de joueurs : " + nbJoueur);
+			$('.joueur').css("max-width", 90 / nbJoueur + "vw");
 			for (var i = 0; i < 9; i++) {
 				var temp = "tbody tr:eq(" + i + ") td:eq(" + nbJoueur + ")";
 				var data = $(temp).remove();
@@ -139,6 +148,10 @@ $(function() {
 			addLocalStorage("currentRound", currentRound);
 			addLocalStorage("currentPlayer", currentPlayer);
 			updateScore(idRow, idColumn, point);
+		}
+		else {
+			alert("Il n'est possible de cliquer que sur le joueur en cours, pour en changer, cliquez sur 'Joueur suivant'");
+			//toastr.info("Il n'est possible de cliquer que sur le joueur en cours, pour en changer, cliquez sur <<Joueur suivant>>");
 		}
 	})
 });
@@ -328,7 +341,6 @@ function updateScore(idRow, idColumn, point) {
 			tabScore[joueur].s16.push(tabScore[joueur].s16[tabScore[joueur].s16.length - 1]);
 			tabScore[joueur].s15.push(tabScore[joueur].s15[tabScore[joueur].s15.length - 1]);
 			tabScore[joueur].sbull.push(tabScore[joueur].sbull[tabScore[joueur].sbull.length - 1]);
-			//tabScore[joueur].score.push(tabScore[joueur].score[tabScore[joueur].score.length-1]);
 			var pointtoAdd = 0;
 			switch (idRow) {
 				case "20":
@@ -433,6 +445,9 @@ function refreshScreen() {
 		currentPlayer.pop();
 		currentRound.pop();
 	}
+	else {
+		alert("Sorry!! Can't go more backward !");
+	}
 	setLocalStorage("currentPlayer", currentPlayer);
 	setLocalStorage("currentRound", currentRound);
 	$("#round").text("Round " + currentRound[currentRound.length - 1]);
@@ -445,7 +460,6 @@ function refreshScreen() {
 }
 
 function griserLigne(idRow) {
-	console.log("griseligne");
 	var tabScore = getTabScore();
 	var testScore = [];
 	var griser = true;
@@ -473,18 +487,15 @@ function griserLigne(idRow) {
 				testScore.push(tabScore[joueur].sbull[tabScore[joueur].sbull.length - 1]);
 				break;
 			default:
-				console.log("Erreur siwtch : " + idRow);
+				console.log("Erreur switch : " + idRow);
 		}
 	}
-	console.log(testScore);
-	for (var i = 0; i < testScore.length - 1; i++) {
+	for (var i = 0; i < testScore.length; i++) {
 		if (testScore[i] != 3) {
 			griser = false;
 		}
 	}
-	console.log(griser);
 	if (griser) {
-		console.log("griser " + idRow);
 		$(".Ligne_" + idRow).css({
 			"background-color": "black"
 		});

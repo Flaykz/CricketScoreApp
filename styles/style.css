@@ -1,10 +1,26 @@
+html, body, .table-responsive, table, tbody {
+    height: 100vh;
+}
+
+table td div, table td div button {
+    height: 100%;
+}
+
+table td div button {
+    border-radius: 0px;
+}
+
 table {
     margin: auto;
     width: 100%;
 }
 
+.table-responsive {
+    margin-bottom: 0px;
+}
+
 table tr {
-    max-height: calc(100vh / 10);
+    /*max-height: calc(100vh / 10);*/
 }
 
 table td {
@@ -13,6 +29,16 @@ table td {
 
 table th {
     vertical-align: middle !important;
+    /*max-width: calc(100vmax/10);*/
+    /*min-width: 10vw;*/
+}
+
+.Joueur_0 {
+    width: 10vw;
+}
+
+.modal-content {
+    width: fit-content;
 }
 
 img[src$=".svg"] {
@@ -22,6 +48,5 @@ img[src$=".svg"] {
 input {
     border: none;
     background: transparent;
-    font-size:140%;
-    min-height: 50px;
+    /*max-width: calc(100vmax/10);*/
 }

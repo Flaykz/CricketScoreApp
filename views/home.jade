@@ -4,18 +4,16 @@ html(lang="fr", dir="ltr")
     meta(charset="utf-8")
     meta(http-equiv="x-ua-compatible", content="ie=edge")
     meta(name="viewport", content="width=device-width, initial-scale=1")
+    meta(name="theme-color", content="#2196F3")
     title=title
     meta(name="description", content="App pour compter le score au Cricket cutthroat")
     link(rel="icon", type="image/png", href="./favicon.png")
-    //link(rel="prefetch", href="./images/0.svg")
-    link(rel="prefetch", href="./images/1.svg")
-    link(rel="prefetch", href="./images/2.svg")
-    link(rel="prefetch", href="./images/3.svg")
-    script(defer, src="https://code.jquery.com/jquery-3.2.1.slim.min.js")
-    script(defer, src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js")
-    script(async, src='models/model.js')
-
-    
+    link(rel="manifest", href="/manifest.json")
+    noscript
+      h1 You don’t have javascript enabled.
+      p Please enable it to get the full experience.
+    script(defer, src="js/concat.js")
+    script(defer, src='models/model.js')
   body
     header
       //button.btn.btn-default(data-toggle="modal", data-target="#myModal") Open option
@@ -25,12 +23,12 @@ html(lang="fr", dir="ltr")
             div.modal-header
               h4.modal-title Ajouter ou enlever des joueurs
             div.modal-body
-              button.btn.btn-default(id="addPlayer") 
+              button.btn.btn-default(id="addPlayer", aria-label="Ajouter joueur") 
                 span.glyphicon.glyphicon-plus Add Player
-              button.btn.btn-default(id="deletePlayer") 
+              button.btn.btn-default(id="deletePlayer", aria-label="Enlever joueur") 
                 span.glyphicon.glyphicon-minus Delete Player
             div.modal-footer
-              button.btn.btn-default(data-dismiss="modal", id="startGame") Start game
+              button.btn.btn-default(data-dismiss="modal", id="startGame", aria-label="Lancer la partie") Start game
     div.table-responsive
       table.table-bordered
         tbody
@@ -44,12 +42,14 @@ html(lang="fr", dir="ltr")
                     if countName > 0
                       th(class="Joueur_#{countName} Ligne_#{item}")
                         div.text-center
-                          input(type="text", name="Joueur_#{countName}", value="#{name}").text-center
+                          input.joueur(type="text", name="Joueur_#{countName}", value="#{name}", aria-label="Nom du joueur").text-center
                     else 
                       th(class="Joueur_#{countName} Ligne_#{item}")
                         div.text-center
-                          button.btn.btn-danger.btn-block(id="next") Next Player
-                          button.btn.btn-primary.btn-block(id="undo") Annuler
+                          button.btn.btn-danger.btn-block(id="next", aria-label="Joueur suivant")
+                            span.glyphicon.glyphicon-play
+                          button.btn.btn-primary.btn-block(id="undo", aria-label="Annuler le dernier coup")
+                            span.glyphicon.glyphicon-backward
                           span.text-center(id="round") Round 1
                   when 1
                     if countName > 0
@@ -64,8 +64,9 @@ html(lang="fr", dir="ltr")
                     if countName > 0
                       td(class="Joueur_#{countName} Ligne_#{item}")
                         div.text-center
-                          button.btn.btn-default-outline.btn-block.case(idRow="#{item}", idColumn="Joueur_#{countName}", id="#{item}_Joueur_#{countName}")
+                          button.btn.btn-default-outline.btn-block.case(idRow="#{item}", idColumn="Joueur_#{countName}", id="#{item}_Joueur_#{countName}", aria-label="score flechette")
                             img.img-fluid(src="/images/0.svg", alt="Responsive image")
+                            // svg(viewBox="0 0 50 50", preserveAspectRatio="xMidYMin slice", style="width: 100%; padding-bottom: 100%; height: 1px; overflow: visible", xmlns="http://www.w3.org/2000/svg", xmlns:svg="http://www.w3.org/2000/svg")
                     else 
                       th(class="Joueur_#{countName} Ligne_#{item}")
                         div.text-center
@@ -87,3 +88,20 @@ html(lang="fr", dir="ltr")
         css2.type = 'text/css';
         var link2 = document.getElementsByTagName('link')[0];
         link2.parentNode.insertBefore(css2, link2);
+        
+        var css3 = document.createElement('link');
+        css3.rel = 'stylesheet';
+        css3.href = '/styles/toastr.min.css';
+        css3.type = 'text/css';
+        var link3 = document.getElementsByTagName('link')[0];
+        link3.parentNode.insertBefore(css3, link3);
+        
+        if('serviceWorker' in navigator) {
+          window.addEventListener("load", function () {
+            navigator.serviceWorker.register('/sw.js').then(function(registration) { 
+              console.log("Service Worker Registered with scope: ", registration.scope);
+              }, function(err) {
+                console.log('ServiceWorker registration failed: ', err);
+              });
+          });
+        }

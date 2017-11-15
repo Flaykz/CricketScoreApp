@@ -1,0 +1,31 @@
+{
+    "short_name": "CricketApp",
+    "name": "Cricket Web App to count your score",
+    "icons": [
+        {
+          "src": "/images/launcher-icon-1x.png",
+          "type": "image/png",
+          "sizes": "48x48"
+        },
+        {
+          "src": "/images/launcher-icon-2x.png",
+          "type": "image/png",
+          "sizes": "96x96"
+        },
+        {
+          "src": "/images/launcher-icon-4x.png",
+          "type": "image/png",
+          "sizes": "192x192"
+        },
+        {
+          "src": "/images/launcher-icon-8x.png",
+          "type": "image/png",
+          "sizes": "512x512"
+        }
+    ],
+    "start_url": "/",
+    "background_color": "#2196F3",
+    "theme_color": "#2196F3",
+    "display": "standalone",
+    "orientation": "landscape"
+}

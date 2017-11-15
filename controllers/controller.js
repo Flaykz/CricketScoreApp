@@ -1,4 +1,5 @@
 var mcache = require("memory-cache");
+var config = require('../config.js').get(process.env.NODE_ENV);
 
 var cache = (duration) => {
   return (req, res, next) => {
@@ -22,8 +23,8 @@ module.exports.controller = function(app) {
     // viewed at based directory http://localhost:8080/
     app.get('/', cache(10), function (req, res) {
         res.render('home', {
-            title: 'CricketScoreApp',
-            pageData: {item: ['', '=', '20', '19', '18', '17', '16', '15', 'Bull'], name: ['', 'Joueur_1']}
+            title: config.title,
+            pageData: {item: config.item, name: config.name}
         });
     });
 }
