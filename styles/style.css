@@ -6,10 +6,6 @@ table td div, table td div button {
     height: 100%;
 }
 
-table td div button {
-    border-radius: 0px;
-}
-
 table {
     margin: auto;
     width: 100%;
@@ -19,22 +15,22 @@ table {
     margin-bottom: 0px;
 }
 
-table tr {
-    /*max-height: calc(100vh / 10);*/
-}
-
-table td {
+table td, table th {
     vertical-align: middle !important;
-}
-
-table th {
-    vertical-align: middle !important;
-    /*max-width: calc(100vmax/10);*/
-    /*min-width: 10vw;*/
 }
 
 .Joueur_0 {
     width: 10vw;
+}
+
+table .btn-block {
+    height: 10vh;
+    padding: 0px;
+    border-radius: 0px;
+}
+
+.Ligne_ {
+    height: 20vh;
 }
 
 .modal-content {
@@ -42,11 +38,10 @@ table th {
 }
 
 img[src$=".svg"] {
-    height: calc((100vh - 250px) / 7);
+    height: 90%;
 }
 
 input {
     border: none;
     background: transparent;
-    /*max-width: calc(100vmax/10);*/
 }
