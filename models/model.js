@@ -74,12 +74,15 @@ $(function() {
 		var currentPlayer = getLastValue(getLocalStorage("currentPlayer"));
 		var nbJoueur = getNbJoueur();
 		var currentRound = parseInt(getLastValue(getLocalStorage("currentRound")), 10);
-		// $(".Joueur_" + currentPlayer).css({
-		// 	"background-color": "#eeeeee"
-		// });
-		$(".Joueur_" + currentPlayer).css({
-			"background-color": ""
+		$(".Joueur_" + currentPlayer).each(function(i, obj) {
+			var currentCSS = $(obj).attr("style");
+			if (currentCSS !== "background-color: black;") {
+				$(obj).css({
+					"background-color": ""
+				});
+			}
 		});
+		
 		if (parseInt(currentPlayer, 10) == nbJoueur) {
 			currentPlayer = "1";
 			currentRound = currentRound + 1;
@@ -93,8 +96,14 @@ $(function() {
 		}
 		addLocalStorage("currentRound", currentRound);
 		addLocalStorage("currentPlayer", currentPlayer);
-		$(".Joueur_" + currentPlayer).css({
-			"background-color": "#FF8800"
+
+		$(".Joueur_" + currentPlayer).each(function(i, obj) {
+			var currentCSS = $(obj).attr("style");
+			if (currentCSS !== "background-color: black;") {
+				$(obj).css({
+					"background-color": "#FF8800"
+				});
+			}
 		});
 		updateScore("null", "null", "0");
 	})
@@ -121,22 +130,16 @@ $(function() {
 		var idRow = $(this).children().attr("idrow");
 		var idColumn = $(this).children().attr("idcolumn");
 		if (idColumn == chaine) {
-			var point = 0;
-			switch ($(this).children().attr("src")) {
-				case "/images/0.svg":
-					$(this).children().attr("src", "/images/1.svg");
-					point = 1;
-					break;
-				case "/images/1.svg":
-					$(this).children().attr("src", "/images/2.svg");
-					point = 2;
-					break;
-				case "/images/2.svg":
-					$(this).children().attr("src", "/images/3.svg");
-					point = 3;
+			var point = parseInt($(this).children().attr("svgid"), 10);
+			point = point + 1;
+			switch (point) {
+				case 1:
+				case 2:
+				case 3:
+					$(this).children().attr("svgid", point);
+					$(this).children().html(drawSVG(point, chaine));
 					break;
 				default:
-					$(this).children().attr("src", "/images/3.svg");
 					point = 0;
 			}
 			addLocalStorage("currentRound", currentRound);
@@ -161,9 +164,6 @@ function init() {
 		backdrop: "static",
 		keyboard: false
 	});
-	// $("tr").css({
-	// 	"background-color": "#eeeeee"
-	// });
 }
 
 function finish() {
@@ -407,16 +407,20 @@ function refreshScreen() {
 		Object.keys(dict).forEach(function(key) {
 			switch (dict[key]) {
 				case 0:
-					$("#" + key + "_" + joueur).attr("src", "/images/0.svg");
+					$("#" + key + "_" + joueur).attr("svgid", dict[key]);
+					$("#" + key + "_" + joueur).html(drawSVG(dict[key], joueur));
 					break;
 				case 1:
-					$("#" + key + "_" + joueur).attr("src", "/images/1.svg");
+					$("#" + key + "_" + joueur).attr("svgid", dict[key]);
+					$("#" + key + "_" + joueur).html(drawSVG(dict[key], joueur));
 					break;
 				case 2:
-					$("#" + key + "_" + joueur).attr("src", "/images/2.svg");
+					$("#" + key + "_" + joueur).attr("svgid", dict[key]);
+					$("#" + key + "_" + joueur).html(drawSVG(dict[key], joueur));
 					break;
 				case 3:
-					$("#" + key + "_" + joueur).attr("src", "/images/3.svg");
+					$("#" + key + "_" + joueur).attr("svgid", dict[key]);
+					$("#" + key + "_" + joueur).html(drawSVG(dict[key], joueur));
 					break;
 				default:
 					//
@@ -424,7 +428,7 @@ function refreshScreen() {
 		});
 		$('#' + joueur).text(score);
 		$("." + joueur).css({
-			"background-color": "#eeeeee"
+			"background-color": ""
 		});
 	}
 	var currentPlayer = getLocalStorage("currentPlayer");
@@ -439,8 +443,22 @@ function refreshScreen() {
 	setLocalStorage("currentPlayer", currentPlayer);
 	setLocalStorage("currentRound", currentRound);
 	$("#round").text("Round " + currentRound[currentRound.length - 1]);
-	$(".Joueur_" + currentPlayer[currentPlayer.length - 1]).css({
-		"background-color": "#FF8800"
+	
+	Object.keys(dict).forEach(function(key) {
+		griserLigne(key);
+	});
+	
+	$(".Joueur_" + currentPlayer[currentPlayer.length - 1]).each(function(i, obj) {
+		var currentCSS = $(obj).attr("style");
+		if (currentCSS !== "background-color: black;") {
+			$(obj).css({
+				"background-color": "#FF8800"
+			});
+		} /*else {
+			$(obj).css({
+				"background-color": ""
+			});
+		}*/
 	});
 }
 
@@ -484,5 +502,66 @@ function griserLigne(idRow) {
 		$(".Ligne_" + idRow).css({
 			"background-color": "black"
 		});
+	} else {
+		$(".Ligne_" + idRow).each(function(i, obj) {
+			var currentCSS = $(obj).attr("style");
+			if (currentCSS !== "background-color: rgb(255, 136, 0);") {
+				$(obj).css({
+					"background-color": ""
+				});
+			} 
+		});
+	}
+}
+
+function drawSVG(svgid, joueur) {
+	var strokeWidth = 3;
+	switch (joueur) {
+		case "Joueur_1":
+			var strokeColour = "#a70707";
+			break;
+		case "Joueur_2":
+			var strokeColour = "#089620";
+			break;
+		case "Joueur_3":
+			var strokeColour = "#089675";
+			break;
+		case "Joueur_4":
+			var strokeColour = "#083a96";
+			break;
+		case "Joueur_5":
+			var strokeColour = "#450896";
+			break;
+		case "Joueur_6":
+			var strokeColour = "#960877";
+			break;
+		case "Joueur_7":
+			var strokeColour = "#000000";
+			break;
+		case "Joueur_8":
+			var strokeColour = "#000000";
+			break;
+		case "Joueur_9":
+			var strokeColour = "#000000";
+			break;
+		default:
+			var strokeColour = "#000000";
+	}
+	
+	var line1 = "<line y2='43' x2='7' y1='7' x1='43' fill-opacity='0' stroke-width='" + strokeWidth + "' stroke='" + strokeColour + "' />";
+	var line2 = "<line y2='43' x2='43' y1='7' x1='7' fill-opacity='0' stroke-width='" + strokeWidth + "' stroke='" + strokeColour + "' />";
+	var circle = "<circle fill-opacity='0' r='21' cy='25' cx='25' stroke-width='" + strokeWidth + "' stroke='" + strokeColour + "' />";
+	switch (svgid) {
+		case 1:
+			return line1;
+			break;
+		case 2:
+			return line1 + line2;
+			break;
+		case 3:
+			return line1 + line2 + circle;
+			break;
+		default:
+			return "";
 	}
 }

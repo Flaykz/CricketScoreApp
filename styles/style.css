@@ -20,10 +20,12 @@ table tr, table td, table th {
 
 .btn-block {
     padding: 0px;
+    height: 10vh;
 }
 
 .scoreGrid {
     height: 90%;
+    vertical-align: middle !important;
 }
 
 .Ligne_ {
