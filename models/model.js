@@ -27,10 +27,10 @@ $(function() {
 			for (var i = 1; i < 9; i++) {
 				var temp = "tbody tr:eq(" + i + ") td:eq(" + indexJoueur + ")";
 				var data = $(temp).clone(true).insertAfter(temp);
-				data.find("button").attr("idcolumn", chaine);
+				data.find(".scoreGrid").attr("idcolumn", chaine);
 				if (i > 1) {
-					var tempId = data.find("button").attr("id");
-					data.find("button").attr("id", tempId.replace(chaineBefore, chaine));
+					var tempId = data.find(".scoreGrid").attr("id");
+					data.find(".scoreGrid").attr("id", tempId.replace(chaineBefore, chaine));
 				}
 				data.find("span").attr("id", chaine);
 				var tempClass = data.attr("class");
@@ -39,7 +39,7 @@ $(function() {
 			$('.joueur').css("max-width", 90 / nbJoueur + "vw");
 		}
 		else {
-			alert("Impossible d'ajouter plus de 9 joueurs");
+			alert("Impossible to add more than 9 players");
 		}
 	})
 	$('#deletePlayer').click(function() {
@@ -67,9 +67,6 @@ $(function() {
 		$(".Joueur_1").css({
 			"background-color": "#FF8800"
 		});
-		$(".Joueur_1 button").css({
-			"background-color": "#FF8800"
-		});
 		setLocalStorage("currentPlayer", ["1"]);
 		setLocalStorage("currentRound", ["1"]);
 	})
@@ -77,11 +74,11 @@ $(function() {
 		var currentPlayer = getLastValue(getLocalStorage("currentPlayer"));
 		var nbJoueur = getNbJoueur();
 		var currentRound = parseInt(getLastValue(getLocalStorage("currentRound")), 10);
+		// $(".Joueur_" + currentPlayer).css({
+		// 	"background-color": "#eeeeee"
+		// });
 		$(".Joueur_" + currentPlayer).css({
-			"background-color": "#eeeeee"
-		});
-		$(".Joueur_" + currentPlayer + " button").css({
-			"background-color": "#eeeeee"
+			"background-color": ""
 		});
 		if (parseInt(currentPlayer, 10) == nbJoueur) {
 			currentPlayer = "1";
@@ -97,9 +94,6 @@ $(function() {
 		addLocalStorage("currentRound", currentRound);
 		addLocalStorage("currentPlayer", currentPlayer);
 		$(".Joueur_" + currentPlayer).css({
-			"background-color": "#FF8800"
-		});
-		$(".Joueur_" + currentPlayer + " button").css({
 			"background-color": "#FF8800"
 		});
 		updateScore("null", "null", "0");
@@ -124,8 +118,8 @@ $(function() {
 		var currentPlayer = getLastValue(getLocalStorage("currentPlayer"));
 		var currentRound = getLastValue(getLocalStorage("currentRound"));
 		var chaine = "Joueur_" + currentPlayer;
-		var idRow = $(this).attr("idrow");
-		var idColumn = $(this).attr("idcolumn");
+		var idRow = $(this).children().attr("idrow");
+		var idColumn = $(this).children().attr("idcolumn");
 		if (idColumn == chaine) {
 			var point = 0;
 			switch ($(this).children().attr("src")) {
@@ -150,7 +144,7 @@ $(function() {
 			updateScore(idRow, idColumn, point);
 		}
 		else {
-			alert("Il n'est possible de cliquer que sur le joueur en cours, pour en changer, cliquez sur 'Joueur suivant'");
+			alert("You must click on the column of the actual player (orange), to switch, click on the Red button at the top left");
 			//toastr.info("Il n'est possible de cliquer que sur le joueur en cours, pour en changer, cliquez sur <<Joueur suivant>>");
 		}
 	})
@@ -167,12 +161,9 @@ function init() {
 		backdrop: "static",
 		keyboard: false
 	});
-	$("tr").css({
-		"background-color": "#eeeeee"
-	});
-	$(".btn-default").css({
-		"background-color": "#eeeeee"
-	});
+	// $("tr").css({
+	// 	"background-color": "#eeeeee"
+	// });
 }
 
 function finish() {
@@ -416,16 +407,16 @@ function refreshScreen() {
 		Object.keys(dict).forEach(function(key) {
 			switch (dict[key]) {
 				case 0:
-					$("#" + key + "_" + joueur).children().attr("src", "/images/0.svg");
+					$("#" + key + "_" + joueur).attr("src", "/images/0.svg");
 					break;
 				case 1:
-					$("#" + key + "_" + joueur).children().attr("src", "/images/1.svg");
+					$("#" + key + "_" + joueur).attr("src", "/images/1.svg");
 					break;
 				case 2:
-					$("#" + key + "_" + joueur).children().attr("src", "/images/2.svg");
+					$("#" + key + "_" + joueur).attr("src", "/images/2.svg");
 					break;
 				case 3:
-					$("#" + key + "_" + joueur).children().attr("src", "/images/3.svg");
+					$("#" + key + "_" + joueur).attr("src", "/images/3.svg");
 					break;
 				default:
 					//
@@ -433,9 +424,6 @@ function refreshScreen() {
 		});
 		$('#' + joueur).text(score);
 		$("." + joueur).css({
-			"background-color": "#eeeeee"
-		});
-		$("." + joueur + " button").css({
 			"background-color": "#eeeeee"
 		});
 	}
@@ -452,9 +440,6 @@ function refreshScreen() {
 	setLocalStorage("currentRound", currentRound);
 	$("#round").text("Round " + currentRound[currentRound.length - 1]);
 	$(".Joueur_" + currentPlayer[currentPlayer.length - 1]).css({
-		"background-color": "#FF8800"
-	});
-	$(".Joueur_" + currentPlayer[currentPlayer.length - 1] + " button").css({
 		"background-color": "#FF8800"
 	});
 }

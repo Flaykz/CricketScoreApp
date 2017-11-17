@@ -1,44 +1,37 @@
 html, body, .table-responsive, table, tbody {
     height: 100vh;
-}
-
-table td div, table td div button {
-    height: 100%;
-}
-
-table {
     margin: auto;
     width: 100%;
 }
 
-.table-responsive {
-    margin-bottom: 0px;
-}
+/*table {*/
+/*    margin: auto;*/
+/*    width: 100%;*/
+/*}*/
 
-table td, table th {
+table tr, table td, table th {
     vertical-align: middle !important;
+    height: 8.75vh;
 }
 
 .Joueur_0 {
     width: 10vw;
 }
 
-table .btn-block {
-    height: 10vh;
+.btn-block {
     padding: 0px;
-    border-radius: 0px;
+}
+
+.scoreGrid {
+    height: 90%;
 }
 
 .Ligne_ {
-    height: 20vh;
+    height: 30vh;
 }
 
 .modal-content {
     width: fit-content;
-}
-
-img[src$=".svg"] {
-    height: 90%;
 }
 
 input {
