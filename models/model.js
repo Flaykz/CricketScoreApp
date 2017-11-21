@@ -36,7 +36,7 @@ $(function() {
 				var tempClass = data.attr("class");
 				data.attr("class", tempClass.replace(chaineBefore, chaine));
 			}
-			$('.joueur').css("max-width", 90 / nbJoueur + "vw");
+			$('.joueur').css("max-width", 85 / nbJoueur + "vw");
 		}
 		else {
 			alert("Impossible to add more than 9 players");
@@ -89,7 +89,7 @@ $(function() {
 			if (currentRound == 21) {
 				finish();
 			} else {
-				$("#round").text("Round " + currentRound);
+				$("#round").text(currentRound);
 			}
 		} else {
 			currentPlayer = parseInt(currentPlayer, 10) + 1;
@@ -427,9 +427,6 @@ function refreshScreen() {
 			}
 		});
 		$('#' + joueur).text(score);
-		$("." + joueur).css({
-			"background-color": ""
-		});
 	}
 	var currentPlayer = getLocalStorage("currentPlayer");
 	var currentRound = getLocalStorage("currentRound");
@@ -442,8 +439,10 @@ function refreshScreen() {
 	}
 	setLocalStorage("currentPlayer", currentPlayer);
 	setLocalStorage("currentRound", currentRound);
-	$("#round").text("Round " + currentRound[currentRound.length - 1]);
-	
+	$("#round").text(currentRound[currentRound.length - 1]);
+	// $(".Joueur_" + currentPlayer[currentPlayer.length - 1]).css({
+	// 	"background-color": "#FF8800"
+	// });
 	Object.keys(dict).forEach(function(key) {
 		griserLigne(key);
 	});
@@ -454,11 +453,11 @@ function refreshScreen() {
 			$(obj).css({
 				"background-color": "#FF8800"
 			});
-		} /*else {
+		} else {
 			$(obj).css({
 				"background-color": ""
 			});
-		}*/
+		}
 	});
 }
 
@@ -503,13 +502,8 @@ function griserLigne(idRow) {
 			"background-color": "black"
 		});
 	} else {
-		$(".Ligne_" + idRow).each(function(i, obj) {
-			var currentCSS = $(obj).attr("style");
-			if (currentCSS !== "background-color: rgb(255, 136, 0);") {
-				$(obj).css({
-					"background-color": ""
-				});
-			} 
+		$(".Ligne_" + idRow).css({
+			"background-color": ""
 		});
 	}
 }

@@ -4,32 +4,40 @@ html, body, .table-responsive, table, tbody {
     width: 100%;
 }
 
-/*table {*/
-/*    margin: auto;*/
-/*    width: 100%;*/
-/*}*/
-
 table tr, table td, table th {
-    vertical-align: middle !important;
-    height: 8.75vh;
+    /*vertical-align: middle !important;*/
+    height: 9.375vh;
+}
+
+.Ligne_ {
+    height: 25vh;
+    font-size: 4vmin;
+}
+
+.Ligne_score {
+    font-size: 6vmin;
+    font-weight: bold;
 }
 
 .Joueur_0 {
-    width: 10vw;
+    width: 15vw;
+    font-size: 5vmin;
 }
 
-.btn-block {
+.control-grid {
+    vertical-align: top;
+}
+
+.control {
     padding: 0px;
     height: 10vh;
+    margin-top: 0px !important;
+    border-radius: 0px;
 }
 
 .scoreGrid {
     height: 90%;
     vertical-align: middle !important;
-}
-
-.Ligne_ {
-    height: 30vh;
 }
 
 .modal-content {

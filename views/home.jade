@@ -32,7 +32,7 @@ html(lang="fr", dir="ltr")
                 span.glyphicon.glyphicon-minus Delete Player
             div.modal-footer
               button.btn.btn-default(data-dismiss="modal", id="startGame", aria-label="Lancer la partie") Start game
-    div
+    div.table-responsive
       table.table-bordered.table-hover
         tbody
           - var countItem = 0;
@@ -46,15 +46,15 @@ html(lang="fr", dir="ltr")
                       th.text-center(class="Joueur_#{countName} Ligne_#{item}")
                         input.joueur(type="text", name="Joueur_#{countName}", value="#{name}", aria-label="Nom du joueur").text-center
                     else 
-                      th.text-center(class="Joueur_#{countName} Ligne_#{item}")
-                        button.btn.btn-danger.btn-block(id="next", aria-label="Joueur suivant")
+                      th.text-center.control-grid(class="Joueur_#{countName}")
+                        button.btn.btn-danger.btn-block.control(id="next", aria-label="Joueur suivant")
                           span.glyphicon.glyphicon-play
-                        button.btn.btn-primary.btn-block(id="undo", aria-label="Annuler le dernier coup")
+                        button.btn.btn-primary.btn-block.control(id="undo", aria-label="Annuler le dernier coup")
                           span.glyphicon.glyphicon-backward
-                        span(id="round") Round 1
+                        span(id="round") 1
                   when 1
                     if countName > 0
-                      td.text-center(class="Joueur_#{countName} Ligne_#{item}")
+                      td.text-center(class="Joueur_#{countName} Ligne_score")
                         span(id="Joueur_#{countName}") 0
                     else 
                       th.text-center(class="Joueur_#{countName} Ligne_#{item}")
@@ -62,7 +62,6 @@ html(lang="fr", dir="ltr")
                   default
                     if countName > 0
                       td.text-center.case(class="Joueur_#{countName} Ligne_#{item}")
-                          // img.img-fluid.scoreGrid(src="/images/0.svg", alt="Responsive image", idRow="#{item}", idColumn="Joueur_#{countName}", id="#{item}_Joueur_#{countName}")
                           svg.scoreGrid(svgid="0", idRow="#{item}", idColumn="Joueur_#{countName}", id="#{item}_Joueur_#{countName}", viewBox="0 0 50 50", preserveAspectRatio="xMidYMin meet", xmlns="http://www.w3.org/2000/svg", xmlns:svg="http://www.w3.org/2000/svg") I'm sorry, your browser does not support SVG images
                     else 
                       th.text-center(class="Joueur_#{countName} Ligne_#{item}")
