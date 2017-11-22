@@ -8,10 +8,61 @@ html(lang="fr", dir="ldiv")
     meta(name="apple-mobile-web-app-capable", content="yes")
     title=title
     meta(name="description", content="App pour compter le score au Cricket cutthroat")
+    style(type="text/css").
+      .table-responsive,.container {
+        display: none;
+      }
+      .mymodal {
+        display: block;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 1050;
+      }
+      .mymodal-dialog {
+        -webkit-transform: translate(0,0);
+        -ms-transform: translate(0,0);
+        -o-transform: translate(0,0);
+        margin: 10px;
+      }
+      .mymodal-content {
+        width: fit-content;
+        border: 1px solid rgba(0,0,0,.2);
+        border-radius: 6px;
+        background-color: #fff;
+        box-shadow: 0 3px 9px rgba(0,0,0,.5);
+      }
+      .mymodal-header {
+        padding: 15px;
+        border-bottom: 1px solid #e5e5e5;
+      }
+      .mymodal-body {
+        padding: 15px;
+        border-bottom: 1px solid #e5e5e5;
+      }
+      .mymodal-footer {
+        padding: 15px;
+        text-align: right;
+        border-bottom: 1px solid #e5e5e5;
+      }
+      .mymodal-title {
+        margin: 0px;
+        line-height: 1.42857143;
+      }
+      h4 {
+        font-size: 18px;
+        font-weight: 500;
+      }
+      button {
+        border-radius: 4px;
+        background-color: #fff;
+        border-color: #ccc;
+        padding: 6px 12px;
+      }
     link(rel="icon", type="image/png", href="./favicon.png")
     link(rel="manifest", href="/manifest.json")
-    // link(rel="stylesheet", media="(max-width:600px)", href="style-small.css")
-    // link(rel="stylesheet", media="(min-width:601px)", href="style-large.css")
     noscript
       h1 You don’t have javascript enabled.
       p Please enable it to get the full experience.
@@ -19,18 +70,17 @@ html(lang="fr", dir="ldiv")
     script(defer, src='models/model.js')
   body
     header
-      // button.btn.btn-default(data-toggle="modal", data-target="#myModal") Open option
-      div.modal.fade(id="myModal", role="dialog")
-        div.modal-dialog.modal-sm
-          div.modal-content
-            div.modal-header
-              h4.modal-title Add or Del players
-            div.modal-body
+      div.mymodal(id="myModal", role="dialog")
+        div.mymodal-dialog.modal-sm
+          div.mymodal-content
+            div.mymodal-header
+              h4.mymodal-title Add or Del players
+            div.mymodal-body
               button.btn.btn-default(id="addPlayer", aria-label="Ajouter joueur") 
                 span.glyphicon.glyphicon-plus Add Player
               button.btn.btn-default(id="deletePlayer", aria-label="Enlever joueur") 
                 span.glyphicon.glyphicon-minus Delete Player
-            div.modal-footer
+            div.mymodal-footer
               button.btn.btn-default(data-dismiss="modal", id="startGame", aria-label="Lancer la partie") Start game
     div.table-responsive.container
       - var countItem = 0;

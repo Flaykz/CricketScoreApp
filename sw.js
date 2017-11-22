@@ -4,8 +4,6 @@ var urlsToCache = [
   '/manifest.json',
   '/config.js',
   '/styles/style.css',
-  '/styles/style-small.css',
-  '/styles/style-large.css',
   '/models/model.js',
   '/controllers/controller.js',
   '/js/concat.js',

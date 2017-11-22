@@ -1,8 +1,5 @@
 $(function() {
 	init();
-	$('#show').click(function() {
-		$('#menu').collapse('toggle');
-	})
 	$('#addPlayer').click(function() {
 		var tabScore = getTabScore();
 		var nbJoueur = getNbJoueur();
@@ -61,6 +58,7 @@ $(function() {
 		}
 	})
 	$("#startGame").click(function() {
+		$('.mymodal').css("display", "none");
 		$(".Joueur_1").css({
 			"background-color": "#FF8800"
 		});
@@ -150,6 +148,12 @@ $(function() {
 	})
 });
 
+$(window).on("load", function () {
+	$('.container').css("display", "");
+	$('.table-responsive').css("display", "flex");
+});
+
+
 function init() {
 	var monJoueur = new Joueur("Joueur_1", [0], [0], [0], [0], [0], [0], [0], [0]);
 	var tabScore = {
@@ -157,10 +161,6 @@ function init() {
 	};
 	setTabScore(tabScore);
 	setNbJoueur("1");
-	$("#myModal").modal({
-		backdrop: "static",
-		keyboard: false
-	});
 }
 
 function finish() {
