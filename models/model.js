@@ -15,28 +15,27 @@ $(function() {
 			tabScore[chaine] = monJoueur;
 			setTabScore(tabScore);
 			setNbJoueur(nbJoueur);
-			var temp = "tbody tr th:eq(" + indexJoueur + ")";
-			var data = $(temp).clone(true).insertAfter(temp);
-			data.find("input").val(chaine);
-			data.find("input").attr("name", chaine);
-			data.find("input").attr("value", chaine);
-			temp = data.attr("class");
-			data.attr("class", temp.replace(chaineBefore, chaine));
-			$('.modal-title').text("Nombre de joueurs : " + nbJoueur);
-			indexJoueur = indexJoueur - 1;
-			for (var i = 1; i < 9; i++) {
-				var temp = "tbody tr:eq(" + i + ") td:eq(" + indexJoueur + ")";
+			for (var i = 0; i < 9; i++) {
+				var temp = ".row:eq(" + i + ") .col:eq(" + indexJoueur + ")";
 				var data = $(temp).clone(true).insertAfter(temp);
-				data.find(".scoreGrid").attr("idcolumn", chaine);
-				if (i > 1) {
-					var tempId = data.find(".scoreGrid").attr("id");
-					data.find(".scoreGrid").attr("id", tempId.replace(chaineBefore, chaine));
+				temp = data.attr("class");
+				data.attr("class", temp.replace(chaineBefore, chaine));
+				if (i === 0) {
+					data.find("input").val(chaine);
+					data.find("input").attr("name", chaine);
+					data.find("input").attr("value", chaine);
 				}
-				data.find("span").attr("id", chaine);
-				var tempClass = data.attr("class");
-				data.attr("class", tempClass.replace(chaineBefore, chaine));
+				if (i === 1) {
+					data.find("span").attr("id", chaine);
+				}
+				if (i > 1) {
+					var temp = data.find(".scoreGrid").attr("id");
+					data.find(".scoreGrid").attr("id", temp.replace(chaineBefore, chaine));
+					data.find(".scoreGrid").attr("idcolumn", chaine);
+				}
 			}
-			$('.joueur').css("max-width", 85 / nbJoueur + "vw");
+			$('.modal-title').text("Nombre de joueurs : " + nbJoueur);
+			$('.col').css("max-width", 85 / nbJoueur + "vw");
 		}
 		else {
 			alert("Impossible to add more than 9 players");
@@ -47,18 +46,16 @@ $(function() {
 		var chaine = "Joueur_" + nbJoueur;
 		var tabScore = getTabScore();
 		if (nbJoueur > 1) {
-			var temp = "tbody tr th:eq(" + nbJoueur + ")";
-			var data = $(temp).remove();
-			nbJoueur = nbJoueur - 1;
-			$('.modal-title').text("Nombre de joueurs : " + nbJoueur);
-			$('.joueur').css("max-width", 90 / nbJoueur + "vw");
 			for (var i = 0; i < 9; i++) {
-				var temp = "tbody tr:eq(" + i + ") td:eq(" + nbJoueur + ")";
+				var temp = ".row:eq(" + i + ") .col:eq(" + nbJoueur + ")";
 				var data = $(temp).remove();
 			}
+			nbJoueur = nbJoueur - 1;
 			setNbJoueur(nbJoueur);
 			delete tabScore[chaine];
 			setTabScore(tabScore);
+			$('.modal-title').text("Nombre de joueurs : " + nbJoueur);
+			$('.col').css("max-width", 90 / nbJoueur + "vw");
 		} else {
 			alert("Sorry!! Can't remove first player!");
 		}
@@ -75,8 +72,8 @@ $(function() {
 		var nbJoueur = getNbJoueur();
 		var currentRound = parseInt(getLastValue(getLocalStorage("currentRound")), 10);
 		$(".Joueur_" + currentPlayer).each(function(i, obj) {
-			var currentCSS = $(obj).attr("style");
-			if (currentCSS !== "background-color: black;") {
+			var currentCSS = $(obj).css("background-color");
+			if (currentCSS !== "rgb(0, 0, 0)") {
 				$(obj).css({
 					"background-color": ""
 				});
@@ -98,8 +95,8 @@ $(function() {
 		addLocalStorage("currentPlayer", currentPlayer);
 
 		$(".Joueur_" + currentPlayer).each(function(i, obj) {
-			var currentCSS = $(obj).attr("style");
-			if (currentCSS !== "background-color: black;") {
+			var currentCSS = $(obj).css("background-color");
+			if (currentCSS !== "rgb(0, 0, 0)") {
 				$(obj).css({
 					"background-color": "#FF8800"
 				});
@@ -384,6 +381,19 @@ function updateScore(idRow, idColumn, point) {
 
 function refreshScreen() {
 	var tabScore = getTabScore();
+	var currentPlayer = getLocalStorage("currentPlayer");
+	var currentRound = getLocalStorage("currentRound");
+	if (currentPlayer.length > 1) {
+		currentPlayer.pop();
+		currentRound.pop();
+	}
+	else {
+		alert("Sorry!! Can't go more backward !");
+	}
+	setLocalStorage("currentPlayer", currentPlayer);
+	setLocalStorage("currentRound", currentRound);
+	$("#round").text(currentRound[currentRound.length - 1]);
+	
 	for (var joueur in tabScore) {
 		var obj = tabScore[joueur];
 		var index = obj.score.length - 1;
@@ -427,37 +437,19 @@ function refreshScreen() {
 			}
 		});
 		$('#' + joueur).text(score);
-	}
-	var currentPlayer = getLocalStorage("currentPlayer");
-	var currentRound = getLocalStorage("currentRound");
-	if (currentPlayer.length > 1) {
-		currentPlayer.pop();
-		currentRound.pop();
-	}
-	else {
-		alert("Sorry!! Can't go more backward !");
-	}
-	setLocalStorage("currentPlayer", currentPlayer);
-	setLocalStorage("currentRound", currentRound);
-	$("#round").text(currentRound[currentRound.length - 1]);
-	// $(".Joueur_" + currentPlayer[currentPlayer.length - 1]).css({
-	// 	"background-color": "#FF8800"
-	// });
-	Object.keys(dict).forEach(function(key) {
-		griserLigne(key);
-	});
-	
-	$(".Joueur_" + currentPlayer[currentPlayer.length - 1]).each(function(i, obj) {
-		var currentCSS = $(obj).attr("style");
-		if (currentCSS !== "background-color: black;") {
-			$(obj).css({
+		var currentPlayer = "Joueur_" + getLastValue(getLocalStorage("currentPlayer"));
+		if (joueur === currentPlayer) {
+			$("." + joueur).css({
 				"background-color": "#FF8800"
 			});
 		} else {
-			$(obj).css({
+			$("." + joueur).css({
 				"background-color": ""
 			});
 		}
+	}
+	Object.keys(dict).forEach(function(key) {
+		griserLigne(key);
 	});
 }
 
@@ -502,8 +494,18 @@ function griserLigne(idRow) {
 			"background-color": "black"
 		});
 	} else {
-		$(".Ligne_" + idRow).css({
-			"background-color": ""
+		var currentPlayer = "Joueur_" + getLastValue(getLocalStorage("currentPlayer"));
+		$(".Ligne_" + idRow).each(function(i, obj) {
+			var currentClassPlayer = $(obj).attr("class").substring(9, 17);
+			if (currentClassPlayer === currentPlayer) {
+				$(obj).css({
+					"background-color": "#FF8800"
+				});
+			} else {
+				$(obj).css({
+					"background-color": ""
+				});
+			}
 		});
 	}
 }

@@ -1,5 +1,5 @@
 <!doctype html>
-html(lang="fr", dir="ltr")
+html(lang="fr", dir="ldiv")
   head
     meta(charset="utf-8")
     meta(http-equiv="x-ua-compatible", content="ie=edge")
@@ -19,7 +19,7 @@ html(lang="fr", dir="ltr")
     script(defer, src='models/model.js')
   body
     header
-      //button.btn.btn-default(data-toggle="modal", data-target="#myModal") Open option
+      // button.btn.btn-default(data-toggle="modal", data-target="#myModal") Open option
       div.modal.fade(id="myModal", role="dialog")
         div.modal-dialog.modal-sm
           div.modal-content
@@ -32,42 +32,40 @@ html(lang="fr", dir="ltr")
                 span.glyphicon.glyphicon-minus Delete Player
             div.modal-footer
               button.btn.btn-default(data-dismiss="modal", id="startGame", aria-label="Lancer la partie") Start game
-    div.table-responsive
-      table.table-bordered.table-hover
-        tbody
-          - var countItem = 0;
-          each item in pageData.item
-            tr
-              - var countName = 0;
-              each name in pageData.name
-                case countItem 
-                  when 0
-                    if countName > 0
-                      th.text-center(class="Joueur_#{countName} Ligne_#{item}")
-                        input.joueur(type="text", name="Joueur_#{countName}", value="#{name}", aria-label="Nom du joueur").text-center
-                    else 
-                      th.text-center.control-grid(class="Joueur_#{countName}")
-                        button.btn.btn-danger.btn-block.control(id="next", aria-label="Joueur suivant")
-                          span.glyphicon.glyphicon-play
-                        button.btn.btn-primary.btn-block.control(id="undo", aria-label="Annuler le dernier coup")
-                          span.glyphicon.glyphicon-backward
-                        span(id="round") 1
-                  when 1
-                    if countName > 0
-                      td.text-center(class="Joueur_#{countName} Ligne_score")
-                        span(id="Joueur_#{countName}") 0
-                    else 
-                      th.text-center(class="Joueur_#{countName} Ligne_#{item}")
-                        span.text-center #{item}
-                  default
-                    if countName > 0
-                      td.text-center.case(class="Joueur_#{countName} Ligne_#{item}")
-                          svg.scoreGrid(svgid="0", idRow="#{item}", idColumn="Joueur_#{countName}", id="#{item}_Joueur_#{countName}", viewBox="0 0 50 50", preserveAspectRatio="xMidYMin meet", xmlns="http://www.w3.org/2000/svg", xmlns:svg="http://www.w3.org/2000/svg") I'm sorry, your browser does not support SVG images
-                    else 
-                      th.text-center(class="Joueur_#{countName} Ligne_#{item}")
-                        span.text-center #{item}
-                - countName++;
-            - countItem++;
+    div.table-responsive.container
+      - var countItem = 0;
+      each item in pageData.item
+        div.row
+          - var countName = 0;
+          each name in pageData.name
+            case countItem
+              when 0
+                if countName > 0
+                  div.col(class="Joueur_#{countName} Ligne_#{item}")
+                    input.text-center.joueur(type="text", name="Joueur_#{countName}", value="#{name}", aria-label="Nom du joueur")
+                else 
+                  div.col.control_grid(class="Joueur_#{countName}")
+                    button.btn.btn-danger.control_button(id="next", aria-label="Joueur suivant")
+                      span.glyphicon.glyphicon-play
+                    button.btn.btn-primary.control_button(id="undo", aria-label="Annuler le dernier coup")
+                      span.glyphicon.glyphicon-backward
+                    span(id="round") 1
+              when 1
+                if countName > 0
+                  div.col(class="Joueur_#{countName} Ligne_score")
+                    span(id="Joueur_#{countName}") 0
+                else 
+                  div.col(class="Joueur_#{countName} Ligne_#{item}")
+                    span #{item}
+              default
+                if countName > 0
+                  div.col.case(class="Joueur_#{countName} Ligne_#{item}")
+                      svg.scoreGrid(svgid="0", idRow="#{item}", idColumn="Joueur_#{countName}", id="#{item}_Joueur_#{countName}", viewBox="0 0 50 50", preserveAspecdivatio="xMidYMin meet", xmlns="http://www.w3.org/2000/svg", xmlns:svg="http://www.w3.org/2000/svg") I'm sorry, your browser does not support SVG images
+                else 
+                  div.col(class="Joueur_#{countName} Ligne_#{item}")
+                    span #{item}
+            - countName++;
+        - countItem++;
     footer
       script.
         var css = document.createElement('link');
@@ -84,19 +82,19 @@ html(lang="fr", dir="ltr")
         var link2 = document.getElementsByTagName('link')[0];
         link2.parentNode.insertBefore(css2, link2);
         
-        var css3 = document.createElement('link');
-        css3.rel = 'stylesheet';
-        css3.href = '/styles/toastr.min.css';
-        css3.type = 'text/css';
-        var link3 = document.getElementsByTagName('link')[0];
-        link3.parentNode.insertBefore(css3, link3);
+        // var css3 = document.createElement('link');
+        // css3.rel = 'stylesheet';
+        // css3.href = '/styles/toasdiv.min.css';
+        // css3.type = 'text/css';
+        // var link3 = document.getElementsByTagName('link')[0];
+        // link3.parentNode.insertBefore(css3, link3);
         
         if('serviceWorker' in navigator) {
           window.addEventListener("load", function () {
-            navigator.serviceWorker.register('/sw.js').then(function(registration) { 
-              console.log("Service Worker Registered with scope: ", registration.scope);
+            navigator.serviceWorker.register('/sw.js').then(function(regisdivation) { 
+              console.log("Service Worker Registered with scope: ", regisdivation.scope);
               }, function(err) {
-                console.log('ServiceWorker registration failed: ', err);
+                console.log('ServiceWorker regisdivation failed: ', err);
               });
           });
         }
