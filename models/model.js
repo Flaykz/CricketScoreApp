@@ -31,7 +31,7 @@ $(function() {
 					data.find(".scoreGrid").attr("idcolumn", chaine);
 				}
 			}
-			$('.modal-title').text("Nombre de joueurs : " + nbJoueur);
+			$('.mymodal-title').text("Nombre de joueurs : " + nbJoueur);
 			$('.col').css("max-width", 85 / nbJoueur + "vw");
 		}
 		else {
@@ -51,7 +51,7 @@ $(function() {
 			setNbJoueur(nbJoueur);
 			delete tabScore[chaine];
 			setTabScore(tabScore);
-			$('.modal-title').text("Nombre de joueurs : " + nbJoueur);
+			$('.mymodal-title').text("Nombre de joueurs : " + nbJoueur);
 			$('.col').css("max-width", 90 / nbJoueur + "vw");
 		} else {
 			alert("Sorry!! Can't remove first player!");
@@ -151,6 +151,8 @@ $(function() {
 $(window).on("load", function () {
 	$('.container').css("display", "");
 	$('.table-responsive').css("display", "flex");
+	// $('.loader').css("display", "none");
+	$('.loader').fadeOut("slow");
 });
 
 
@@ -164,7 +166,39 @@ function init() {
 }
 
 function finish() {
-	alert("finish");
+	var tabScore = getTabScore();
+	var testScore = [];
+	for (var joueur in tabScore) {
+		testScore.push(tabScore[joueur].nom + "," + tabScore[joueur].score[tabScore[joueur].score.length - 1]);
+	}
+	var lenTab = testScore.length
+	for (var i = 0; i < lenTab - 1; i++) {
+		if (testScore[i].split(",")[1] < testScore[i + 1].split(",")[1]) {
+			testScore.splice(i + 1, 1);
+			i = i - 1;
+			lenTab = lenTab - 1;
+		}
+		else {
+			if (testScore[i].split(",")[1] > testScore[i + 1].split(",")[1]) {
+				testScore.splice(i, 1);
+				i = i - 1;
+				lenTab = lenTab -1;
+			}
+		}
+	}
+
+	lenTab = testScore.length
+	if (lenTab > 1) {
+		winner = "";
+		for (var i = 0; i < lenTab; i++) {
+			winner = winner + " " + testScore[i].split(",")[0];
+		}
+		alert("winner are :" + winner);
+	}
+	else {
+		alert("winner is :" + testScore[0].split(",")[0]);
+	}
+	
 }
 
 function Joueur(nom, score, s20, s19, s18, s17, s16, s15, sbull) {
