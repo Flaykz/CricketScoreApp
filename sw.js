@@ -1,3 +1,4 @@
+var version = 'v1::';
 var CACHE_NAME = 'cricket-cache';
 var urlsToCache = [
   '/',
@@ -15,72 +16,78 @@ var urlsToCache = [
 ];
 
 self.addEventListener('install', function(event) {
-    console.log("The service worker is being installed.");
-    event.waitUntil(precache());
+  console.log("install event in progress.");
+  event.waitUntil(precache());
 });
 
-self.addEventListener('activate', function (event) {
-    console.log("The service worker is activate.");
-    event.waitUntil(
-        caches.keys().then(function (cacheNames) {
-            return Promise.all(
-                cacheNames.filter(function (cacheName) {
-                    //return true if you want to remove this cache
-                }).map(function(cacheName) {
-                    return caches.delete(cacheName);
-                })
-            );
+self.addEventListener('activate', function(event) {
+  console.log("activate event in progress.");
+  event.waitUntil(
+    caches.keys()
+    .then(function(keys) {
+      return Promise.all(
+        keys.filter(function(key) {
+          return !key.startsWith(version);
         })
-    ); 
+        .map(function(key) {
+          console.log("delete cache");
+          return caches.delete(key);
+        })
+      );
+    })
+    .then(function() {
+      console.log('activate event completed.');
+    })
+  ); 
 });
 
 self.addEventListener('fetch', function(event) {
-    console.log("The service worker is fetching something.");
-    event.respondWith(
-        caches.open(CACHE_NAME).then(function(cache) {
-            return cache.match(event.request).then(function (response) {
-                // return response || fetch(event.request).then(function(response) {
-                //     cache.put(event.request, response.clone());
-                //     return response;
-                // });
-                var fetchPromise = fetch(event.request).then(function(networkResponse) {
-                    cache.put(event.request, networkResponse.clone());
-                    return networkResponse;
-                })
-                return response || fetchPromise;
-            }).catch(function() {
-                console.log("fail to cache and fail to network.");
-                return cache.match('/offline.html');
-            });
+  if (event.request.method !== 'GET') {
+    console.log('fetch event ignored.', event.request.method, event.request.url);
+    return;
+  } 
+    
+  event.respondWith(
+    caches.match(event.request)
+    .then(function(cached) {
+      var networked = fetch(event.request)
+      .then(fetchedFromNetwork, unableToResolve)
+      .catch(unableToResolve);
+      console.log('fetch event', cached ? '(cached)' : '(network)', event.request.url);
+      return cached || networked;
+      
+      function fetchedFromNetwork(response) {
+        var cacheCopy = response.clone();
+        console.log('fetch response from network.', event.request.url);
+        caches.open(version + CACHE_NAME)
+        .then(function add(cache) {
+          cache.put(event.request, cacheCopy);
         })
-    );
-//   event.respondWith(fromNetwork(event.request, 400).catch(function () {
-//     return fromCache(event.request);
-//   })
-//   );
+        .then(function() {
+          console.log('fetch response stored in cache.', event.request.url);
+        });
+        return response;
+      }
+      
+      function unableToResolve() {
+        console.log('fetch request failed in both cache and network.');
+        return new Response('<h1>Service Unavailable</h1>', {
+          status: 503,
+          statusText: 'Service Unavailable',
+          headers: new Headers({
+            'Content-Type': 'text/html'
+          })
+        });
+      }
+    })
+  );
 });
 
 function precache() {
-  return caches.open(CACHE_NAME).then(function(cache) {
-    console.log('Opened cache');
+  return caches.open(version + CACHE_NAME).then(function(cache) {
+    console.log('All files are cached');
     return cache.addAll(urlsToCache);
-  });
-}
-
-function fromNetwork(request, timeout) {
-  return new Promise(function (fulfill, reject) {
-    var timeoutId = setTimeout(reject, timeout);
-    fetch(request).then(function(response) {
-      clearTimeout(timeoutId);
-      fulfill(response);
-    }, reject);
-  });
-}
-
-function fromCache (request) {
-  return caches.open(CACHE_NAME).then(function (cache) {
-    return caches.match(request).then(function (matching) {
-      return matching || Promise.reject("no-match");
-    });
+  }).then(function () {
+    console.log('Install completed');
   });
 }
