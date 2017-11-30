@@ -7,6 +7,8 @@ html, body, .table-responsive {
 .table-responsive {
     /*display: flex;*/
     flex-direction: column;
+    pointer-events: none;
+    cursor: default;
 }
 
 .row {
@@ -28,6 +30,10 @@ html, body, .table-responsive {
     justify-content: center;
     align-items: center;
     border: 1px solid #dcdcdc;
+}
+
+.case div:hover {
+    background-color: black;
 }
 
 .Ligne_score {
@@ -57,7 +63,6 @@ html, body, .table-responsive {
 
 .scoreGrid {
     height: 90%;
-    /*vertical-align: middle !important;*/
 }
 
 input {
@@ -65,3 +70,28 @@ input {
     background: transparent;
     width: 100%;
 }
+
+/*.resizable{ */
+/*    overflow: hidden;*/
+/*    resize: both;*/
+/*}*/
+
+/*.draggable{*/
+/*    position: absolute;*/
+/*    z-index: 100;*/
+/*    width: 15vw;*/
+/*}*/
+
+/*.draggable-handler{*/
+/*    padding: 20px;*/
+/*    cursor: move;*/
+/*}*/
+
+/*.draggable-handler:hover{*/
+/*    background-color: black;*/
+/*}*/
+
+/*.dragging{*/
+/*    cursor: move;*/
+/*    z-index: 200 !important;*/
+/*}*/

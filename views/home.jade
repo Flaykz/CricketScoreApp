@@ -1,5 +1,5 @@
 <!doctype html>
-html(lang="fr", dir="ldiv")
+html(lang="fr", dir="ltr")
   head
     meta(charset="utf-8")
     meta(http-equiv="x-ua-compatible", content="ie=edge")
@@ -15,11 +15,10 @@ html(lang="fr", dir="ldiv")
       .mymodal {
         display: block;
         position: fixed;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
+        top: 20vh;
+        left: 20vw;
         z-index: 1050;
+        font-size: 5vmin;
       }
       .mymodal-dialog {
         -webkit-transform: translate(0,0);
@@ -49,11 +48,7 @@ html(lang="fr", dir="ldiv")
       }
       .mymodal-title {
         margin: 0px;
-        line-height: 1.42857143;
-      }
-      h4 {
-        font-size: 18px;
-        font-weight: 500;
+        font-weight: bold;
       }
       button {
         border-radius: 4px;
@@ -81,26 +76,26 @@ html(lang="fr", dir="ldiv")
       }
     link(rel="icon", type="image/png", href="./favicon.png")
     link(rel="manifest", href="/manifest.json")
-    noscript
-      h1 You don’t have javascript enabled.
-      p Please enable it to get the full experience.
     script(defer, src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js")
     script(defer, src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js", integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa", crossorigin="anonymous")
     script(defer, src='models/model.js')
   body
+    noscript
+      h1 You don’t have javascript enabled.
+      p Please enable it to get the full experience.
     header
       div.mymodal(id="myModal", role="dialog")
-        div.mymodal-dialog.modal-sm
+        div.mymodal-dialog
           div.mymodal-content
             div.mymodal-header
-              h4.mymodal-title Add or Del players
+              p.mymodal-title Add or Del players
             div.mymodal-body
               button(id="addPlayer", aria-label="Ajouter joueur") 
                 span.glyphicon.glyphicon-plus Add Player
               button(id="deletePlayer", aria-label="Enlever joueur") 
                 span.glyphicon.glyphicon-minus Delete Player
             div.mymodal-footer
-              button.btn.btn-default(data-dismiss="modal", id="startGame", aria-label="Lancer la partie") Start game
+              button(data-dismiss="modal", id="startGame", aria-label="Lancer la partie") Start game
     div.loader
     div.table-responsive.container
       - var countItem = 0;
@@ -130,7 +125,7 @@ html(lang="fr", dir="ldiv")
               default
                 if countName > 0
                   div.col.case(class="Joueur_#{countName} Ligne_#{item}")
-                      svg.scoreGrid(svgid="0", idRow="#{item}", idColumn="Joueur_#{countName}", id="#{item}_Joueur_#{countName}", viewBox="0 0 50 50", preserveAspecdivatio="xMidYMin meet", xmlns="http://www.w3.org/2000/svg", xmlns:svg="http://www.w3.org/2000/svg") I'm sorry, your browser does not support SVG images
+                      svg.scoreGrid(svgid="0", idRow="#{item}", idColumn="Joueur_#{countName}", id="#{item}_Joueur_#{countName}", viewBox="0 0 50 50", preserveAspecdivatio="xMidYMin meet", xmlns="http://www.w3.org/2000/svg")
                 else 
                   div.col(class="Joueur_#{countName} Ligne_#{item}")
                     span #{item}

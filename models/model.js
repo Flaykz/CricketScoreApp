@@ -59,6 +59,8 @@ $(function() {
 	})
 	$("#startGame").click(function() {
 		$('.mymodal').css("display", "none");
+		$('.table-responsive').css("pointer-events", "initial");
+		$('.table-responsive').css("cursor", "initial");
 		$(".Joueur_1").css({
 			"background-color": "#FF8800"
 		});
@@ -153,6 +155,27 @@ $(window).on("load", function () {
 	$('.table-responsive').css("display", "flex");
 	// $('.loader').css("display", "none");
 	$('.loader').fadeOut("slow");
+	// dragElement(document.getElementById("draggable"));
+	// $('.draggable-handler').mousedown(function(e) {
+	// 	e = e || window.event;
+	// 	var posDragX = drag.position().left;
+	// 	var posDragY = drag.position().top;
+	// 	var posCursorX = e.clientX;
+	// 	var posCursorY = e.clientY;
+	// 	var offsetX = posCursorX - posDragX;
+	// 	var offsetY = posCursorY - posDragY;
+	// 	drag = $(this).closest('.draggable');
+	// 	drag.addClass('dragging');
+	// 	$(this).on('mousemove', function(e) {    
+	//     	posCursorX = e.clientX;
+	// 		posCursorY = e.clientY;
+	//     	drag.css('left', posCursorX - offsetX);
+	//     	drag.css('top', posCursorY - offsetY);
+	//     	window.getSelection().removeAllRanges();
+	// 	})
+	// });
+	// $('.draggable-handler').mouseleave(stopDragging);
+	// $('.draggable-handler').mouseup(stopDragging);
 });
 
 
@@ -594,4 +617,49 @@ function drawSVG(svgid, joueur) {
 		default:
 			return "";
 	}
+}
+
+function dragElement(elmnt) {
+  var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+  if (document.getElementById(elmnt.id + "header")) {
+    /* if present, the header is where you move the DIV from:*/
+    document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
+  } else {
+    /* otherwise, move the DIV from anywhere inside the DIV:*/
+    elmnt.onmousedown = dragMouseDown;
+  }
+
+  function dragMouseDown(e) {
+    e = e || window.event;
+    // get the mouse cursor position at startup:
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    document.onmouseup = closeDragElement;
+    // call a function whenever the cursor moves:
+    document.onmousemove = elementDrag;
+  }
+
+  function elementDrag(e) {
+    e = e || window.event;
+    // calculate the new cursor position:
+    pos1 = pos3 - e.clientX;
+    pos2 = pos4 - e.clientY;
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    // set the element's new position:
+    elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+    elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+  }
+
+  function closeDragElement() {
+    /* stop moving when mouse button is released:*/
+    document.onmouseup = null;
+    document.onmousemove = null;
+  }
+}
+
+function stopDragging() {
+  drag = $(this).closest('.draggable')
+  drag.removeClass('dragging')
+  $(this).off('mousemove')
 }
