@@ -14,11 +14,11 @@ html, body, .table-responsive {
 .row {
     display: flex;
     justify-content: flex-start;
-    height: 9.375vh;
+    height: 10.625vh;
 }
 
 .row:first-child {
-    height: 25vh;
+    height: 15vh;
     font-size: 4vmin;
 }
 
@@ -43,24 +43,24 @@ html, body, .table-responsive {
 }
 
 .Joueur_0 {
-    width: 15vw;
+    /*width: 15vw;*/
     font-size: 5vmin;
 }
 
-.control_grid {
-    display: flex;
-    flex-direction: column;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-}
+/*.control_grid {*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    flex-wrap: nowrap;*/
+/*    justify-content: flex-start;*/
+/*}*/
 
-.control_button {
-    width : 100%;
-    border-radius: 0px;
-    height: 20vh;
-    position: relative;
-    z-index: 0;
-}
+/*.control_button {*/
+/*    width : 100%;*/
+/*    border-radius: 0px;*/
+/*    height: 20vh;*/
+/*    position: relative;*/
+/*    z-index: 0;*/
+/*}*/
 
 .scoreGrid {
     height: 90%;

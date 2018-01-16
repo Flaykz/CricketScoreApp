@@ -33,7 +33,7 @@ $(function() {
 				}
 			}
 			$('.mymodal-title').text("Nombre de joueurs : " + nbJoueur);
-			//$('.col').css("max-width", 90 / nbJoueur + "vw");
+			$('.col').css("max-width", 90 / nbJoueur + "vw");
 		}
 		else {
 			alert("Impossible to add more than 9 players");
@@ -53,7 +53,7 @@ $(function() {
 			delete tabScore[chaine];
 			setTabScore(tabScore);
 			$('.mymodal-title').text("Nombre de joueurs : " + nbJoueur);
-			//$('.col').css("max-width", 90 / nbJoueur + "vw");
+			$('.col').css("max-width", 90 / nbJoueur + "vw");
 		} else {
 			alert("Sorry!! Can't remove first player!");
 		}
@@ -108,14 +108,6 @@ $(function() {
 			});
 			updateScore("null", "null", "0");
 		}
-		else {
-			var tabScore = getTabScore();
-			for (var joueur in tabScore) {
-				undo(tabScore[joueur]);
-			}
-			setTabScore(tabScore);
-			refreshScreen();
-		}
 	})
 	
 	$("input").change(function() {
@@ -126,7 +118,14 @@ $(function() {
 		tabScore[name].nom = value;
 		setTabScore(tabScore);
 	})
-
+	$("#undo").click(function() {
+		var tabScore = getTabScore();
+		for (var joueur in tabScore) {
+			undo(tabScore[joueur]);
+		}
+		setTabScore(tabScore);
+		refreshScreen();
+	})
 	$('.case').click(function() {
 		var currentPlayer = getLastValue(getLocalStorage("currentPlayer"));
 		var currentRound = getLastValue(getLocalStorage("currentRound"));
