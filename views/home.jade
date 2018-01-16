@@ -6,6 +6,12 @@ html(lang="fr", dir="ltr")
     meta(name="viewport", content="width=device-width, initial-scale=1")
     meta(name="theme-color", content="#2196F3")
     meta(name="apple-mobile-web-app-capable", content="yes")
+    link(rel="apple-touch-icon", href="/images/launcher-icon-1x.png")
+    link(rel="apple-touch-icon", sizes="48x48", href="/images/launcher-icon-1x.png")
+    link(rel="apple-touch-icon", sizes="96x96", href="/images/launcher-icon-2x.png")
+    link(rel="apple-touch-icon", sizes="192x192", href="/images/launcher-icon-3x.png")
+    link(rel="apple-touch-icon", sizes="512x512", href="/images/launcher-icon-4x.png")
+    link(rel="apple-touch-startup-image", href="/images/launcher-icon-1x.png")
     title=title
     meta(name="description", content="App pour compter le score au Cricket cutthroat")
     style(type="text/css").
@@ -108,10 +114,11 @@ html(lang="fr", dir="ltr")
                 if countName > 0
                   div.col(class="Joueur_#{countName} Ligne_#{item}")
                     input.text-center.joueur(type="text", name="Joueur_#{countName}", value="#{name}", aria-label="Nom du joueur")
+                    span(id="Stats_Joueur_#{countName}") 0.00
                 else 
                   div.col.control_grid(class="Joueur_#{countName}")
-                    button.btn.btn-danger.control_button(id="next", aria-label="Joueur suivant")
-                      span.glyphicon.glyphicon-play
+                    //button.btn.btn-danger.control_button(id="next", aria-label="Joueur suivant")
+                    //  span.glyphicon.glyphicon-play
                     button.btn.btn-primary.control_button(id="undo", aria-label="Annuler le dernier coup")
                       span.glyphicon.glyphicon-backward
                     span(id="round") 1
@@ -125,7 +132,7 @@ html(lang="fr", dir="ltr")
               default
                 if countName > 0
                   div.col.case(class="Joueur_#{countName} Ligne_#{item}")
-                      svg.scoreGrid(svgid="0", idRow="#{item}", idColumn="Joueur_#{countName}", id="#{item}_Joueur_#{countName}", viewBox="0 0 50 50", preserveAspecdivatio="xMidYMin meet", xmlns="http://www.w3.org/2000/svg")
+                      svg.scoreGrid(svgid="0", id="#{item}_Joueur_#{countName}", viewBox="0 0 50 50", xmlns="http://www.w3.org/2000/svg")
                 else 
                   div.col(class="Joueur_#{countName} Ligne_#{item}")
                     span #{item}

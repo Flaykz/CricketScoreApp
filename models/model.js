@@ -8,7 +8,8 @@ $(function() {
 		nbJoueur = nbJoueur + 1;
 		if (nbJoueur < 10) {
 			var chaine = "Joueur_" + nbJoueur;
-			var monJoueur = new Joueur(chaine, [0], [0], [0], [0], [0], [0], [0], [0]);
+			var stats = ["0;0"];
+			var monJoueur = new Joueur(chaine, stats, [0], [0], [0], [0], [0], [0], [0], [0]);
 			tabScore[chaine] = monJoueur;
 			setTabScore(tabScore);
 			setNbJoueur(nbJoueur);
@@ -21,6 +22,7 @@ $(function() {
 					data.find("input").val(chaine);
 					data.find("input").attr("name", chaine);
 					data.find("input").attr("value", chaine);
+					data.find("span").attr("id", "Stats_" + chaine);
 				}
 				if (i === 1) {
 					data.find("span").attr("id", chaine);
@@ -28,11 +30,10 @@ $(function() {
 				if (i > 1) {
 					var temp = data.find(".scoreGrid").attr("id");
 					data.find(".scoreGrid").attr("id", temp.replace(chaineBefore, chaine));
-					data.find(".scoreGrid").attr("idcolumn", chaine);
 				}
 			}
 			$('.mymodal-title').text("Nombre de joueurs : " + nbJoueur);
-			$('.col').css("max-width", 85 / nbJoueur + "vw");
+			$('.col').css("max-width", 90 / nbJoueur + "vw");
 		}
 		else {
 			alert("Impossible to add more than 9 players");
@@ -67,43 +68,48 @@ $(function() {
 		setLocalStorage("currentPlayer", ["1"]);
 		setLocalStorage("currentRound", ["1"]);
 	})
-	$("#next").click(function() {
-		var currentPlayer = getLastValue(getLocalStorage("currentPlayer"));
-		var nbJoueur = getNbJoueur();
-		var currentRound = parseInt(getLastValue(getLocalStorage("currentRound")), 10);
-		$(".Joueur_" + currentPlayer).each(function(i, obj) {
-			var currentCSS = $(obj).css("background-color");
-			if (currentCSS !== "rgb(0, 0, 0)") {
-				$(obj).css({
-					"background-color": ""
-				});
-			}
-		});
-		
-		if (parseInt(currentPlayer, 10) == nbJoueur) {
-			currentPlayer = "1";
-			currentRound = currentRound + 1;
-			if (currentRound == 21) {
-				finish();
+	
+	$(".Joueur_0").click(function() {
+		var row = $(this).attr("class");
+		if (row.match("Ligne_(20|19|18|17|16|15|Bull)")) {
+			var currentPlayer = getLastValue(getLocalStorage("currentPlayer"));
+			var nbJoueur = getNbJoueur();
+			var currentRound = parseInt(getLastValue(getLocalStorage("currentRound")), 10);
+			$(".Joueur_" + currentPlayer).each(function(i, obj) {
+				var currentCSS = $(obj).css("background-color");
+				if (currentCSS !== "rgb(0, 0, 0)") {
+					$(obj).css({
+						"background-color": ""
+					});
+				}
+			});
+			
+			if (parseInt(currentPlayer, 10) == nbJoueur) {
+				currentPlayer = "1";
+				currentRound = currentRound + 1;
+				if (currentRound < 21) {
+					$("#round").text(currentRound);
+				}
 			} else {
-				$("#round").text(currentRound);
+				currentPlayer = parseInt(currentPlayer, 10) + 1;
 			}
-		} else {
-			currentPlayer = parseInt(currentPlayer, 10) + 1;
+			addLocalStorage("currentRound", currentRound);
+			addLocalStorage("currentPlayer", currentPlayer);
+			
+			finish(currentPlayer);
+	
+			$(".Joueur_" + currentPlayer).each(function(i, obj) {
+				var currentCSS = $(obj).css("background-color");
+				if (currentCSS !== "rgb(0, 0, 0)") {
+					$(obj).css({
+						"background-color": "#FF8800"
+					});
+				}
+			});
+			updateScore("null", "null", "0");
 		}
-		addLocalStorage("currentRound", currentRound);
-		addLocalStorage("currentPlayer", currentPlayer);
-
-		$(".Joueur_" + currentPlayer).each(function(i, obj) {
-			var currentCSS = $(obj).css("background-color");
-			if (currentCSS !== "rgb(0, 0, 0)") {
-				$(obj).css({
-					"background-color": "#FF8800"
-				});
-			}
-		});
-		updateScore("null", "null", "0");
 	})
+	
 	$("input").change(function() {
 		var name = $(this).attr("name");
 		var value = $(this).val();
@@ -124,8 +130,8 @@ $(function() {
 		var currentPlayer = getLastValue(getLocalStorage("currentPlayer"));
 		var currentRound = getLastValue(getLocalStorage("currentRound"));
 		var chaine = "Joueur_" + currentPlayer;
-		var idRow = $(this).children().attr("idrow");
-		var idColumn = $(this).children().attr("idcolumn");
+		var idRow = $(this).children().attr("id").split("_")[0];
+		var idColumn = $(this).children().attr("id").substr(-8, 8);
 		if (idColumn == chaine) {
 			var point = parseInt($(this).children().attr("svgid"), 10);
 			point = point + 1;
@@ -155,32 +161,11 @@ $(window).on("load", function () {
 	$('.table-responsive').css("display", "flex");
 	// $('.loader').css("display", "none");
 	$('.loader').fadeOut("slow");
-	// dragElement(document.getElementById("draggable"));
-	// $('.draggable-handler').mousedown(function(e) {
-	// 	e = e || window.event;
-	// 	var posDragX = drag.position().left;
-	// 	var posDragY = drag.position().top;
-	// 	var posCursorX = e.clientX;
-	// 	var posCursorY = e.clientY;
-	// 	var offsetX = posCursorX - posDragX;
-	// 	var offsetY = posCursorY - posDragY;
-	// 	drag = $(this).closest('.draggable');
-	// 	drag.addClass('dragging');
-	// 	$(this).on('mousemove', function(e) {    
-	//     	posCursorX = e.clientX;
-	// 		posCursorY = e.clientY;
-	//     	drag.css('left', posCursorX - offsetX);
-	//     	drag.css('top', posCursorY - offsetY);
-	//     	window.getSelection().removeAllRanges();
-	// 	})
-	// });
-	// $('.draggable-handler').mouseleave(stopDragging);
-	// $('.draggable-handler').mouseup(stopDragging);
 });
 
 
 function init() {
-	var monJoueur = new Joueur("Joueur_1", [0], [0], [0], [0], [0], [0], [0], [0]);
+	var monJoueur = new Joueur("Joueur_1", ["0;0"], [0], [0], [0], [0], [0], [0], [0], [0]);
 	var tabScore = {
 		"Joueur_1": monJoueur
 	};
@@ -188,44 +173,79 @@ function init() {
 	setNbJoueur("1");
 }
 
-function finish() {
+function finish(idColumn) {
 	var tabScore = getTabScore();
 	var testScore = [];
-	for (var joueur in tabScore) {
-		testScore.push(tabScore[joueur].nom + "," + tabScore[joueur].score[tabScore[joueur].score.length - 1]);
-	}
-	var lenTab = testScore.length
-	for (var i = 0; i < lenTab - 1; i++) {
-		if (testScore[i].split(",")[1] < testScore[i + 1].split(",")[1]) {
-			testScore.splice(i + 1, 1);
-			i = i - 1;
-			lenTab = lenTab - 1;
+	var currentRound = parseInt(getLastValue(getLocalStorage("currentRound")), 10);
+	if (currentRound == 21) {
+		for (var joueur in tabScore) {
+			testScore.push(tabScore[joueur].nom + "," + tabScore[joueur].score[tabScore[joueur].score.length - 1]);
+		}
+		var lenTab = testScore.length
+		for (var i = 0; i < lenTab - 1; i++) {
+			if (testScore[i].split(",")[1] < testScore[i + 1].split(",")[1]) {
+				testScore.splice(i + 1, 1);
+				i = i - 1;
+				lenTab = lenTab - 1;
+			}
+			else {
+				if (testScore[i].split(",")[1] > testScore[i + 1].split(",")[1]) {
+					testScore.splice(i, 1);
+					i = i - 1;
+					lenTab = lenTab -1;
+				}
+			}
+		}
+		lenTab = testScore.length
+		if (lenTab > 1) {
+			var winner = "";
+			for (var i = 0; i < lenTab; i++) {
+				winner = winner + " " + testScore[i].split(",")[0];
+			}
+			alert("winner are :" + winner);
+			window.location.reload();
 		}
 		else {
-			if (testScore[i].split(",")[1] > testScore[i + 1].split(",")[1]) {
-				testScore.splice(i, 1);
-				i = i - 1;
-				lenTab = lenTab -1;
+			alert("winner is :" + testScore[0].split(",")[0]);
+			window.location.reload();
+		}
+	}
+	else {
+		for (var joueur in tabScore) {
+			if (joueur == idColumn) {
+				var s20 = parseInt(tabScore[joueur].s20[tabScore[joueur].s20.length - 1], 10);
+				var s19 = parseInt(tabScore[joueur].s19[tabScore[joueur].s19.length - 1], 10);
+				var s18 = parseInt(tabScore[joueur].s18[tabScore[joueur].s18.length - 1], 10);
+				var s17 = parseInt(tabScore[joueur].s17[tabScore[joueur].s17.length - 1], 10);
+				var s16 = parseInt(tabScore[joueur].s16[tabScore[joueur].s16.length - 1], 10);
+				var s15 = parseInt(tabScore[joueur].s15[tabScore[joueur].s15.length - 1], 10);
+				var sbull = parseInt(tabScore[joueur].sbull[tabScore[joueur].sbull.length - 1], 10);
+				var score = parseInt(tabScore[joueur].score[tabScore[joueur].score.length - 1], 10);
+				var nom = tabScore[joueur].nom;
+			}
+			else {
+				testScore.push(tabScore[joueur].nom + "," + tabScore[joueur].score[tabScore[joueur].score.length - 1]);
+			}
+		}
+		if (s20 + s19 + s18 + s17 + s16 + s15 + sbull == 21) {
+			var lenTab = testScore.length
+			var end = true;
+			for (var i = 0; i < lenTab; i++) {
+				if (testScore[i].split(",")[1] < score) {
+					end = false;
+				}
+			}
+			if (end) {
+				alert("winner is : " + nom);
+				window.location.reload();
 			}
 		}
 	}
-
-	lenTab = testScore.length
-	if (lenTab > 1) {
-		winner = "";
-		for (var i = 0; i < lenTab; i++) {
-			winner = winner + " " + testScore[i].split(",")[0];
-		}
-		alert("winner are :" + winner);
-	}
-	else {
-		alert("winner is :" + testScore[0].split(",")[0]);
-	}
-	
 }
 
-function Joueur(nom, score, s20, s19, s18, s17, s16, s15, sbull) {
+function Joueur(nom, stats, score, s20, s19, s18, s17, s16, s15, sbull) {
 	this.nom = nom;
+	this.stats = stats;
 	this.score = score;
 	this.s20 = s20;
 	this.s19 = s19;
@@ -238,6 +258,7 @@ function Joueur(nom, score, s20, s19, s18, s17, s16, s15, sbull) {
 
 function undo(joueur) {
 	if (joueur.score.length > 1) {
+		joueur.stats.pop();
 		joueur.score.pop();
 		joueur.s20.pop();
 		joueur.s19.pop();
@@ -355,7 +376,7 @@ function updateScore(idRow, idColumn, point) {
 						tabScore[joueur].sbull.push(tabScore[joueur].sbull[tabScore[joueur].sbull.length - 1]);
 						tabScore[joueur].score.push(tabScore[joueur].score[tabScore[joueur].score.length - 1]);
 						break;
-					case "bull":
+					case "Bull":
 						tabScore[joueur].s20.push(tabScore[joueur].s20[tabScore[joueur].s20.length - 1]);
 						tabScore[joueur].s19.push(tabScore[joueur].s19[tabScore[joueur].s19.length - 1]);
 						tabScore[joueur].s18.push(tabScore[joueur].s18[tabScore[joueur].s18.length - 1]);
@@ -363,7 +384,7 @@ function updateScore(idRow, idColumn, point) {
 						tabScore[joueur].s16.push(tabScore[joueur].s16[tabScore[joueur].s16.length - 1]);
 						tabScore[joueur].s15.push(tabScore[joueur].s15[tabScore[joueur].s15.length - 1]);
 						tabScore[joueur].sbull.push(point);
-						tabScore[joueur].score.push(tabScore[joueur].score[tabScore[joueur].score.length - 1]);
+						tabScore[joueur].score.push(tabScore[joueur].score[tabScore[joueur].score.length - 1]);;
 						break;
 					default:
 						//
@@ -418,7 +439,7 @@ function updateScore(idRow, idColumn, point) {
 						pointtoAdd = pointtoAdd + 15;
 					}
 					break;
-				case "bull":
+				case "Bull":
 					if ((tabScore[joueur].sbull[tabScore[joueur].sbull.length - 1] != 3) && (joueur != idColumn)) {
 						pointtoAdd = pointtoAdd + 25;
 					}
@@ -429,10 +450,34 @@ function updateScore(idRow, idColumn, point) {
 			$('#' + joueur).text(nouveauScore);
 			tabScore[joueur].score.push(nouveauScore);
 		}
+		var currentPlayer = getLastValue(getLocalStorage("currentPlayer"));
+		var currentRound = getLastValue(getLocalStorage("currentRound"));
+		if (joueur == idColumn) {
+			lastHit = parseInt(tabScore[joueur].stats[tabScore[joueur].stats.length - 1].split(";")[0], 10);
+			newHit = lastHit + 1;
+			newStat = newHit / currentRound;
+			newStat = newStat.toFixed(2);
+			tabScore[joueur].stats.push(newHit + ";" + newStat);
+			$("#Stats_" + joueur).text(newStat);
+		}
+		else {
+			if (joueur[joueur.length - 1] == currentPlayer) {
+				lastHit = parseInt(tabScore[joueur].stats[tabScore[joueur].stats.length - 1].split(";")[0], 10);
+				newStat = lastHit / currentRound;
+				newStat = newStat.toFixed(2);
+				tabScore[joueur].stats.push(lastHit + ";" + newStat);
+				if ($("#Stats_" + joueur).text() != newStat) {
+					$("#Stats_" + joueur).text(newStat);
+				}
+			}
+		}
 	}
 	setTabScore(tabScore);
 	if (point == 3) {
 		griserLigne(idRow);
+	}
+	if (point == 3 || point == 0) {
+		finish(idColumn);
 	}
 }
 
@@ -440,9 +485,11 @@ function refreshScreen() {
 	var tabScore = getTabScore();
 	var currentPlayer = getLocalStorage("currentPlayer");
 	var currentRound = getLocalStorage("currentRound");
+	if (currentRound.length > 1) {
+		currentRound.pop();
+	}
 	if (currentPlayer.length > 1) {
 		currentPlayer.pop();
-		currentRound.pop();
 	}
 	else {
 		alert("Sorry!! Can't go more backward !");
@@ -450,11 +497,11 @@ function refreshScreen() {
 	setLocalStorage("currentPlayer", currentPlayer);
 	setLocalStorage("currentRound", currentRound);
 	$("#round").text(currentRound[currentRound.length - 1]);
-	
 	for (var joueur in tabScore) {
 		var obj = tabScore[joueur];
 		var index = obj.score.length - 1;
 		var score = obj.score[index];
+		var stats = obj.stats[index];
 		var s20 = obj.s20[index];
 		var s19 = obj.s19[index];
 		var s18 = obj.s18[index];
@@ -469,7 +516,7 @@ function refreshScreen() {
 			"17": s17,
 			"16": s16,
 			"15": s15,
-			"bull": sbull
+			"Bull": sbull
 		};
 		Object.keys(dict).forEach(function(key) {
 			switch (dict[key]) {
@@ -503,6 +550,14 @@ function refreshScreen() {
 			$("." + joueur).css({
 				"background-color": ""
 			});
+		}
+		var currentPlayer = getLastValue(getLocalStorage("currentPlayer"));
+		var currentRound = getLastValue(getLocalStorage("currentRound"));
+		lastHit = parseInt(tabScore[joueur].stats[tabScore[joueur].stats.length - 1].split(";")[0], 10);
+		newStat = lastHit / currentRound;
+		newStat = newStat.toFixed(2);
+		if ($("#Stats_" + joueur).text() != newStat) {
+			$("#Stats_" + joueur).text(newStat);
 		}
 	}
 	Object.keys(dict).forEach(function(key) {
@@ -568,31 +623,34 @@ function griserLigne(idRow) {
 }
 
 function drawSVG(svgid, joueur) {
-	var strokeWidth = 3;
+	var widthHeight = 50;
+	var strokeWidth = 8;
+	var min = strokeWidth + ((strokeWidth - 7) * -2);
+	var max = widthHeight - min;
 	switch (joueur) {
 		case "Joueur_1":
-			var strokeColour = "#a70707";
+			var strokeColour = "#ffff00";
 			break;
 		case "Joueur_2":
-			var strokeColour = "#089620";
+			var strokeColour = "#00ff00";
 			break;
 		case "Joueur_3":
-			var strokeColour = "#089675";
+			var strokeColour = "#00ffff";
 			break;
 		case "Joueur_4":
-			var strokeColour = "#083a96";
+			var strokeColour = "#0000ff";
 			break;
 		case "Joueur_5":
-			var strokeColour = "#450896";
+			var strokeColour = "#8000ff";
 			break;
 		case "Joueur_6":
-			var strokeColour = "#960877";
+			var strokeColour = "#ff00bf";
 			break;
 		case "Joueur_7":
-			var strokeColour = "#000000";
+			var strokeColour = "#ff0000";
 			break;
 		case "Joueur_8":
-			var strokeColour = "#000000";
+			var strokeColour = "#008000";
 			break;
 		case "Joueur_9":
 			var strokeColour = "#000000";
@@ -600,19 +658,27 @@ function drawSVG(svgid, joueur) {
 		default:
 			var strokeColour = "#000000";
 	}
-	
-	var line1 = "<line y2='43' x2='7' y1='7' x1='43' fill-opacity='0' stroke-width='" + strokeWidth + "' stroke='" + strokeColour + "' />";
-	var line2 = "<line y2='43' x2='43' y1='7' x1='7' fill-opacity='0' stroke-width='" + strokeWidth + "' stroke='" + strokeColour + "' />";
-	var circle = "<circle fill-opacity='0' r='21' cy='25' cx='25' stroke-width='" + strokeWidth + "' stroke='" + strokeColour + "' />";
+	var filter = "<defs><filter id='shadow' width='200%' height='200%'><feOffset in='SourceGraphic' dx='3' dy='3' result='offsetOut'></feOffset><feColorMatrix result='matrixOut' in='offsetOut' type='matrix' values='0.2 0 0 0 0 0 0.2 0 0 0 0 0 0.2 0 0 0 0 0 1 0'></feColorMatrix><feGaussianBlur result='blurOut' in='matrixOut' stdDeviation='4'></feGaussianBlur><feBlend in='SourceGraphic' in2='blurOut' mode='normal'></feBlend></filter><filter id='light' filterUnits='userSpaceOnUse' width='200%' height='200%'><feGaussianBlur in='SourceAlpha' stdDeviation='4' result='blurOut'></feGaussianBlur><feOffset in='blurOut' dx='4' dy='4' result='offsetBlur'></feOffset><feSpecularLighting in='blurOut' surfaceScale='20' specularConstant='.25' specularExponent='4' lighting-color='#bbbbbb' result='specOut'><fePointLight x='-2000' y='-2000' z='200'></fePointLight></feSpecularLighting><feComposite in='specOut' in2='SourceAlpha' operator='in' result='specOut'></feComposite><feComposite in='SourceGraphic' in2='specOut' operator='arithmetic' k1='0' k2='1' k3='1' k4='0' result='litPaint'></feComposite></filter></defs><g filter='url(#light)'>";
+	//var filter = "";
+	if (filter != "") {
+		var line1 = "<line filter='url(#shadow)' y2='" + max + "' x2='" + min + "' y1='" + min + "' x1='" + max + "' fill-opacity='0' stroke-width='" + strokeWidth + "' stroke='" + strokeColour + "' /></g>";
+		var line2 = "<line filter='url(#shadow)' y2='" + max + "' x2='" + max + "' y1='" + min + "' x1='" + min + "' fill-opacity='0' stroke-width='" + strokeWidth + "' stroke='" + strokeColour + "' />";
+		var circle = "<circle fill-opacity='0' r='18' cy='25' cx='25' stroke-width='" + strokeWidth + "' stroke='" + strokeColour + "' />";
+	}
+	else {
+		var line1 = "<line y2='" + max + "' x2='" + min + "' y1='" + min + "' x1='" + max + "' fill-opacity='0' stroke-width='" + strokeWidth + "' stroke='" + strokeColour + "' />";
+		var line2 = "<line y2='" + max + "' x2='" + max + "' y1='" + min + "' x1='" + min + "' fill-opacity='0' stroke-width='" + strokeWidth + "' stroke='" + strokeColour + "' />";
+		var circle = "<circle fill-opacity='0' r='18' cy='25' cx='25' stroke-width='" + strokeWidth + "' stroke='" + strokeColour + "' />";
+	}
 	switch (svgid) {
 		case 1:
-			return line1;
+			return filter + line1;
 			break;
 		case 2:
-			return line1 + line2;
+			return filter + line2 + line1;
 			break;
 		case 3:
-			return line1 + line2 + circle;
+			return filter + circle + line2 + line1;
 			break;
 		default:
 			return "";

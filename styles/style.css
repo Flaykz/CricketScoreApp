@@ -27,13 +27,14 @@ html, body, .table-responsive {
     width: 100%;
     height: 100%;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     border: 1px solid #dcdcdc;
 }
 
-.case div:hover {
-    background-color: black;
+.col:hover {
+    opacity: 0.8;
 }
 
 .Ligne_score {
@@ -56,7 +57,7 @@ html, body, .table-responsive {
 .control_button {
     width : 100%;
     border-radius: 0px;
-    height: 10vh;
+    height: 20vh;
     position: relative;
     z-index: 0;
 }
