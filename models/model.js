@@ -8,7 +8,7 @@ $(function() {
 		nbJoueur = nbJoueur + 1;
 		if (nbJoueur < 10) {
 			var chaine = "Joueur_" + nbJoueur;
-			var stats = ["1;0;0.00"];
+			var stats = ["0;0;0.00"];
 			var monJoueur = new Joueur(chaine, stats, [0], [0], [0], [0], [0], [0], [0], [0]);
 			tabScore[chaine] = monJoueur;
 			setTabScore(tabScore);
@@ -72,41 +72,44 @@ $(function() {
 	$(".Joueur_0").click(function() {
 		var row = $(this).attr("class");
 		if (row.match("Ligne_(20|19|18|17|16|15|Bull)")) {
+			updateScore("null", "null", "0");
+			
 			var currentPlayer = getLastValue(getLocalStorage("currentPlayer"));
 			var nbJoueur = getNbJoueur();
 			var currentRound = parseInt(getLastValue(getLocalStorage("currentRound")), 10);
-			$(".Joueur_" + currentPlayer).each(function(i, obj) {
-				var currentCSS = $(obj).css("background-color");
-				if (currentCSS !== "rgb(0, 0, 0)") {
-					$(obj).css({
-						"background-color": ""
-					});
-				}
-			});
 			
-			if (parseInt(currentPlayer, 10) == nbJoueur) {
-				currentPlayer = "1";
-				currentRound = currentRound + 1;
-				if (currentRound < 21) {
-					$("#round").text(currentRound);
-				}
-			} else {
-				currentPlayer = parseInt(currentPlayer, 10) + 1;
+			if ((parseInt(currentPlayer, 10) == nbJoueur) && (currentRound == 20)) {
+				//appel finish
+				finish(currentPlayer);
 			}
-			addLocalStorage("currentRound", currentRound);
-			addLocalStorage("currentPlayer", currentPlayer);
-			
-			finish(currentPlayer);
-	
-			$(".Joueur_" + currentPlayer).each(function(i, obj) {
-				var currentCSS = $(obj).css("background-color");
-				if (currentCSS !== "rgb(0, 0, 0)") {
-					$(obj).css({
-						"background-color": "#FF8800"
-					});
+			else {
+				$(".Joueur_" + currentPlayer).each(function(i, obj) {
+					var currentCSS = $(obj).css("background-color");
+					if (currentCSS !== "rgb(0, 0, 0)") {
+						$(obj).css({
+							"background-color": ""
+						});
+					}
+				});
+				if (parseInt(currentPlayer, 10) == nbJoueur) {
+					currentPlayer = "1";
+					currentRound = currentRound + 1;
+					$("#round").text(currentRound);
+				} else {
+					currentPlayer = parseInt(currentPlayer, 10) + 1;
 				}
-			});
-			updateScore("null", "null", "0");
+				$(".Joueur_" + currentPlayer).each(function(i, obj) {
+					var currentCSS = $(obj).css("background-color");
+					if (currentCSS !== "rgb(0, 0, 0)") {
+						$(obj).css({
+							"background-color": "#FF8800"
+						});
+					}
+				});
+				
+				addLocalStorage("currentRound", currentRound);
+				addLocalStorage("currentPlayer", currentPlayer);
+			}
 		}
 		else {
 			var tabScore = getTabScore();
@@ -166,7 +169,7 @@ $(window).on("load", function () {
 
 
 function init() {
-	var monJoueur = new Joueur("Joueur_1", ["1;0;0.00"], [0], [0], [0], [0], [0], [0], [0], [0]);
+	var monJoueur = new Joueur("Joueur_1", ["0;0;0.00"], [0], [0], [0], [0], [0], [0], [0], [0]);
 	var tabScore = {
 		"Joueur_1": monJoueur
 	};
@@ -313,6 +316,10 @@ function getLastValue(obj) {
 
 function updateScore(idRow, idColumn, point) {
 	var tabScore = getTabScore();
+	var currentPlayer = getLastValue(getLocalStorage("currentPlayer"));
+	var currentRound = getLastValue(getLocalStorage("currentRound"));
+	var nbJoueur = getLocalStorage("nbJoueur");
+
 	for (var joueur in tabScore) {
 		if (point != 0) {
 			if (joueur == idColumn) {
@@ -451,9 +458,7 @@ function updateScore(idRow, idColumn, point) {
 			$('#' + joueur).text(nouveauScore);
 			tabScore[joueur].score.push(nouveauScore);
 		}
-		var currentPlayer = getLastValue(getLocalStorage("currentPlayer"));
-		var currentRound = getLastValue(getLocalStorage("currentRound"));
-		var nbJoueur = getLocalStorage("nbJoueur");
+		
 		if (joueur == idColumn) {
 			lastRound = parseInt(tabScore[joueur].stats[tabScore[joueur].stats.length - 1].split(";")[0], 10);
 			lastHit = parseInt(tabScore[joueur].stats[tabScore[joueur].stats.length - 1].split(";")[1], 10);
@@ -464,38 +469,39 @@ function updateScore(idRow, idColumn, point) {
 			$("#Stats_" + joueur).text(newStat);
 		}
 		else {
-			if (currentPlayer == 1) {
-				currentPlayer = nbJoueur;
-			}
-			else {
-				currentPlayer = currentPlayer - 1;
-			}
-			if (joueur[joueur.length - 1] == currentPlayer) {
-				lastRound = parseInt(tabScore[joueur].stats[tabScore[joueur].stats.length - 1].split(";")[0], 10);
-				lastHit = parseInt(tabScore[joueur].stats[tabScore[joueur].stats.length - 1].split(";")[1], 10);
-				newStat = lastHit / currentRound;
-				newStat = newStat.toFixed(2);
-				tabScore[joueur].stats.push(currentRound + ";" + lastHit + ";" + newStat);
-				if ($("#Stats_" + joueur).text() != newStat) {
-					$("#Stats_" + joueur).text(newStat);
+			if (idColumn == "null") {
+				if (joueur[joueur.length - 1] != currentPlayer) {
+					tabScore[joueur].stats.push(tabScore[joueur].stats[tabScore[joueur].stats.length - 1]);
+				}
+				else {
+					lastRound = parseInt(tabScore[joueur].stats[tabScore[joueur].stats.length - 1].split(";")[0], 10);
+					if (currentRound != lastRound) {
+						lastHit = parseInt(tabScore[joueur].stats[tabScore[joueur].stats.length - 1].split(";")[1], 10);
+						newStat = lastHit / currentRound;
+						newStat = newStat.toFixed(2);
+						tabScore[joueur].stats.push(currentRound + ";" + lastHit + ";" + newStat);
+						if ($("#Stats_" + joueur).text() != newStat) {
+							$("#Stats_" + joueur).text(newStat);
+						}
+					}
+					else {
+						tabScore[joueur].stats.push(tabScore[joueur].stats[tabScore[joueur].stats.length - 1]);
+					}
 				}
 			}
 			else {
-				lastRound = parseInt(tabScore[joueur].stats[tabScore[joueur].stats.length - 1].split(";")[0], 10);
-				lastHit = parseInt(tabScore[joueur].stats[tabScore[joueur].stats.length - 1].split(";")[1], 10);
-				newStat = lastHit / currentRound;
-				newStat = newStat.toFixed(2);
-				tabScore[joueur].stats.push(currentRound + ";" + lastHit + ";" + newStat);
+				tabScore[joueur].stats.push(tabScore[joueur].stats[tabScore[joueur].stats.length - 1]);
 			}
 		}
 	}
 	setTabScore(tabScore);
+	
 	if (point == 3) {
 		griserLigne(idRow);
 	}
-	if (point == 3 || point == 0) {
-		finish(idColumn);
-	}
+	// if (point == 3 || point == 0) {
+	// 	finish(idColumn);
+	// }
 }
 
 function refreshScreen() {
@@ -576,6 +582,7 @@ function refreshScreen() {
 		if ($("#Stats_" + joueur).text() != newStat) {
 			$("#Stats_" + joueur).text(newStat);
 		}
+		console.log("4 : " + joueur);
 	}
 	Object.keys(dict).forEach(function(key) {
 		griserLigne(key);
@@ -623,10 +630,12 @@ function griserLigne(idRow) {
 			"background-color": "black"
 		});
 	} else {
-		var currentPlayer = "Joueur_" + getLastValue(getLocalStorage("currentPlayer"));
+		var currentPlayer = getLastValue(getLocalStorage("currentPlayer"));
+		var currentNamePlayer = "Joueur_" + currentPlayer;
 		$(".Ligne_" + idRow).each(function(i, obj) {
-			var currentClassPlayer = $(obj).attr("class").substring(9, 17);
-			if (currentClassPlayer === currentPlayer) {
+			var currentClassPlayer = "Joueur_" + i;
+			//var currentClassPlayer = $(obj).attr("class").substring(9, 17);
+			if (currentClassPlayer === currentNamePlayer) {
 				$(obj).css({
 					"background-color": "#FF8800"
 				});
