@@ -18,6 +18,9 @@ html(lang="fr", dir="ltr")
       .table-responsive,.container {
         display: none;
       }
+      .modalEndGame {
+        display: none;
+      }
       .mymodal {
         display: block;
         position: fixed;
@@ -117,10 +120,6 @@ html(lang="fr", dir="ltr")
                     span(id="Stats_Joueur_#{countName}") 0.00
                 else 
                   div.col.Ligne_nom(class="Joueur_#{countName}")
-                    //button.btn.btn-danger.control_button(id="next", aria-label="Joueur suivant")
-                    //  span.glyphicon.glyphicon-play
-                    //button.btn.btn-primary.control_button(id="undo", aria-label="Annuler le dernier coup")
-                      //span.glyphicon.glyphicon-backward
                     span(id="round") 1
               when 1
                 if countName > 0
@@ -139,6 +138,7 @@ html(lang="fr", dir="ltr")
             - countName++;
         - countItem++;
     footer
+      div.modalEndGame
       script.
         var css = document.createElement('link');
         css.rel = 'stylesheet';
@@ -153,13 +153,6 @@ html(lang="fr", dir="ltr")
         css2.type = 'text/css';
         var link2 = document.getElementsByTagName('link')[0];
         link2.parentNode.insertBefore(css2, link2);
-        
-        // var css3 = document.createElement('link');
-        // css3.rel = 'stylesheet';
-        // css3.href = '/styles/toasdiv.min.css';
-        // css3.type = 'text/css';
-        // var link3 = document.getElementsByTagName('link')[0];
-        // link3.parentNode.insertBefore(css3, link3);
         
         if('serviceWorker' in navigator) {
           window.addEventListener("load", function () {

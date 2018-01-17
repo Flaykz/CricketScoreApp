@@ -44,6 +44,7 @@ html, body, .table-responsive {
 
 .Joueur_0 {
     /*width: 15vw;*/
+    max-width: 30vw;
     font-size: 5vmin;
     background-color: #ce4242;
 }
