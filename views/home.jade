@@ -112,11 +112,11 @@ html(lang="fr", dir="ltr")
             case countItem
               when 0
                 if countName > 0
-                  div.col(class="Joueur_#{countName} Ligne_#{item}")
+                  div.col.Ligne_nom(class="Joueur_#{countName}")
                     input.text-center.joueur(type="text", name="Joueur_#{countName}", value="#{name}", aria-label="Nom du joueur")
                     span(id="Stats_Joueur_#{countName}") 0.00
                 else 
-                  div.col.control_grid(class="Joueur_#{countName}")
+                  div.col.Ligne_nom(class="Joueur_#{countName}")
                     //button.btn.btn-danger.control_button(id="next", aria-label="Joueur suivant")
                     //  span.glyphicon.glyphicon-play
                     //button.btn.btn-primary.control_button(id="undo", aria-label="Annuler le dernier coup")
@@ -124,10 +124,10 @@ html(lang="fr", dir="ltr")
                     span(id="round") 1
               when 1
                 if countName > 0
-                  div.col(class="Joueur_#{countName} Ligne_score")
+                  div.col.Ligne_score(class="Joueur_#{countName}")
                     span(id="Joueur_#{countName}") 0
                 else 
-                  div.col(class="Joueur_#{countName} Ligne_#{item}")
+                  div.col.Ligne_score(class="Joueur_#{countName}")
                     span #{item}
               default
                 if countName > 0

@@ -8,7 +8,7 @@ $(function() {
 		nbJoueur = nbJoueur + 1;
 		if (nbJoueur < 10) {
 			var chaine = "Joueur_" + nbJoueur;
-			var stats = ["0;0"];
+			var stats = ["1;0;0.00"];
 			var monJoueur = new Joueur(chaine, stats, [0], [0], [0], [0], [0], [0], [0], [0]);
 			tabScore[chaine] = monJoueur;
 			setTabScore(tabScore);
@@ -166,7 +166,7 @@ $(window).on("load", function () {
 
 
 function init() {
-	var monJoueur = new Joueur("Joueur_1", ["0;0"], [0], [0], [0], [0], [0], [0], [0], [0]);
+	var monJoueur = new Joueur("Joueur_1", ["1;0;0.00"], [0], [0], [0], [0], [0], [0], [0], [0]);
 	var tabScore = {
 		"Joueur_1": monJoueur
 	};
@@ -455,11 +455,12 @@ function updateScore(idRow, idColumn, point) {
 		var currentRound = getLastValue(getLocalStorage("currentRound"));
 		var nbJoueur = getLocalStorage("nbJoueur");
 		if (joueur == idColumn) {
-			lastHit = parseInt(tabScore[joueur].stats[tabScore[joueur].stats.length - 1].split(";")[0], 10);
+			lastRound = parseInt(tabScore[joueur].stats[tabScore[joueur].stats.length - 1].split(";")[0], 10);
+			lastHit = parseInt(tabScore[joueur].stats[tabScore[joueur].stats.length - 1].split(";")[1], 10);
 			newHit = lastHit + 1;
 			newStat = newHit / currentRound;
 			newStat = newStat.toFixed(2);
-			tabScore[joueur].stats.push(newHit + ";" + newStat);
+			tabScore[joueur].stats.push(currentRound + ";" + newHit + ";" + newStat);
 			$("#Stats_" + joueur).text(newStat);
 		}
 		else {
@@ -470,19 +471,21 @@ function updateScore(idRow, idColumn, point) {
 				currentPlayer = currentPlayer - 1;
 			}
 			if (joueur[joueur.length - 1] == currentPlayer) {
-				lastHit = parseInt(tabScore[joueur].stats[tabScore[joueur].stats.length - 1].split(";")[0], 10);
+				lastRound = parseInt(tabScore[joueur].stats[tabScore[joueur].stats.length - 1].split(";")[0], 10);
+				lastHit = parseInt(tabScore[joueur].stats[tabScore[joueur].stats.length - 1].split(";")[1], 10);
 				newStat = lastHit / currentRound;
 				newStat = newStat.toFixed(2);
-				tabScore[joueur].stats.push(lastHit + ";" + newStat);
+				tabScore[joueur].stats.push(currentRound + ";" + lastHit + ";" + newStat);
 				if ($("#Stats_" + joueur).text() != newStat) {
 					$("#Stats_" + joueur).text(newStat);
 				}
 			}
 			else {
-				lastHit = parseInt(tabScore[joueur].stats[tabScore[joueur].stats.length - 1].split(";")[0], 10);
+				lastRound = parseInt(tabScore[joueur].stats[tabScore[joueur].stats.length - 1].split(";")[0], 10);
+				lastHit = parseInt(tabScore[joueur].stats[tabScore[joueur].stats.length - 1].split(";")[1], 10);
 				newStat = lastHit / currentRound;
 				newStat = newStat.toFixed(2);
-				tabScore[joueur].stats.push(lastHit + ";" + newStat);
+				tabScore[joueur].stats.push(currentRound + ";" + lastHit + ";" + newStat);
 			}
 		}
 	}
@@ -567,7 +570,7 @@ function refreshScreen() {
 		}
 		var currentPlayer = getLastValue(getLocalStorage("currentPlayer"));
 		var currentRound = getLastValue(getLocalStorage("currentRound"));
-		lastHit = parseInt(tabScore[joueur].stats[tabScore[joueur].stats.length - 1].split(";")[0], 10);
+		lastHit = parseInt(tabScore[joueur].stats[tabScore[joueur].stats.length - 1].split(";")[1], 10);
 		newStat = lastHit / currentRound;
 		newStat = newStat.toFixed(2);
 		if ($("#Stats_" + joueur).text() != newStat) {

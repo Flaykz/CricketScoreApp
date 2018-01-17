@@ -45,6 +45,15 @@ html, body, .table-responsive {
 .Joueur_0 {
     /*width: 15vw;*/
     font-size: 5vmin;
+    background-color: #ce4242;
+}
+
+.Joueur_0.Ligne_score {
+    background-color: #6464ec;
+}
+
+.Joueur_0.Ligne_nom {
+    background-color: #6464ec;
 }
 
 /*.control_grid {*/
@@ -63,7 +72,7 @@ html, body, .table-responsive {
 /*}*/
 
 .scoreGrid {
-    height: 90%;
+    /*height: 90%;*/
 }
 
 input {
@@ -71,28 +80,3 @@ input {
     background: transparent;
     width: 100%;
 }
-
-/*.resizable{ */
-/*    overflow: hidden;*/
-/*    resize: both;*/
-/*}*/
-
-/*.draggable{*/
-/*    position: absolute;*/
-/*    z-index: 100;*/
-/*    width: 15vw;*/
-/*}*/
-
-/*.draggable-handler{*/
-/*    padding: 20px;*/
-/*    cursor: move;*/
-/*}*/
-
-/*.draggable-handler:hover{*/
-/*    background-color: black;*/
-/*}*/
-
-/*.dragging{*/
-/*    cursor: move;*/
-/*    z-index: 200 !important;*/
-/*}*/
