@@ -174,38 +174,29 @@ function finish() {
 	var tabScore = getTabScore();
 	var testScore = [];
 	var minScore = [];
-	var indexArray = [];
+	var winner = "";
 	var currentRound = parseInt(getLastValue(getLocalStorage("currentRound")), 10);
-	var currentPlayer = parseInt(getLastValue(getLocalStorage("currentPlayer")), 10);
 	for (var joueur in tabScore) {
 		var full = getLastValue(tabScore[joueur].s20) + getLastValue(tabScore[joueur].s19) + getLastValue(tabScore[joueur].s18) + getLastValue(tabScore[joueur].s17) + getLastValue(tabScore[joueur].s16) + getLastValue(tabScore[joueur].s15) + getLastValue(tabScore[joueur].sbull); 
 		testScore.push(tabScore[joueur].nom + "," + getLastValue(tabScore[joueur].score) + "," + full);
 		minScore.push(getLastValue(tabScore[joueur].score));
 	}
 	var min = arrayMin(minScore);
-	var index = minScore.indexOf(min);
-	while (index != -1) {
-		indexArray.push(index);
-		var index = minScore.indexOf(min, index + 1);
-	}
-	lenTab = indexArray.length;
+	var indexArray = allIndexOf(minScore, min);
+	var lenTab = indexArray.length;
 	
 	if (currentRound == 21) {
 		if (lenTab > 1) {
-			var winner = "";
 			for (var i = 0; i < lenTab; i++) {
 				winner = winner + " " + testScore[indexArray[i]].split(",")[0];
 			}
-			alert("winner are :" + winner);
-			window.location.reload();
+			drawWinPlayer("winner are :" + winner);
 		}
 		else {
-			alert("winner is :" + testScore[indexArray[0]].split(",")[0]);
-			window.location.reload();
+			drawWinPlayer("winner is :" + testScore[indexArray[0]].split(",")[0]);
 		}
 	}
 	else {
-		var winner = "";
 		var count = 0;
 		var win = false;
 		for (var i = 0; i < lenTab; i++) {
@@ -217,12 +208,10 @@ function finish() {
 		}
 		if (win) {
 			if (count > 1) {
-				alert("winner are :" + winner);
-				window.location.reload();
+				drawWinPlayer("winner are :" + winner);
 			}
 			if (count == 1) {
-				alert("winner is :" + winner);
-				window.location.reload();
+				drawWinPlayer("winner is :" + winner);
 			}
 		}
 	}
@@ -304,6 +293,33 @@ function arrayMin(arr) {
 	}
 	return min;
 };
+
+function allIndexOf(arr, el) {
+	var indexArray = [];
+	var index = arr.indexOf(el);
+	while (index != -1) {
+		indexArray.push(index);
+		var index = arr.indexOf(el, index + 1);
+	}
+	return indexArray;
+}
+
+function drawWinPlayer(winner) {
+	$('.table-responsive').css("pointer-events", "none");
+	$('.table-responsive').css("cursor", "default");
+	var modalStart = "<div role='dialog' class='mymodal'><div class='mymodal-dialog'><div class='mymodal-content'><div class='mymodal-body'>";
+	//var modalEnd = "</div><div class='mymodal-footer'><button data-dismiss='modal' id='reset' aria-label='reset'><span class='glyphicon glyphicon-plus'>Reset</span></button><button data-dismiss='modal' id='revanche' aria-label='revanche'><span class='glyphicon glyphicon-minus'>Revanche</span></button></div></div></div></div>";
+	var modalEnd = "</div><div class='mymodal-footer'><button data-dismiss='modal' id='newPartie' aria-label='Nouvelle partie'>Nouvelle partie</button></div></div></div></div>";
+	$(".modalEndGame").html(modalStart + winner + modalEnd);
+	$(".modalEndGame").css("display", "block");
+	$(".modalEndGame").on("click",function() {
+		drawModalEndGame();
+	});
+}
+
+function drawModalEndGame() {
+	window.location.reload();
+}
 
 function updateScore(idRow, idColumn, point) {
 	var tabScore = getTabScore();
