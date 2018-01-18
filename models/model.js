@@ -59,15 +59,9 @@ $(function() {
 		}
 	})
 	$("#startGame").click(function() {
-		$('.mymodal').css("display", "none");
-		$('.table-responsive').css("pointer-events", "initial");
-		$('.table-responsive').css("cursor", "initial");
-		$(".Joueur_1").css({
-			"background-color": "#FF8800"
-		});
-		setLocalStorage("currentPlayer", ["1"]);
-		setLocalStorage("currentRound", ["1"]);
+		startGame();
 	})
+
 	$(".Joueur_0").click(function() {
 		var row = $(this).attr("class");
 		if (row.match("Ligne_(20|19|18|17|16|15|Bull)")) {
@@ -162,12 +156,31 @@ $(window).on("load", function () {
 
 
 function init() {
-	var monJoueur = new Joueur("Joueur_1", ["0;0;0.00"], [0], [0], [0], [0], [0], [0], [0], [0]);
-	var tabScore = {
-		"Joueur_1": monJoueur
-	};
-	setTabScore(tabScore);
-	setNbJoueur("1");
+	var href = window.location.href;
+	var hostname = window.location.hostname;
+	var path = href.replace("https://" + hostname, "");
+	if (path == "/") {
+		var monJoueur = new Joueur("Joueur_1", ["0;0;0.00"], [0], [0], [0], [0], [0], [0], [0], [0]);
+		var tabScore = {
+			"Joueur_1": monJoueur
+		};
+		setTabScore(tabScore);
+		setNbJoueur("1");
+	}
+	else {
+		path = path.replace("/?", "");
+		var listPlayer = path.split("&");
+		var tabScore = new Object();
+		for (var i = 0; i < listPlayer.length; i++) {
+			var cle = "Joueur_" + parseInt(i + 1);
+			var nomJoueur = $("input[name='" + cle + "']").attr("value");
+			var monJoueur = new Joueur(nomJoueur, ["0;0;0.00"], [0], [0], [0], [0], [0], [0], [0], [0]);
+			tabScore[cle] = monJoueur;
+		}
+		setNbJoueur(i);
+		setTabScore(tabScore);
+		startGame();
+	}
 }
 
 function finish() {
@@ -276,11 +289,11 @@ function getLocalStorage(nomVar) {
 	return JSON.parse(localStorage.getItem(nomVar));
 }
 
-function getLastValue(obj) {
-	if (obj.length > 1) {
-		return obj[obj.length - 1];
+function getLastValue(arr) {
+	if (arr.length > 1) {
+		return arr[arr.length - 1];
 	} else {
-		return obj[0];
+		return arr[0];
 	}
 }
 
@@ -304,21 +317,56 @@ function allIndexOf(arr, el) {
 	return indexArray;
 }
 
+function sortByScoreAsc(key1, key2) {
+	return getLastValue(key1.score) > getLastValue(key2.score);
+}
+
+function sortByScoreDsc(key1, key2) {
+	return getLastValue(key1.score) < getLastValue(key2.score);
+}
+
+function objectToTab(obj) {
+	var tab = [];
+	for (var item in obj) {
+		tab.push(obj[item]);
+	}
+	return tab;
+}
+
 function drawWinPlayer(winner) {
 	$('.table-responsive').css("pointer-events", "none");
 	$('.table-responsive').css("cursor", "default");
-	var modalStart = "<div role='dialog' class='mymodal'><div class='mymodal-dialog'><div class='mymodal-content'><div class='mymodal-body'>";
-	//var modalEnd = "</div><div class='mymodal-footer'><button data-dismiss='modal' id='reset' aria-label='reset'><span class='glyphicon glyphicon-plus'>Reset</span></button><button data-dismiss='modal' id='revanche' aria-label='revanche'><span class='glyphicon glyphicon-minus'>Revanche</span></button></div></div></div></div>";
-	var modalEnd = "</div><div class='mymodal-footer'><button data-dismiss='modal' id='newPartie' aria-label='Nouvelle partie'>Nouvelle partie</button></div></div></div></div>";
+	var modalStart = "<div class='mymodal-dialog'><div class='mymodal-content'><div class='mymodal-body'>";
+	var modalEnd = "</div><div class='mymodal-footer'><button id='revengeGame' aria-label='Revenge'>Revenge</button><button id='restartGame' aria-label='Restart'>Restart</button></div></div></div>";
 	$(".modalEndGame").html(modalStart + winner + modalEnd);
 	$(".modalEndGame").css("display", "block");
-	$(".modalEndGame").on("click",function() {
-		drawModalEndGame();
+	var url = "https://" + window.location.hostname;
+	$("#restartGame").on("click",function() {
+		window.location.assign(url);
 	});
+	$("#revengeGame").on("click",function() {
+		var tabScore = getTabScore();
+		var path = "/?";
+		var tab = objectToTab(tabScore).sort(sortByScoreDsc);
+		for (var i = 1; i < tab.length + 1; i++) {
+			path = path + "&p" + i + "=" + tab[i - 1].nom;
+			if (i == 1) {
+				path = path.replace("&", "");
+			}
+		}
+		window.location.assign(url + path);
+	})
 }
 
-function drawModalEndGame() {
-	window.location.reload();
+function startGame() {
+	$('.mymodal').css("display", "none");
+	$('.table-responsive').css("pointer-events", "initial");
+	$('.table-responsive').css("cursor", "initial");
+	$(".Joueur_1").css({
+		"background-color": "#FF8800"
+	});
+	setLocalStorage("currentPlayer", ["1"]);
+	setLocalStorage("currentRound", ["1"]);
 }
 
 function updateScore(idRow, idColumn, point) {
