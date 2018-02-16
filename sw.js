@@ -45,13 +45,16 @@ self.addEventListener('activate', function(event) {
 });
 
 self.addEventListener('fetch', function(event) {
+  console.log('fetchevent: request url before : ', event.request.url);
+  event.request.url = event.request.url.replace('\/\?.*', '/');
+  console.log('fetchevent: request url after : ', event.request.url);
   if (event.request.method !== 'GET') {
     console.log('fetch event ignored.', event.request.method, event.request.url);
     return;
   } 
     
   event.respondWith(
-    caches.match(event.request)
+    caches.match(event.request, { 'ignoreSearch': true })
     .then(function(cached) {
       var networked = fetch(event.request)
       .then(fetchedFromNetwork, unableToResolve)

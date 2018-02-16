@@ -139,32 +139,41 @@ function init() {
 	var href = window.location.href;
 	var hostname = window.location.hostname;
 	var path = href.replace("https://" + hostname, "");
+	var nbJoueur = "1";
+	var tabScore = new Object();
 	if (path == "/") {
-		var monJoueur = new Joueur("Joueur_1", ["0;0;0.00"], [0], [0], [0], [0], [0], [0], [0], [0]);
-		var tabScore = {
-			"Joueur_1": monJoueur
-		};
-		setTabScore(tabScore);
-		setNbJoueur("1");
-		for (var i = 2; i < 5; i++) {
-			var chaine = ".Joueur_" + i;
-			$(chaine).css("display", "none");
+		for (var i = 1; i < 5; i++) {
+			var nomJoueur = "Joueur_" + i;
+			$("input[name='" + nomJoueur + "']").attr("value", nomJoueur);
 		}
+		var monJoueur = new Joueur(nomJoueur, ["0;0;0.00"], [0], [0], [0], [0], [0], [0], [0], [0]);
+		tabScore["Joueur_1"] = monJoueur;
 	}
 	else {
 		path = path.replace("/?", "");
 		var listPlayer = path.split("&");
-		var tabScore = new Object();
 		for (var i = 0; i < listPlayer.length; i++) {
 			var cle = "Joueur_" + parseInt(i + 1);
-			$("." + cle).css("display", "");
-			var nomJoueur = $("input[name='" + cle + "']").attr("value");
+			var nomJoueur = listPlayer[i].split("=")[1]
+			$("input[name='" + cle + "']").attr("value", nomJoueur);
 			var monJoueur = new Joueur(nomJoueur, ["0;0;0.00"], [0], [0], [0], [0], [0], [0], [0], [0]);
 			tabScore[cle] = monJoueur;
 		}
-		setNbJoueur(i);
-		setTabScore(tabScore);
+		nbJoueur = i;
 		startGame();
+		history.pushState({Title: "accueil", Url: "/"}, "accueil", "/");
+	}
+	
+	setTabScore(tabScore);
+	setNbJoueur(nbJoueur);
+	
+	for (var i = 1; i < 5; i++) {
+		var chaine = ".Joueur_" + i;
+		if (i > parseInt(nbJoueur)) {
+			$(chaine).css("display", "none");
+		} else {
+			$(chaine).css("display", "");
+		}
 	}
 }
 
