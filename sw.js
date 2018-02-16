@@ -2,6 +2,7 @@ var version = 'v1::';
 var CACHE_NAME = 'cricket-cache';
 var urlsToCache = [
   '/',
+  '/sw.js',
   '/manifest.json',
   '/config.js',
   '/styles/style.css',

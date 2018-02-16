@@ -1,42 +1,25 @@
 $(function() {
 	init();
+	
 	$('#addPlayer').click(function() {
 		var tabScore = getTabScore();
 		var nbJoueur = getNbJoueur();
 		var indexJoueur = nbJoueur;
 		var chaineBefore = "Joueur_" + nbJoueur;
 		nbJoueur = nbJoueur + 1;
-		if (nbJoueur < 10) {
+		if (nbJoueur < 5) {
 			var chaine = "Joueur_" + nbJoueur;
 			var stats = ["0;0;0.00"];
 			var monJoueur = new Joueur(chaine, stats, [0], [0], [0], [0], [0], [0], [0], [0]);
 			tabScore[chaine] = monJoueur;
 			setTabScore(tabScore);
 			setNbJoueur(nbJoueur);
-			for (var i = 0; i < 9; i++) {
-				var temp = ".row:eq(" + i + ") .col:eq(" + indexJoueur + ")";
-				var data = $(temp).clone(true).insertAfter(temp);
-				temp = data.attr("class");
-				data.attr("class", temp.replace(chaineBefore, chaine));
-				if (i === 0) {
-					data.find("input").val(chaine);
-					data.find("input").attr("name", chaine);
-					data.find("input").attr("value", chaine);
-					data.find("span").attr("id", "Stats_" + chaine);
-				}
-				if (i === 1) {
-					data.find("span").attr("id", chaine);
-				}
-				if (i > 1) {
-					var temp = data.find(".scoreGrid").attr("id");
-					data.find(".scoreGrid").attr("id", temp.replace(chaineBefore, chaine));
-				}
-			}
+			$("." + chaine).css("display", "");
 			$('.mymodal-title').text("Nombre de joueurs : " + nbJoueur);
 			//$('.col').css("max-width", 90 / nbJoueur + "vw");
 		}
 		else {
-			alert("Impossible to add more than 9 players");
+			alert("Impossible to add more than 4 players");
 		}
 	})
 	$('#deletePlayer').click(function() {
@@ -44,10 +27,7 @@ $(function() {
 		var chaine = "Joueur_" + nbJoueur;
 		var tabScore = getTabScore();
 		if (nbJoueur > 1) {
-			for (var i = 0; i < 9; i++) {
-				var temp = ".row:eq(" + i + ") .col:eq(" + nbJoueur + ")";
-				var data = $(temp).remove();
-			}
+			$("." + chaine).css("display", "none");
 			nbJoueur = nbJoueur - 1;
 			setNbJoueur(nbJoueur);
 			delete tabScore[chaine];
@@ -166,6 +146,10 @@ function init() {
 		};
 		setTabScore(tabScore);
 		setNbJoueur("1");
+		for (var i = 2; i < 5; i++) {
+			var chaine = ".Joueur_" + i;
+			$(chaine).css("display", "none");
+		}
 	}
 	else {
 		path = path.replace("/?", "");
@@ -173,6 +157,7 @@ function init() {
 		var tabScore = new Object();
 		for (var i = 0; i < listPlayer.length; i++) {
 			var cle = "Joueur_" + parseInt(i + 1);
+			$("." + cle).css("display", "");
 			var nomJoueur = $("input[name='" + cle + "']").attr("value");
 			var monJoueur = new Joueur(nomJoueur, ["0;0;0.00"], [0], [0], [0], [0], [0], [0], [0], [0]);
 			tabScore[cle] = monJoueur;
