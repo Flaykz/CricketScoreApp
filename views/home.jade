@@ -113,6 +113,8 @@ html(lang="fr", dir="ltr")
             div.mymodal-footer
               button(data-dismiss="modal", id="startGame", aria-label="Lancer la partie") Start game
     div.loader
+    div.toast
+      span(id="toast")
     div.table-responsive.container
       - var countItem = 0;
       each item in pageData.item
