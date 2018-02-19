@@ -57,8 +57,24 @@ html, body, .table-responsive {
     background-color: #6464ec;
 }
 
-.scoreGrid {
-    /*height: 90%;*/
+.toast {
+    display: none;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+}
+
+#toast {
+    border: 1px solid rgba(0,0,0,.2);
+    border-radius: 6px;
+    background-color: #fff;
+    box-shadow: 0 3px 9px rgba(0,0,0,.5);
+    margin-top: 5vh;
+    margin-bottom: auto;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 10px;
+    font-size: 7vmin;
 }
 
 input {
