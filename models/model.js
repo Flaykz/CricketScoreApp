@@ -19,7 +19,7 @@ $(function() {
 			//$('.col').css("max-width", 90 / nbJoueur + "vw");
 		}
 		else {
-			alert("Impossible to add more than 4 players");
+			showToast("Impossible to add more than 4 players", 2);
 		}
 	})
 	$('#deletePlayer').click(function() {
@@ -35,7 +35,7 @@ $(function() {
 			$('.mymodal-title').text("Nombre de joueurs : " + nbJoueur);
 			//$('.col').css("max-width", 90 / nbJoueur + "vw");
 		} else {
-			alert("Sorry!! Can't remove first player!");
+			showToast("Sorry!! Can't remove first player!", 2);
 		}
 	})
 	$("#startGame").click(function() {
@@ -121,8 +121,7 @@ $(function() {
 			updateScore(idRow, idColumn, point);
 		}
 		else {
-			alert("You must click on the column of the actual player (orange), to switch, click on the Red button at the top left");
-			//toastr.info("Il n'est possible de cliquer que sur le joueur en cours, pour en changer, cliquez sur <<Joueur suivant>>");
+			showToast("You must click on the column of the actual player (orange), to switch, click on the Red button at the top left", 0);
 		}
 	})
 });
@@ -575,7 +574,7 @@ function refreshScreen() {
 		currentPlayer.pop();
 	}
 	else {
-		alert("Sorry!! Can't go more backward !");
+		showToast("Sorry!! Can't go more backward !", 2);
 	}
 	setLocalStorage("currentPlayer", currentPlayer);
 	setLocalStorage("currentRound", currentRound);
@@ -771,47 +770,18 @@ function drawSVG(svgid, joueur) {
 	}
 }
 
-function dragElement(elmnt) {
-  var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-  if (document.getElementById(elmnt.id + "header")) {
-    /* if present, the header is where you move the DIV from:*/
-    document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
-  } else {
-    /* otherwise, move the DIV from anywhere inside the DIV:*/
-    elmnt.onmousedown = dragMouseDown;
-  }
-
-  function dragMouseDown(e) {
-    e = e || window.event;
-    // get the mouse cursor position at startup:
-    pos3 = e.clientX;
-    pos4 = e.clientY;
-    document.onmouseup = closeDragElement;
-    // call a function whenever the cursor moves:
-    document.onmousemove = elementDrag;
-  }
-
-  function elementDrag(e) {
-    e = e || window.event;
-    // calculate the new cursor position:
-    pos1 = pos3 - e.clientX;
-    pos2 = pos4 - e.clientY;
-    pos3 = e.clientX;
-    pos4 = e.clientY;
-    // set the element's new position:
-    elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
-    elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
-  }
-
-  function closeDragElement() {
-    /* stop moving when mouse button is released:*/
-    document.onmouseup = null;
-    document.onmousemove = null;
-  }
+function showToast(message, timeout) {
+	$('#toast').text(message);
+	$('.toast').css('display', 'flex').hide().fadeIn('slow');
+	if (parseInt(timeout) != 0) {
+		timeout = parseInt(timeout) * 1000;
+		res = setTimeout(hideToast, timeout);
+	}
 }
 
-function stopDragging() {
-  drag = $(this).closest('.draggable')
-  drag.removeClass('dragging')
-  $(this).off('mousemove')
+function hideToast() {
+  var display = $('.toast').css('display');
+  if (display == 'flex') {
+	  $('.toast').fadeOut("slow");
+  }
 }

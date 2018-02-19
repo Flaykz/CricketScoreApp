@@ -146,27 +146,4 @@ html(lang="fr", dir="ltr")
         - countItem++;
     footer
       div.modalEndGame(role="dialog")
-      script.
-        var css = document.createElement('link');
-        css.rel = 'stylesheet';
-        css.href = '/styles/style.css';
-        css.type = 'text/css';
-        var link = document.getElementsByTagName('link')[0];
-        link.parentNode.insertBefore(css, link);
-        
-        var css2 = document.createElement('link');
-        css2.rel = 'stylesheet';
-        css2.href = 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css';
-        css2.type = 'text/css';
-        var link2 = document.getElementsByTagName('link')[0];
-        link2.parentNode.insertBefore(css2, link2);
-        
-        if('serviceWorker' in navigator) {
-          window.addEventListener("load", function () {
-            navigator.serviceWorker.register('/sw.js').then(function(regisdivation) { 
-              console.log("Service Worker Registered with scope: ", regisdivation.scope);
-              }, function(err) {
-                console.log('ServiceWorker regisdivation failed: ', err);
-              });
-          });
-        }
+      script(defer, src='/js/home.js')
