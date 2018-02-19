@@ -142,12 +142,12 @@ function init() {
 	var nbJoueur = "1";
 	var tabScore = new Object();
 	if (path == "/") {
+		var monJoueur = new Joueur("Joueur_1", ["0;0;0.00"], [0], [0], [0], [0], [0], [0], [0], [0]);
+		tabScore["Joueur_1"] = monJoueur;
 		for (var i = 1; i < 5; i++) {
 			var nomJoueur = "Joueur_" + i;
 			$("input[name='" + nomJoueur + "']").attr("value", nomJoueur);
 		}
-		var monJoueur = new Joueur(nomJoueur, ["0;0;0.00"], [0], [0], [0], [0], [0], [0], [0], [0]);
-		tabScore["Joueur_1"] = monJoueur;
 	}
 	else {
 		path = path.replace("/?", "");

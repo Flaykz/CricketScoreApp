@@ -46,31 +46,37 @@ self.addEventListener('activate', function(event) {
 
 self.addEventListener('fetch', function(event) {
   console.log('fetchevent: request url before : ', event.request.url);
-  event.request.url = event.request.url.replace('\/\?.*', '/');
-  console.log('fetchevent: request url after : ', event.request.url);
-  if (event.request.method !== 'GET') {
-    console.log('fetch event ignored.', event.request.method, event.request.url);
+  var urlStripped = event.request.url.split("?")[0];
+  if (urlStripped == "https://dev.flaykz.ovh/") {
+    var req = new Request(urlStripped);
+  }
+  else {
+    var req = event.request;
+  }
+  
+  if (req.method !== 'GET') {
+    console.log('fetch event ignored.', req.method, req.url);
     return;
   } 
     
   event.respondWith(
-    caches.match(event.request, { 'ignoreSearch': true })
+    caches.match(req, { 'ignoreSearch': true })
     .then(function(cached) {
-      var networked = fetch(event.request)
+      var networked = fetch(req)
       .then(fetchedFromNetwork, unableToResolve)
       .catch(unableToResolve);
-      console.log('fetch event', cached ? '(cached)' : '(network)', event.request.url);
+      console.log('fetch event', cached ? '(cached)' : '(network)', req.url);
       return cached || networked;
       
       function fetchedFromNetwork(response) {
         var cacheCopy = response.clone();
-        console.log('fetch response from network.', event.request.url);
+        console.log('fetch response from network.', req.url);
         caches.open(version + CACHE_NAME)
         .then(function add(cache) {
-          cache.put(event.request, cacheCopy);
+          cache.put(req, cacheCopy);
         })
         .then(function() {
-          console.log('fetch response stored in cache.', event.request.url);
+          console.log('fetch response stored in cache.', req.url);
         });
         return response;
       }
