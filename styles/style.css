@@ -75,6 +75,7 @@ html, body, .table-responsive {
     margin-right: auto;
     padding: 10px;
     font-size: 7vmin;
+    max-width: 80%;
 }
 
 input {
