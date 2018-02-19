@@ -121,8 +121,12 @@ $(function() {
 			updateScore(idRow, idColumn, point);
 		}
 		else {
-			showToast("You must click on the column of the actual player (orange), to switch, click on the Red button at the top left", 0);
+			showToast("You must click on the column of the actual player (orange), to switch, click on Red", 0);
 		}
+	})
+	
+	$('.toast').click(function() {
+		$(this).fadeOut("slow");
 	})
 });
 
