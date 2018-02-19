@@ -15,20 +15,20 @@ module.exports.controller = function(app) {
       if (params.length > 0) {
         res.render('home', {
           title: config.title,
-          pageData: {item: config.item, name: params}
+          pageData: {item: config.item, name: params, colour: config.colour}
         });
       }
       else {
         res.render('home', {
           title: config.title,
-          pageData: {item: config.item, name: config.name}
+          pageData: {item: config.item, name: config.name, colour: config.colour}
         });
       }
     }
     else {
       res.render('home', {
         title: config.title,
-        pageData: {item: config.item, name: config.name}
+        pageData: {item: config.item, name: config.name, colour: config.colour}
       });
     }
   });

@@ -57,6 +57,11 @@ html, body, .table-responsive {
     background-color: #6464ec;
 }
 
+div .colour-choice {
+    display: flex;
+    flex-direction: row;
+}
+
 .toast {
     display: none;
     position: fixed;

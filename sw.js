@@ -5,7 +5,7 @@ var urlsToCache = [
   '/sw.js',
   '/manifest.json',
   '/config.js',
-  '/home.js',
+  '/js/home.js',
   '/styles/style.css',
   'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css',
   '/models/model.js',

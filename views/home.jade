@@ -105,6 +105,11 @@ html(lang="fr", dir="ltr")
           div.mymodal-content
             div.mymodal-header
               p.mymodal-title Add or Del players
+            div.colour-choice
+              - var countColor = 1;
+              each colour in pageData.colour
+                input.colour-choice(class='Joueur_#{countColor}', type='color', value=colour)
+                - countColor++;
             div.mymodal-body
               button(id="addPlayer", aria-label="Ajouter joueur") 
                 span.glyphicon.glyphicon-plus Add Player

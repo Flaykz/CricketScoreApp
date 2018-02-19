@@ -16,7 +16,11 @@ $(function() {
 			setNbJoueur(nbJoueur);
 			$("." + chaine).css("display", "");
 			$('.mymodal-title').text("Nombre de joueurs : " + nbJoueur);
-			//$('.col').css("max-width", 90 / nbJoueur + "vw");
+			var value = $('.colour-choice .' + chaine).val();
+			var colour = {};
+			colour = getLocalStorage('colour');
+			colour[chaine] = value;
+			setLocalStorage('colour', colour);
 		}
 		else {
 			showToast("Impossible to add more than 4 players", 2);
@@ -33,7 +37,6 @@ $(function() {
 			delete tabScore[chaine];
 			setTabScore(tabScore);
 			$('.mymodal-title').text("Nombre de joueurs : " + nbJoueur);
-			//$('.col').css("max-width", 90 / nbJoueur + "vw");
 		} else {
 			showToast("Sorry!! Can't remove first player!", 2);
 		}
@@ -88,13 +91,22 @@ $(function() {
 		}
 	})
 	
-	$("input").change(function() {
+	$("row input").change(function() {
 		var name = $(this).attr("name");
 		var value = $(this).val();
 		$(this).attr("value", value);
 		var tabScore = getTabScore();
 		tabScore[name].nom = value;
 		setTabScore(tabScore);
+	})
+	
+	$(".colour-choice input").change(function() {
+		var joueur = $(this).attr("class").replace('colour-choice ', '');
+		var value = $(this).val();
+		var colour = {};
+		colour = getLocalStorage('colour');
+		colour[joueur] = value;
+		setLocalStorage('colour', colour);
 	})
 
 	$('.case').click(function() {
@@ -135,8 +147,12 @@ $(window).on("load", function () {
 	$('.table-responsive').css("display", "flex");
 	// $('.loader').css("display", "none");
 	$('.loader').fadeOut("slow");
+	var value = $('.colour-choice .Joueur_1').val();
+	var colour = {};
+	colour = getLocalStorage('colour');
+	colour['Joueur_1'] = value;
+	setLocalStorage('colour', colour);
 });
-
 
 function init() {
 	var href = window.location.href;
@@ -716,37 +732,40 @@ function drawSVG(svgid, joueur) {
 	var strokeWidth = 8;
 	var min = strokeWidth + ((strokeWidth - 7) * -2);
 	var max = widthHeight - min;
-	switch (joueur) {
-		case "Joueur_1":
-			var strokeColour = "#ffff00";
-			break;
-		case "Joueur_2":
-			var strokeColour = "#00ff00";
-			break;
-		case "Joueur_3":
-			var strokeColour = "#00ffff";
-			break;
-		case "Joueur_4":
-			var strokeColour = "#0000ff";
-			break;
-		case "Joueur_5":
-			var strokeColour = "#8000ff";
-			break;
-		case "Joueur_6":
-			var strokeColour = "#ff00bf";
-			break;
-		case "Joueur_7":
-			var strokeColour = "#ff0000";
-			break;
-		case "Joueur_8":
-			var strokeColour = "#008000";
-			break;
-		case "Joueur_9":
-			var strokeColour = "#000000";
-			break;
-		default:
-			var strokeColour = "#000000";
-	}
+	var colour = {};
+	colour = getLocalStorage('colour');
+	var strokeColour = colour[joueur];
+	// switch (joueur) {
+	// 	case "Joueur_1":
+	// 		var strokeColour = colour[joueur];
+	// 		break;
+	// 	case "Joueur_2":
+	// 		var strokeColour = colour[joueur];
+	// 		break;
+	// 	case "Joueur_3":
+	// 		var strokeColour = colour[joueur];
+	// 		break;
+	// 	case "Joueur_4":
+	// 		var strokeColour = colour[joueur];
+	// 		break;
+	// 	case "Joueur_5":
+	// 		var strokeColour = "#8000ff";
+	// 		break;
+	// 	case "Joueur_6":
+	// 		var strokeColour = "#ff00bf";
+	// 		break;
+	// 	case "Joueur_7":
+	// 		var strokeColour = "#ff0000";
+	// 		break;
+	// 	case "Joueur_8":
+	// 		var strokeColour = "#008000";
+	// 		break;
+	// 	case "Joueur_9":
+	// 		var strokeColour = "#000000";
+	// 		break;
+	// 	default:
+	// 		var strokeColour = "#000000";
+	// }
 	var filter = "<defs><filter id='shadow' width='200%' height='200%'><feOffset in='SourceGraphic' dx='3' dy='3' result='offsetOut'></feOffset><feColorMatrix result='matrixOut' in='offsetOut' type='matrix' values='0.2 0 0 0 0 0 0.2 0 0 0 0 0 0.2 0 0 0 0 0 1 0'></feColorMatrix><feGaussianBlur result='blurOut' in='matrixOut' stdDeviation='4'></feGaussianBlur><feBlend in='SourceGraphic' in2='blurOut' mode='normal'></feBlend></filter><filter id='light' filterUnits='userSpaceOnUse' width='200%' height='200%'><feGaussianBlur in='SourceAlpha' stdDeviation='4' result='blurOut'></feGaussianBlur><feOffset in='blurOut' dx='4' dy='4' result='offsetBlur'></feOffset><feSpecularLighting in='blurOut' surfaceScale='20' specularConstant='.25' specularExponent='4' lighting-color='#bbbbbb' result='specOut'><fePointLight x='-2000' y='-2000' z='200'></fePointLight></feSpecularLighting><feComposite in='specOut' in2='SourceAlpha' operator='in' result='specOut'></feComposite><feComposite in='SourceGraphic' in2='specOut' operator='arithmetic' k1='0' k2='1' k3='1' k4='0' result='litPaint'></feComposite></filter></defs><g filter='url(#light)'>";
 	//var filter = "";
 	if (filter != "") {
