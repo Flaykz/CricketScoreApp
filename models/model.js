@@ -472,15 +472,9 @@ function updateScore(idRow, idColumn, point) {
 		addLocalStorage("currentRound", 21);
 		currentRound = 21;
 	}
-	if (idColumn == "null") {
-		if (currentRound == 21) {
-			finish();
-		}
-	}
-	else {
-		if (point == 3 || point == 0 || currentRound == 21) {
-			finish();
-		}
+
+	if (((idColumn == "null") && (currentRound == 21)) || ((point == 3 || point == 0 || currentRound == 21) && (idColumn != "null"))) {
+		finish();
 	}
 }
 
@@ -512,15 +506,7 @@ function refreshScreen() {
 		var s16 = obj.s16[index];
 		var s15 = obj.s15[index];
 		var sbull = obj.sbull[index];
-		var dict = {
-			"20": s20,
-			"19": s19,
-			"18": s18,
-			"17": s17,
-			"16": s16,
-			"15": s15,
-			"Bull": sbull
-		};
+		var dict = {"20": s20, "19": s19, "18": s18, "s17": s17, "16": s16,	"15": s15, "Bull": sbull};
 		Object.keys(dict).forEach(function(key) {
 			switch (dict[key]) {
 				case 0:
