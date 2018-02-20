@@ -14,7 +14,7 @@ $(function() {
 			tabScore[chaine] = monJoueur;
 			setTabScore(tabScore);
 			setNbJoueur(nbJoueur);
-			$("." + chaine).css("display", "");
+			$("." + chaine).css("display", "flex");
 			$('.mymodal-title').text("Nombre de joueurs : " + nbJoueur);
 			var value = $('.colour-choice .' + chaine).val();
 			var colour = {};
@@ -100,8 +100,8 @@ $(function() {
 		setTabScore(tabScore);
 	})
 	
-	$(".colour-choice input").change(function() {
-		var joueur = $(this).attr("class").replace('colour-choice ', '');
+	$(".input-colour-choice").change(function() {
+		var joueur = $(this).attr("class").replace('input-colour-choice ', '');
 		var value = $(this).val();
 		var colour = {};
 		colour = getLocalStorage('colour');
@@ -147,11 +147,6 @@ $(window).on("load", function () {
 	$('.table-responsive').css("display", "flex");
 	// $('.loader').css("display", "none");
 	$('.loader').fadeOut("slow");
-	var value = $('.colour-choice .Joueur_1').val();
-	var colour = {};
-	colour = getLocalStorage('colour');
-	colour['Joueur_1'] = value;
-	setLocalStorage('colour', colour);
 });
 
 function init() {
@@ -167,6 +162,10 @@ function init() {
 			var nomJoueur = "Joueur_" + i;
 			$("input[name='" + nomJoueur + "']").attr("value", nomJoueur);
 		}
+		var value = $('.colour-choice .Joueur_1').val();
+		var colour = {};
+		colour['Joueur_1'] = value;
+		setLocalStorage('colour', colour);
 	}
 	else {
 		path = path.replace("/?", "");
@@ -177,6 +176,9 @@ function init() {
 			$("input[name='" + cle + "']").attr("value", nomJoueur);
 			var monJoueur = new Joueur(nomJoueur, ["0;0;0.00"], [0], [0], [0], [0], [0], [0], [0], [0]);
 			tabScore[cle] = monJoueur;
+			var colour = {};
+			colour = getLocalStorage('colour');
+			$('.colour-choice .' + cle).attr("value", colour[cle]);
 		}
 		nbJoueur = i;
 		startGame();
@@ -191,7 +193,7 @@ function init() {
 		if (i > parseInt(nbJoueur)) {
 			$(chaine).css("display", "none");
 		} else {
-			$(chaine).css("display", "");
+			$(chaine).css("display", "flex");
 		}
 	}
 }
