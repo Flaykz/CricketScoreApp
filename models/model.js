@@ -396,37 +396,13 @@ function updateScore(idRow, idColumn, point) {
 	var dicPoint = {"s20": 20, "s19": 19, "s18": 18, "s17": 17, "s16": 16, "s15": 15, "sbull": 25};
 	var srow = "s" + idRow.toLowerCase();
 	for (var joueur in tabScore) {
-		if (point != 0) {
-			if (joueur == idColumn) {
-				for (var row in tabScore[joueur]) {
-					switch (row) {
-						case srow:
-							tabScore[joueur][row].push(point);
-						case "nom":
-						case "stats":
-							break;
-						default:
-							addLastValueInArr(tabScore[joueur][row]);
-					}
-				}
-			} else {
-				for (var row in tabScore[joueur]) {
-					switch (row) {
-						case "nom":
-						case "stats":
-							break;
-						default:
-							addLastValueInArr(tabScore[joueur][row]);
-					}
-				}
-			}
-		} else {
-			for (var row in tabScore[joueur]) {
-				switch (row) {
-					case "nom":
-					case "stats":
-						break;
-					case "score":
+		for (var row in tabScore[joueur]) {
+			switch (row) {
+				case "nom":
+				case "stats":
+					break;
+				case "score":
+					if (point == 0) {
 						var pointtoAdd = 0;
 						if (srow != "snull") {
 							if ((getLastValue(tabScore[joueur][srow]) != 3) && (joueur != idColumn)) {
@@ -436,16 +412,25 @@ function updateScore(idRow, idColumn, point) {
 						var nouveauScore = getLastValue(tabScore[joueur][row]) + pointtoAdd;
 						$('#' + joueur).text(nouveauScore);
 						tabScore[joueur].score.push(nouveauScore);
-						break;
-					default:
+					} else {
 						addLastValueInArr(tabScore[joueur][row]);
-				}
+					}
+					break;
+				case srow:
+					if (point != 0) {
+						if (joueur == idColumn) {
+							tabScore[joueur][row].push(point);
+							break;
+						} 
+					}
+				default:
+					addLastValueInArr(tabScore[joueur][row]);
 			}
 		}
 		
 		if (joueur == idColumn) {
-			lastRound = parseInt(tabScore[joueur].stats[tabScore[joueur].stats.length - 1].split(";")[0], 10);
-			lastHit = parseInt(tabScore[joueur].stats[tabScore[joueur].stats.length - 1].split(";")[1], 10);
+			lastRound = parseInt(getLastValue(tabScore[joueur].stats).split(";")[0], 10);
+			lastHit = parseInt(getLastValue(tabScore[joueur].stats).split(";")[1], 10);
 			newHit = lastHit + 1;
 			newStat = newHit / currentRound;
 			newStat = newStat.toFixed(2);
@@ -458,9 +443,9 @@ function updateScore(idRow, idColumn, point) {
 					addLastValueInArr(tabScore[joueur].stats);
 				}
 				else {
-					lastRound = parseInt(tabScore[joueur].stats[tabScore[joueur].stats.length - 1].split(";")[0], 10);
+					lastRound = parseInt(getLastValue(tabScore[joueur].stats).split(";")[0], 10);
 					if (currentRound != lastRound) {
-						lastHit = parseInt(tabScore[joueur].stats[tabScore[joueur].stats.length - 1].split(";")[1], 10);
+						lastHit = parseInt(getLastValue(tabScore[joueur].stats).split(";")[1], 10);
 						newStat = lastHit / currentRound;
 						newStat = newStat.toFixed(2);
 						tabScore[joueur].stats.push(currentRound + ";" + lastHit + ";" + newStat);
@@ -571,7 +556,7 @@ function refreshScreen() {
 		}
 		var currentPlayer = getLastValue(getLocalStorage("currentPlayer"));
 		var currentRound = getLastValue(getLocalStorage("currentRound"));
-		lastHit = parseInt(tabScore[joueur].stats[tabScore[joueur].stats.length - 1].split(";")[1], 10);
+		lastHit = parseInt(getLastValue(tabScore[joueur].stats).split(";")[1], 10);
 		newStat = lastHit / currentRound;
 		newStat = newStat.toFixed(2);
 		if ($("#Stats_" + joueur).text() != newStat) {
