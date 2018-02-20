@@ -312,6 +312,10 @@ function getLastValue(arr) {
 	}
 }
 
+function addLastValueInArr(arr) {
+	arr.push(getLastValue(arr));
+}
+
 function arrayMin(arr) {
 	var len = arr.length, min = Infinity;
 	while (len--) {
@@ -389,144 +393,54 @@ function updateScore(idRow, idColumn, point) {
 	var currentPlayer = getLastValue(getLocalStorage("currentPlayer"));
 	var currentRound = getLastValue(getLocalStorage("currentRound"));
 	var nbJoueur = getLocalStorage("nbJoueur");
-
+	var dicPoint = {"s20": 20, "s19": 19, "s18": 18, "s17": 17, "s16": 16, "s15": 15, "sbull": 25};
+	var srow = "s" + idRow.toLowerCase();
 	for (var joueur in tabScore) {
 		if (point != 0) {
 			if (joueur == idColumn) {
-				switch (idRow) {
-					case "20":
-						tabScore[joueur].s20.push(point);
-						tabScore[joueur].s19.push(tabScore[joueur].s19[tabScore[joueur].s19.length - 1]);
-						tabScore[joueur].s18.push(tabScore[joueur].s18[tabScore[joueur].s18.length - 1]);
-						tabScore[joueur].s17.push(tabScore[joueur].s17[tabScore[joueur].s17.length - 1]);
-						tabScore[joueur].s16.push(tabScore[joueur].s16[tabScore[joueur].s16.length - 1]);
-						tabScore[joueur].s15.push(tabScore[joueur].s15[tabScore[joueur].s15.length - 1]);
-						tabScore[joueur].sbull.push(tabScore[joueur].sbull[tabScore[joueur].sbull.length - 1]);
-						tabScore[joueur].score.push(tabScore[joueur].score[tabScore[joueur].score.length - 1]);
-						break;
-					case "19":
-						tabScore[joueur].s20.push(tabScore[joueur].s20[tabScore[joueur].s20.length - 1]);
-						tabScore[joueur].s19.push(point);
-						tabScore[joueur].s18.push(tabScore[joueur].s18[tabScore[joueur].s18.length - 1]);
-						tabScore[joueur].s17.push(tabScore[joueur].s17[tabScore[joueur].s17.length - 1]);
-						tabScore[joueur].s16.push(tabScore[joueur].s16[tabScore[joueur].s16.length - 1]);
-						tabScore[joueur].s15.push(tabScore[joueur].s15[tabScore[joueur].s15.length - 1]);
-						tabScore[joueur].sbull.push(tabScore[joueur].sbull[tabScore[joueur].sbull.length - 1]);
-						tabScore[joueur].score.push(tabScore[joueur].score[tabScore[joueur].score.length - 1]);
-						break;
-					case "18":
-						tabScore[joueur].s20.push(tabScore[joueur].s20[tabScore[joueur].s20.length - 1]);
-						tabScore[joueur].s19.push(tabScore[joueur].s19[tabScore[joueur].s19.length - 1]);
-						tabScore[joueur].s18.push(point);
-						tabScore[joueur].s17.push(tabScore[joueur].s17[tabScore[joueur].s17.length - 1]);
-						tabScore[joueur].s16.push(tabScore[joueur].s16[tabScore[joueur].s16.length - 1]);
-						tabScore[joueur].s15.push(tabScore[joueur].s15[tabScore[joueur].s15.length - 1]);
-						tabScore[joueur].sbull.push(tabScore[joueur].sbull[tabScore[joueur].sbull.length - 1]);
-						tabScore[joueur].score.push(tabScore[joueur].score[tabScore[joueur].score.length - 1]);
-						break;
-					case "17":
-						tabScore[joueur].s20.push(tabScore[joueur].s20[tabScore[joueur].s20.length - 1]);
-						tabScore[joueur].s19.push(tabScore[joueur].s19[tabScore[joueur].s19.length - 1]);
-						tabScore[joueur].s18.push(tabScore[joueur].s18[tabScore[joueur].s18.length - 1]);
-						tabScore[joueur].s17.push(point);
-						tabScore[joueur].s16.push(tabScore[joueur].s16[tabScore[joueur].s16.length - 1]);
-						tabScore[joueur].s15.push(tabScore[joueur].s15[tabScore[joueur].s15.length - 1]);
-						tabScore[joueur].sbull.push(tabScore[joueur].sbull[tabScore[joueur].sbull.length - 1]);
-						tabScore[joueur].score.push(tabScore[joueur].score[tabScore[joueur].score.length - 1]);
-						break;
-					case "16":
-						tabScore[joueur].s20.push(tabScore[joueur].s20[tabScore[joueur].s20.length - 1]);
-						tabScore[joueur].s19.push(tabScore[joueur].s19[tabScore[joueur].s19.length - 1]);
-						tabScore[joueur].s18.push(tabScore[joueur].s18[tabScore[joueur].s18.length - 1]);
-						tabScore[joueur].s17.push(tabScore[joueur].s17[tabScore[joueur].s17.length - 1]);
-						tabScore[joueur].s16.push(point);
-						tabScore[joueur].s15.push(tabScore[joueur].s15[tabScore[joueur].s15.length - 1]);
-						tabScore[joueur].sbull.push(tabScore[joueur].sbull[tabScore[joueur].sbull.length - 1]);
-						tabScore[joueur].score.push(tabScore[joueur].score[tabScore[joueur].score.length - 1]);
-						break;
-					case "15":
-						tabScore[joueur].s20.push(tabScore[joueur].s20[tabScore[joueur].s20.length - 1]);
-						tabScore[joueur].s19.push(tabScore[joueur].s19[tabScore[joueur].s19.length - 1]);
-						tabScore[joueur].s18.push(tabScore[joueur].s18[tabScore[joueur].s18.length - 1]);
-						tabScore[joueur].s17.push(tabScore[joueur].s17[tabScore[joueur].s17.length - 1]);
-						tabScore[joueur].s16.push(tabScore[joueur].s16[tabScore[joueur].s16.length - 1]);
-						tabScore[joueur].s15.push(point);
-						tabScore[joueur].sbull.push(tabScore[joueur].sbull[tabScore[joueur].sbull.length - 1]);
-						tabScore[joueur].score.push(tabScore[joueur].score[tabScore[joueur].score.length - 1]);
-						break;
-					case "Bull":
-						tabScore[joueur].s20.push(tabScore[joueur].s20[tabScore[joueur].s20.length - 1]);
-						tabScore[joueur].s19.push(tabScore[joueur].s19[tabScore[joueur].s19.length - 1]);
-						tabScore[joueur].s18.push(tabScore[joueur].s18[tabScore[joueur].s18.length - 1]);
-						tabScore[joueur].s17.push(tabScore[joueur].s17[tabScore[joueur].s17.length - 1]);
-						tabScore[joueur].s16.push(tabScore[joueur].s16[tabScore[joueur].s16.length - 1]);
-						tabScore[joueur].s15.push(tabScore[joueur].s15[tabScore[joueur].s15.length - 1]);
-						tabScore[joueur].sbull.push(point);
-						tabScore[joueur].score.push(tabScore[joueur].score[tabScore[joueur].score.length - 1]);;
-						break;
-					default:
-						//
+				for (var row in tabScore[joueur]) {
+					switch (row) {
+						case srow:
+							tabScore[joueur][row].push(point);
+						case "nom":
+						case "stats":
+							break;
+						default:
+							addLastValueInArr(tabScore[joueur][row]);
+					}
 				}
 			} else {
-				tabScore[joueur].s20.push(tabScore[joueur].s20[tabScore[joueur].s20.length - 1]);
-				tabScore[joueur].s19.push(tabScore[joueur].s19[tabScore[joueur].s19.length - 1]);
-				tabScore[joueur].s18.push(tabScore[joueur].s18[tabScore[joueur].s18.length - 1]);
-				tabScore[joueur].s17.push(tabScore[joueur].s17[tabScore[joueur].s17.length - 1]);
-				tabScore[joueur].s16.push(tabScore[joueur].s16[tabScore[joueur].s16.length - 1]);
-				tabScore[joueur].s15.push(tabScore[joueur].s15[tabScore[joueur].s15.length - 1]);
-				tabScore[joueur].sbull.push(tabScore[joueur].sbull[tabScore[joueur].sbull.length - 1]);
-				tabScore[joueur].score.push(tabScore[joueur].score[tabScore[joueur].score.length - 1]);
+				for (var row in tabScore[joueur]) {
+					switch (row) {
+						case "nom":
+						case "stats":
+							break;
+						default:
+							addLastValueInArr(tabScore[joueur][row]);
+					}
+				}
 			}
 		} else {
-			tabScore[joueur].s20.push(tabScore[joueur].s20[tabScore[joueur].s20.length - 1]);
-			tabScore[joueur].s19.push(tabScore[joueur].s19[tabScore[joueur].s19.length - 1]);
-			tabScore[joueur].s18.push(tabScore[joueur].s18[tabScore[joueur].s18.length - 1]);
-			tabScore[joueur].s17.push(tabScore[joueur].s17[tabScore[joueur].s17.length - 1]);
-			tabScore[joueur].s16.push(tabScore[joueur].s16[tabScore[joueur].s16.length - 1]);
-			tabScore[joueur].s15.push(tabScore[joueur].s15[tabScore[joueur].s15.length - 1]);
-			tabScore[joueur].sbull.push(tabScore[joueur].sbull[tabScore[joueur].sbull.length - 1]);
-			var pointtoAdd = 0;
-			switch (idRow) {
-				case "20":
-					if ((tabScore[joueur].s20[tabScore[joueur].s20.length - 1] != 3) && (joueur != idColumn)) {
-						pointtoAdd = pointtoAdd + 20;
-					}
-					break;
-				case "19":
-					if ((tabScore[joueur].s19[tabScore[joueur].s19.length - 1] != 3) && (joueur != idColumn)) {
-						pointtoAdd = pointtoAdd + 19;
-					}
-					break;
-				case "18":
-					if ((tabScore[joueur].s18[tabScore[joueur].s18.length - 1] != 3) && (joueur != idColumn)) {
-						pointtoAdd = pointtoAdd + 18;
-					}
-					break;
-				case "17":
-					if ((tabScore[joueur].s17[tabScore[joueur].s17.length - 1] != 3) && (joueur != idColumn)) {
-						pointtoAdd = pointtoAdd + 17;
-					}
-					break;
-				case "16":
-					if ((tabScore[joueur].s16[tabScore[joueur].s16.length - 1] != 3) && (joueur != idColumn)) {
-						pointtoAdd = pointtoAdd + 16;
-					}
-					break;
-				case "15":
-					if ((tabScore[joueur].s15[tabScore[joueur].s15.length - 1] != 3) && (joueur != idColumn)) {
-						pointtoAdd = pointtoAdd + 15;
-					}
-					break;
-				case "Bull":
-					if ((tabScore[joueur].sbull[tabScore[joueur].sbull.length - 1] != 3) && (joueur != idColumn)) {
-						pointtoAdd = pointtoAdd + 25;
-					}
-				default:
-					//
+			for (var row in tabScore[joueur]) {
+				switch (row) {
+					case "nom":
+					case "stats":
+						break;
+					case "score":
+						var pointtoAdd = 0;
+						if (srow != "snull") {
+							if ((getLastValue(tabScore[joueur][srow]) != 3) && (joueur != idColumn)) {
+								pointtoAdd = pointtoAdd + dicPoint[srow];
+							}
+						}
+						var nouveauScore = getLastValue(tabScore[joueur][row]) + pointtoAdd;
+						$('#' + joueur).text(nouveauScore);
+						tabScore[joueur].score.push(nouveauScore);
+						break;
+					default:
+						addLastValueInArr(tabScore[joueur][row]);
+				}
 			}
-			var nouveauScore = tabScore[joueur].score[tabScore[joueur].score.length - 1] + pointtoAdd;
-			$('#' + joueur).text(nouveauScore);
-			tabScore[joueur].score.push(nouveauScore);
 		}
 		
 		if (joueur == idColumn) {
@@ -541,7 +455,7 @@ function updateScore(idRow, idColumn, point) {
 		else {
 			if (idColumn == "null") {
 				if (joueur[joueur.length - 1] != currentPlayer) {
-					tabScore[joueur].stats.push(tabScore[joueur].stats[tabScore[joueur].stats.length - 1]);
+					addLastValueInArr(tabScore[joueur].stats);
 				}
 				else {
 					lastRound = parseInt(tabScore[joueur].stats[tabScore[joueur].stats.length - 1].split(";")[0], 10);
@@ -555,12 +469,12 @@ function updateScore(idRow, idColumn, point) {
 						}
 					}
 					else {
-						tabScore[joueur].stats.push(tabScore[joueur].stats[tabScore[joueur].stats.length - 1]);
+						addLastValueInArr(tabScore[joueur].stats);
 					}
 				}
 			}
 			else {
-				tabScore[joueur].stats.push(tabScore[joueur].stats[tabScore[joueur].stats.length - 1]);
+				addLastValueInArr(tabScore[joueur].stats);
 			}
 		}
 	}
@@ -737,37 +651,6 @@ function drawSVG(svgid, joueur) {
 	var colour = {};
 	colour = getLocalStorage('colour');
 	var strokeColour = colour[joueur];
-	// switch (joueur) {
-	// 	case "Joueur_1":
-	// 		var strokeColour = colour[joueur];
-	// 		break;
-	// 	case "Joueur_2":
-	// 		var strokeColour = colour[joueur];
-	// 		break;
-	// 	case "Joueur_3":
-	// 		var strokeColour = colour[joueur];
-	// 		break;
-	// 	case "Joueur_4":
-	// 		var strokeColour = colour[joueur];
-	// 		break;
-	// 	case "Joueur_5":
-	// 		var strokeColour = "#8000ff";
-	// 		break;
-	// 	case "Joueur_6":
-	// 		var strokeColour = "#ff00bf";
-	// 		break;
-	// 	case "Joueur_7":
-	// 		var strokeColour = "#ff0000";
-	// 		break;
-	// 	case "Joueur_8":
-	// 		var strokeColour = "#008000";
-	// 		break;
-	// 	case "Joueur_9":
-	// 		var strokeColour = "#000000";
-	// 		break;
-	// 	default:
-	// 		var strokeColour = "#000000";
-	// }
 	var filter = "<defs><filter id='shadow' width='200%' height='200%'><feOffset in='SourceGraphic' dx='3' dy='3' result='offsetOut'></feOffset><feColorMatrix result='matrixOut' in='offsetOut' type='matrix' values='0.2 0 0 0 0 0 0.2 0 0 0 0 0 0.2 0 0 0 0 0 1 0'></feColorMatrix><feGaussianBlur result='blurOut' in='matrixOut' stdDeviation='4'></feGaussianBlur><feBlend in='SourceGraphic' in2='blurOut' mode='normal'></feBlend></filter><filter id='light' filterUnits='userSpaceOnUse' width='200%' height='200%'><feGaussianBlur in='SourceAlpha' stdDeviation='4' result='blurOut'></feGaussianBlur><feOffset in='blurOut' dx='4' dy='4' result='offsetBlur'></feOffset><feSpecularLighting in='blurOut' surfaceScale='20' specularConstant='.25' specularExponent='4' lighting-color='#bbbbbb' result='specOut'><fePointLight x='-2000' y='-2000' z='200'></fePointLight></feSpecularLighting><feComposite in='specOut' in2='SourceAlpha' operator='in' result='specOut'></feComposite><feComposite in='SourceGraphic' in2='specOut' operator='arithmetic' k1='0' k2='1' k3='1' k4='0' result='litPaint'></feComposite></filter></defs><g filter='url(#light)'>";
 	//var filter = "";
 	if (filter != "") {
