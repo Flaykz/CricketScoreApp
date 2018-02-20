@@ -499,7 +499,7 @@ function refreshScreen() {
 	}
 	setLocalStorage("currentPlayer", currentPlayer);
 	setLocalStorage("currentRound", currentRound);
-	$("#round").text(currentRound[currentRound.length - 1]);
+	$("#round").text(getLastValue(currentRound));
 	for (var joueur in tabScore) {
 		var obj = tabScore[joueur];
 		var index = obj.score.length - 1;
@@ -524,17 +524,8 @@ function refreshScreen() {
 		Object.keys(dict).forEach(function(key) {
 			switch (dict[key]) {
 				case 0:
-					$("#" + key + "_" + joueur).attr("svgid", dict[key]);
-					$("#" + key + "_" + joueur).html(drawSVG(dict[key], joueur));
-					break;
 				case 1:
-					$("#" + key + "_" + joueur).attr("svgid", dict[key]);
-					$("#" + key + "_" + joueur).html(drawSVG(dict[key], joueur));
-					break;
 				case 2:
-					$("#" + key + "_" + joueur).attr("svgid", dict[key]);
-					$("#" + key + "_" + joueur).html(drawSVG(dict[key], joueur));
-					break;
 				case 3:
 					$("#" + key + "_" + joueur).attr("svgid", dict[key]);
 					$("#" + key + "_" + joueur).html(drawSVG(dict[key], joueur));
@@ -573,32 +564,9 @@ function griserLigne(idRow) {
 	var tabScore = getTabScore();
 	var testScore = [];
 	var griser = true;
+	var srow = "s" + idRow.toLowerCase();
 	for (var joueur in tabScore) {
-		switch (idRow) {
-			case "20":
-				testScore.push(tabScore[joueur].s20[tabScore[joueur].s20.length - 1]);
-				break;
-			case "19":
-				testScore.push(tabScore[joueur].s19[tabScore[joueur].s19.length - 1]);
-				break;
-			case "18":
-				testScore.push(tabScore[joueur].s18[tabScore[joueur].s18.length - 1]);
-				break;
-			case "17":
-				testScore.push(tabScore[joueur].s17[tabScore[joueur].s17.length - 1]);
-				break;
-			case "16":
-				testScore.push(tabScore[joueur].s16[tabScore[joueur].s16.length - 1]);
-				break;
-			case "15":
-				testScore.push(tabScore[joueur].s15[tabScore[joueur].s15.length - 1]);
-				break;
-			case "Bull":
-				testScore.push(tabScore[joueur].sbull[tabScore[joueur].sbull.length - 1]);
-				break;
-			default:
-				console.log("Erreur switch : " + idRow);
-		}
+		testScore.push(getLastValue(tabScore[joueur][srow]));
 	}
 	for (var i = 0; i < testScore.length; i++) {
 		if (testScore[i] != 3) {
