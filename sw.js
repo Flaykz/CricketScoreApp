@@ -1,4 +1,4 @@
-var version = 'v1:5:0';
+var version = 'v1:5:6';
 var CACHE_NAME = 'cricket-cache';
 var urlsToCache = [
   '/',
@@ -41,6 +41,7 @@ self.addEventListener('activate', function(event) {
     })
     .then(function() {
       console.log('activate event completed.');
+      //return self.clients.claim();
     })
   ); 
 });
@@ -102,5 +103,6 @@ function precache() {
     return cache.addAll(urlsToCache);
   }).then(function () {
     console.log('Install completed');
+    return self.skipWaiting();
   });
 }
