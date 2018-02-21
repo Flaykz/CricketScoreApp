@@ -1,4 +1,4 @@
-var version = 'v1::';
+var version = 'v1:5:0';
 var CACHE_NAME = 'cricket-cache';
 var urlsToCache = [
   '/',

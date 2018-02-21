@@ -83,3 +83,17 @@ html, body, .table-responsive {
     width: 100%;
     text-align: center;
 }
+
+[contenteditable="true"] {
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+[contenteditable="true"] br {
+    display: none;
+}
+
+[contenteditable="true"] * {
+    display: inline;
+    white-space: nowrap;
+}
