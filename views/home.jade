@@ -137,7 +137,7 @@ html(lang="fr", dir="ltr")
               when 0
                 if countName > 0
                   div.col.Ligne_nom(class="Joueur_#{countName}")
-                    input.text-center.joueur(type="text", name="Joueur_#{countName}", value="#{name}", aria-label="Nom du joueur")
+                    div.joueur(name="Joueur_#{countName}", contenteditable="true") #{name}
                     span(id="Stats_Joueur_#{countName}") 0.00
                 else 
                   div.col.Ligne_nom(class="Joueur_#{countName}")

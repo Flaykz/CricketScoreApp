@@ -79,8 +79,7 @@ html, body, .table-responsive {
     max-width: 80%;
 }
 
-input {
-    border: none;
-    background: transparent;
+.joueur, input {
     width: 100%;
+    text-align: center;
 }

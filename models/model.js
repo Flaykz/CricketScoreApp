@@ -104,15 +104,21 @@ $(function() {
 			
 			refreshScreen();
 		}
+		setTeam();
 	})
 	
-	$(".row input").change(function() {
+	$(".joueur").change(function() {
 		var name = $(this).attr("name");
-		var value = $(this).val();
-		$(this).attr("value", value);
+		var value = sanitize($(this).text());
 		var tabScore = getTabScore();
 		tabScore[name].nom = value;
 		setTabScore(tabScore);
+		var len = value.split(",", 2).length;
+		if (len > 1) {
+			value = "<span class='team1'>" + value.split(",", 2)[0] + "</span><span class='team2'>" + value.split(",", 2)[1] + "</span>";
+		}
+		$(this).html(value);
+		setTeam();
 	})
 	
 	$(".input-colour-choice").change(function() {
@@ -155,6 +161,14 @@ $(function() {
 	$('.toast').click(function() {
 		$(this).fadeOut("slow");
 	})
+	
+	$("[contenteditable]").on('focus', function() {
+		before = $(this).html();
+	}).on('blur keypup paste', function() {
+		if ($(this).html() != before) {
+			$(this).trigger('change');
+		}
+	});
 });
 
 $(window).on("load", function () {
@@ -177,7 +191,7 @@ function init() {
 		tabScore["Joueur_1"] = monJoueur;
 		for (var i = 1; i < 5; i++) {
 			var nomJoueur = "Joueur_" + i;
-			$("input[name='" + nomJoueur + "']").attr("value", nomJoueur);
+			$(".joueur[name='" + nomJoueur + "']").html(nomJoueur);
 		}
 		var value = $('.colour-choice .Joueur_1').val();
 		tabColour['Joueur_1'] = value;
@@ -188,12 +202,17 @@ function init() {
 		var listPlayer = path.split("&");
 		for (var i = 0; i < listPlayer.length; i++) {
 			var cle = "Joueur_" + parseInt(i + 1);
-			var nomJoueur = listPlayer[i].split("=")[1]
-			$("input[name='" + cle + "']").attr("value", nomJoueur);
+			var nomJoueur = sanitize(decodeURIComponent(listPlayer[i].split("=")[1]));
+			var len = nomJoueur.split(",", 2).length;
+			if (len > 1) {
+				nomJoueur = "<span class='team1'>" + nomJoueur.split(",", 2)[0] + "</span><span class='team2'>" + nomJoueur.split(",", 2)[1] + "</span>";
+			}
+			$(".joueur[name='" + cle + "']").html(nomJoueur);
+			setTeam();
 			var monJoueur = new Joueur(nomJoueur, ["0;0;0.00"], [0], [0], [0], [0], [0], [0], [0], [0]);
 			tabScore[cle] = monJoueur;
 			tabColour = getLocalStorage('colour');
-			$('.colour-choice .' + cle).attr("value", tabColour[cle]);
+			$('.colour-choice .' + cle).val(tabColour[cle]);
 		}
 		nbJoueur = i;
 		startGame();
@@ -213,6 +232,17 @@ function init() {
 	}
 }
 
+function setTeam() {
+	var currentRound = parseInt(getLastValue(getLocalStorage("currentRound")));
+	if (currentRound % 2 == 1) {
+		$(".team1").css("font-size", "6vmin");
+		$(".team2").css("font-size", "4vmin");
+	} else {
+		$(".team2").css("font-size", "6vmin");
+		$(".team1").css("font-size", "4vmin");
+	}
+}
+
 function finish() {
 	var tabScore = getTabScore();
 	var testScore = [];
@@ -221,7 +251,7 @@ function finish() {
 	var currentRound = parseInt(getLastValue(getLocalStorage("currentRound")), 10);
 	for (var joueur in tabScore) {
 		var full = getLastValue(tabScore[joueur].s20) + getLastValue(tabScore[joueur].s19) + getLastValue(tabScore[joueur].s18) + getLastValue(tabScore[joueur].s17) + getLastValue(tabScore[joueur].s16) + getLastValue(tabScore[joueur].s15) + getLastValue(tabScore[joueur].sbull); 
-		testScore.push(tabScore[joueur].nom + "," + getLastValue(tabScore[joueur].score) + "," + full);
+		testScore.push(tabScore[joueur].nom + "|" + getLastValue(tabScore[joueur].score) + "|" + full);
 		minScore.push(getLastValue(tabScore[joueur].score));
 	}
 	var min = arrayMin(minScore);
@@ -231,23 +261,23 @@ function finish() {
 	if (currentRound == 21) {
 		if (lenTab > 1) {
 			for (var i = 0; i < lenTab; i++) {
-				winner = winner + " " + testScore[indexArray[i]].split(",")[0];
+				winner = winner + " " + testScore[indexArray[i]].split("|")[0];
 			}
 			drawWinPlayer("winner are :" + winner);
 		}
 		else {
-			drawWinPlayer("winner is :" + testScore[indexArray[0]].split(",")[0]);
+			drawWinPlayer("winner is :" + testScore[indexArray[0]].split("|")[0]);
 		}
 	}
 	else {
 		var count = 0;
 		var win = false;
 		for (var i = 0; i < lenTab; i++) {
-			if (testScore[indexArray[i]].split(",")[2] == 21) {
+			if (getLastValue(testScore[indexArray[i]].split("|")) == 21) {
 				win = true;
 			}
 			count = count + 1;
-			winner = winner + " " + testScore[indexArray[i]].split(",")[0];
+			winner = winner + " " + testScore[indexArray[i]].split("|")[0];
 		}
 		if (win) {
 			if (count > 1) {
@@ -365,6 +395,14 @@ function objectToTab(obj) {
 		tab.push(obj[item]);
 	}
 	return tab;
+}
+
+function sanitize(input) {
+	var sanitized = input.replace(/<script[^>]*?>.*?<\/script>/gi, '').
+					 replace(/<[\/\!]*?[^<>]*?>/gi, '').
+					 replace(/<style[^>]*?>.*?<\/style>/gi, '').
+					 replace(/<![\s\S]*?--[ \t\n\r]*>/gi, '');
+	return sanitized;
 }
 
 function drawWinPlayer(winner) {
@@ -537,7 +575,8 @@ function refreshScreen() {
 		}
 	}
 	
-	var dict = {"20": s20, "19": s19, "18": s18, "17": s17, "16": s16,	"15": s15, "Bull": sbull};
+	var dict = {"20": "", "19": "", "18": "", "17": "", "16": "",	"15": "", "Bull": ""};
+	
 	Object.keys(dict).forEach(function(key) {
 		griserLigne(key);
 	});
