@@ -106,7 +106,7 @@ $(function() {
 		}
 	})
 	
-	$("row input").change(function() {
+	$(".row input").change(function() {
 		var name = $(this).attr("name");
 		var value = $(this).val();
 		$(this).attr("value", value);
