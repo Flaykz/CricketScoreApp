@@ -17,10 +17,10 @@ $(function() {
 			$("." + chaine).css("display", "flex");
 			$('.mymodal-title').text("Nombre de joueurs : " + nbJoueur);
 			var value = $('.colour-choice .' + chaine).val();
-			var colour = {};
-			colour = getLocalStorage('colour');
-			colour[chaine] = value;
-			setLocalStorage('colour', colour);
+			var tabColour = {};
+			tabColour = getLocalStorage('colour');
+			tabColour[chaine] = value;
+			setLocalStorage('colour', tabColour);
 		}
 		else {
 			showToast("Impossible to add more than 4 players", 2);
@@ -47,14 +47,16 @@ $(function() {
 
 	$(".Joueur_0").click(function() {
 		var row = $(this).attr("class");
+		var tabCurrentPlayer = getLocalStorage("currentPlayer");
+		var tabCurrentRound = getLocalStorage("currentRound");
 		if (row.match("Ligne_(20|19|18|17|16|15|Bull)")) {
 			updateScore("null", "null", "0");
 			
-			var currentPlayer = getLastValue(getLocalStorage("currentPlayer"));
+			var currPlayer = getLastValue(tabCurrentPlayer);
+			var currRound = parseInt(getLastValue(tabCurrentRound), 10);
 			var nbJoueur = getNbJoueur();
-			var currentRound = parseInt(getLastValue(getLocalStorage("currentRound")), 10);
 			
-			$(".Joueur_" + currentPlayer).each(function(i, obj) {
+			$(".Joueur_" + currPlayer).each(function(i, obj) {
 				var currentCSS = $(obj).css("background-color");
 				if (currentCSS !== "rgb(0, 0, 0)") {
 					$(obj).css({
@@ -62,14 +64,14 @@ $(function() {
 					});
 				}
 			});
-			if (parseInt(currentPlayer, 10) == nbJoueur) {
-				currentPlayer = "1";
-				currentRound = currentRound + 1;
-				$("#round").text(currentRound);
+			if (parseInt(currPlayer, 10) == nbJoueur) {
+				currPlayer = "1";
+				currRound = currRound + 1;
+				$("#round").text(currRound);
 			} else {
-				currentPlayer = parseInt(currentPlayer, 10) + 1;
+				currPlayer = parseInt(currPlayer, 10) + 1;
 			}
-			$(".Joueur_" + currentPlayer).each(function(i, obj) {
+			$(".Joueur_" + currPlayer).each(function(i, obj) {
 				var currentCSS = $(obj).css("background-color");
 				if (currentCSS !== "rgb(0, 0, 0)") {
 					$(obj).css({
@@ -78,15 +80,28 @@ $(function() {
 				}
 			});
 			
-			addLocalStorage("currentRound", currentRound);
-			addLocalStorage("currentPlayer", currentPlayer);
+			addLocalStorage("currentRound", currRound);
+			addLocalStorage("currentPlayer", currPlayer);
 		}
 		else {
+			if (tabCurrentRound.length > 1) {
+				tabCurrentRound.pop();
+				setLocalStorage("currentRound", tabCurrentRound);
+				if (tabCurrentPlayer.length > 1) {
+					tabCurrentPlayer.pop();
+					setLocalStorage("currentPlayer", tabCurrentPlayer);
+				} else {
+					alert("Il n'est pas normal que tabCurrentRound soit > 1 et pas tabCurrentPlayer");
+				}
+			} else {
+				showToast("Sorry!! Can't go more backward !", 2);
+			}
 			var tabScore = getTabScore();
 			for (var joueur in tabScore) {
 				undo(tabScore[joueur]);
 			}
 			setTabScore(tabScore);
+			
 			refreshScreen();
 		}
 	})
@@ -103,10 +118,10 @@ $(function() {
 	$(".input-colour-choice").change(function() {
 		var joueur = $(this).attr("class").replace('input-colour-choice ', '');
 		var value = $(this).val();
-		var colour = {};
-		colour = getLocalStorage('colour');
-		colour[joueur] = value;
-		setLocalStorage('colour', colour);
+		var tabColour = {};
+		tabColour = getLocalStorage('colour');
+		tabColour[joueur] = value;
+		setLocalStorage('colour', tabColour);
 	})
 
 	$('.case').click(function() {
@@ -155,6 +170,8 @@ function init() {
 	var path = href.replace("https://" + hostname, "");
 	var nbJoueur = "1";
 	var tabScore = new Object();
+	var tabColour = {};
+	
 	if (path == "/") {
 		var monJoueur = new Joueur("Joueur_1", ["0;0;0.00"], [0], [0], [0], [0], [0], [0], [0], [0]);
 		tabScore["Joueur_1"] = monJoueur;
@@ -163,9 +180,8 @@ function init() {
 			$("input[name='" + nomJoueur + "']").attr("value", nomJoueur);
 		}
 		var value = $('.colour-choice .Joueur_1').val();
-		var colour = {};
-		colour['Joueur_1'] = value;
-		setLocalStorage('colour', colour);
+		tabColour['Joueur_1'] = value;
+		setLocalStorage('colour', tabColour);
 	}
 	else {
 		path = path.replace("/?", "");
@@ -176,9 +192,8 @@ function init() {
 			$("input[name='" + cle + "']").attr("value", nomJoueur);
 			var monJoueur = new Joueur(nomJoueur, ["0;0;0.00"], [0], [0], [0], [0], [0], [0], [0], [0]);
 			tabScore[cle] = monJoueur;
-			var colour = {};
-			colour = getLocalStorage('colour');
-			$('.colour-choice .' + cle).attr("value", colour[cle]);
+			tabColour = getLocalStorage('colour');
+			$('.colour-choice .' + cle).attr("value", tabColour[cle]);
 		}
 		nbJoueur = i;
 		startGame();
@@ -290,10 +305,10 @@ function setNbJoueur(nbJoueur) {
 	localStorage.setItem("nbJoueur", nbJoueur);
 }
 
-function addLocalStorage(nomVar, value) {
-	var obj = getLocalStorage(nomVar);
+function addLocalStorage(arr, value) {
+	var obj = getLocalStorage(arr);
 	obj.push(value.toString());
-	setLocalStorage(nomVar, obj);
+	setLocalStorage(arr, obj);
 }
 
 function setLocalStorage(nomVar, value) {
@@ -480,49 +495,38 @@ function updateScore(idRow, idColumn, point) {
 
 function refreshScreen() {
 	var tabScore = getTabScore();
-	var currentPlayer = getLocalStorage("currentPlayer");
-	var currentRound = getLocalStorage("currentRound");
-	if (currentRound.length > 1) {
-		currentRound.pop();
-	}
-	if (currentPlayer.length > 1) {
-		currentPlayer.pop();
-	}
-	else {
-		showToast("Sorry!! Can't go more backward !", 2);
-	}
-	setLocalStorage("currentPlayer", currentPlayer);
-	setLocalStorage("currentRound", currentRound);
-	$("#round").text(getLastValue(currentRound));
+	var currentPlayer = getLastValue(getLocalStorage("currentPlayer"));
+	var currentRound = getLastValue(getLocalStorage("currentRound"));
+	
+	$("#round").text(currentRound);
+	
 	for (var joueur in tabScore) {
-		var obj = tabScore[joueur];
-		var index = obj.score.length - 1;
-		var score = obj.score[index];
-		var stats = obj.stats[index];
-		var s20 = obj.s20[index];
-		var s19 = obj.s19[index];
-		var s18 = obj.s18[index];
-		var s17 = obj.s17[index];
-		var s16 = obj.s16[index];
-		var s15 = obj.s15[index];
-		var sbull = obj.sbull[index];
-		var dict = {"20": s20, "19": s19, "18": s18, "s17": s17, "16": s16,	"15": s15, "Bull": sbull};
-		Object.keys(dict).forEach(function(key) {
-			switch (dict[key]) {
-				case 0:
-				case 1:
-				case 2:
-				case 3:
-					$("#" + key + "_" + joueur).attr("svgid", dict[key]);
-					$("#" + key + "_" + joueur).html(drawSVG(dict[key], joueur));
+		for (var row in tabScore[joueur]) {
+			var srow = row.substring(1, row.length).replace("b", "B");
+			switch (row) {
+				case "score":
+					$('#' + joueur).text(getLastValue(tabScore[joueur][row]));
+					break;
+				case "stats":
+					var lastStat = getLastValue(tabScore[joueur][row]);
+					lastHit = parseInt(lastStat.split(";")[1], 10);
+					newStat = lastHit / currentRound;
+					newStat = newStat.toFixed(2);
+					if ($("#Stats_" + joueur).text() != newStat) {
+						$("#Stats_" + joueur).text(newStat);
+					}
+					break;
+				case "nom":
 					break;
 				default:
-					//
+					var val = getLastValue(tabScore[joueur][row]);
+					$("#" + srow + "_" + joueur).attr("svgid", val);
+					$("#" + srow + "_" + joueur).html(drawSVG(val, joueur));
 			}
-		});
-		$('#' + joueur).text(score);
-		var currentPlayer = "Joueur_" + getLastValue(getLocalStorage("currentPlayer"));
-		if (joueur === currentPlayer) {
+		}
+		
+		var nomPlayer = "Joueur_" + currentPlayer;
+		if (joueur === nomPlayer) {
 			$("." + joueur).css({
 				"background-color": "#FF8800"
 			});
@@ -531,16 +535,9 @@ function refreshScreen() {
 				"background-color": ""
 			});
 		}
-		var currentPlayer = getLastValue(getLocalStorage("currentPlayer"));
-		var currentRound = getLastValue(getLocalStorage("currentRound"));
-		lastHit = parseInt(getLastValue(tabScore[joueur].stats).split(";")[1], 10);
-		newStat = lastHit / currentRound;
-		newStat = newStat.toFixed(2);
-		if ($("#Stats_" + joueur).text() != newStat) {
-			$("#Stats_" + joueur).text(newStat);
-		}
-		console.log("4 : " + joueur);
 	}
+	
+	var dict = {"20": s20, "19": s19, "18": s18, "17": s17, "16": s16,	"15": s15, "Bull": sbull};
 	Object.keys(dict).forEach(function(key) {
 		griserLigne(key);
 	});
@@ -568,7 +565,6 @@ function griserLigne(idRow) {
 		var currentNamePlayer = "Joueur_" + currentPlayer;
 		$(".Ligne_" + idRow).each(function(i, obj) {
 			var currentClassPlayer = "Joueur_" + i;
-			//var currentClassPlayer = $(obj).attr("class").substring(9, 17);
 			if (currentClassPlayer === currentNamePlayer) {
 				$(obj).css({
 					"background-color": "#FF8800"
@@ -587,21 +583,13 @@ function drawSVG(svgid, joueur) {
 	var strokeWidth = 8;
 	var min = strokeWidth + ((strokeWidth - 7) * -2);
 	var max = widthHeight - min;
-	var colour = {};
-	colour = getLocalStorage('colour');
-	var strokeColour = colour[joueur];
+	var tabColour = {};
+	tabColour = getLocalStorage('colour');
+	var strokeColour = tabColour[joueur];
 	var filter = "<defs><filter id='shadow' width='200%' height='200%'><feOffset in='SourceGraphic' dx='3' dy='3' result='offsetOut'></feOffset><feColorMatrix result='matrixOut' in='offsetOut' type='matrix' values='0.2 0 0 0 0 0 0.2 0 0 0 0 0 0.2 0 0 0 0 0 1 0'></feColorMatrix><feGaussianBlur result='blurOut' in='matrixOut' stdDeviation='4'></feGaussianBlur><feBlend in='SourceGraphic' in2='blurOut' mode='normal'></feBlend></filter><filter id='light' filterUnits='userSpaceOnUse' width='200%' height='200%'><feGaussianBlur in='SourceAlpha' stdDeviation='4' result='blurOut'></feGaussianBlur><feOffset in='blurOut' dx='4' dy='4' result='offsetBlur'></feOffset><feSpecularLighting in='blurOut' surfaceScale='20' specularConstant='.25' specularExponent='4' lighting-color='#bbbbbb' result='specOut'><fePointLight x='-2000' y='-2000' z='200'></fePointLight></feSpecularLighting><feComposite in='specOut' in2='SourceAlpha' operator='in' result='specOut'></feComposite><feComposite in='SourceGraphic' in2='specOut' operator='arithmetic' k1='0' k2='1' k3='1' k4='0' result='litPaint'></feComposite></filter></defs><g filter='url(#light)'>";
-	//var filter = "";
-	if (filter != "") {
-		var line1 = "<line filter='url(#shadow)' y2='" + max + "' x2='" + min + "' y1='" + min + "' x1='" + max + "' fill-opacity='0' stroke-width='" + strokeWidth + "' stroke='" + strokeColour + "' /></g>";
-		var line2 = "<line filter='url(#shadow)' y2='" + max + "' x2='" + max + "' y1='" + min + "' x1='" + min + "' fill-opacity='0' stroke-width='" + strokeWidth + "' stroke='" + strokeColour + "' />";
-		var circle = "<circle fill-opacity='0' r='18' cy='25' cx='25' stroke-width='" + strokeWidth + "' stroke='" + strokeColour + "' />";
-	}
-	else {
-		var line1 = "<line y2='" + max + "' x2='" + min + "' y1='" + min + "' x1='" + max + "' fill-opacity='0' stroke-width='" + strokeWidth + "' stroke='" + strokeColour + "' />";
-		var line2 = "<line y2='" + max + "' x2='" + max + "' y1='" + min + "' x1='" + min + "' fill-opacity='0' stroke-width='" + strokeWidth + "' stroke='" + strokeColour + "' />";
-		var circle = "<circle fill-opacity='0' r='18' cy='25' cx='25' stroke-width='" + strokeWidth + "' stroke='" + strokeColour + "' />";
-	}
+	var line1 = "<line filter='url(#shadow)' y2='" + max + "' x2='" + min + "' y1='" + min + "' x1='" + max + "' fill-opacity='0' stroke-width='" + strokeWidth + "' stroke='" + strokeColour + "' /></g>";
+	var line2 = "<line filter='url(#shadow)' y2='" + max + "' x2='" + max + "' y1='" + min + "' x1='" + min + "' fill-opacity='0' stroke-width='" + strokeWidth + "' stroke='" + strokeColour + "' />";
+	var circle = "<circle fill-opacity='0' r='18' cy='25' cx='25' stroke-width='" + strokeWidth + "' stroke='" + strokeColour + "' />";
 	switch (svgid) {
 		case 1:
 			return filter + line1;
