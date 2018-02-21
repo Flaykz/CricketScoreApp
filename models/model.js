@@ -248,6 +248,8 @@ function finish() {
 	var testScore = [];
 	var minScore = [];
 	var winner = "";
+	var intro = "";
+	var win = false;
 	var currentRound = parseInt(getLastValue(getLocalStorage("currentRound")), 10);
 	for (var joueur in tabScore) {
 		var full = getLastValue(tabScore[joueur].s20) + getLastValue(tabScore[joueur].s19) + getLastValue(tabScore[joueur].s18) + getLastValue(tabScore[joueur].s17) + getLastValue(tabScore[joueur].s16) + getLastValue(tabScore[joueur].s15) + getLastValue(tabScore[joueur].sbull); 
@@ -259,34 +261,36 @@ function finish() {
 	var lenTab = indexArray.length;
 	
 	if (currentRound == 21) {
+		win = true;
 		if (lenTab > 1) {
 			for (var i = 0; i < lenTab; i++) {
-				winner = winner + " " + testScore[indexArray[i]].split("|")[0];
+				winner = winner + "</br>" + testScore[indexArray[i]].split("|")[0];
 			}
-			drawWinPlayer("winner are :" + winner);
+			intro = "winner are :";
 		}
 		else {
-			drawWinPlayer("winner is :" + testScore[indexArray[0]].split("|")[0]);
+			winner = testScore[indexArray[0]].split("|")[0];
+			intro = "winner is :";
 		}
 	}
 	else {
 		var count = 0;
-		var win = false;
 		for (var i = 0; i < lenTab; i++) {
 			if (getLastValue(testScore[indexArray[i]].split("|")) == 21) {
 				win = true;
 			}
 			count = count + 1;
-			winner = winner + " " + testScore[indexArray[i]].split("|")[0];
+			winner = winner + "</br>" + testScore[indexArray[i]].split("|")[0];
 		}
-		if (win) {
-			if (count > 1) {
-				drawWinPlayer("winner are :" + winner);
-			}
-			if (count == 1) {
-				drawWinPlayer("winner is :" + winner);
-			}
+		if (count > 1) {
+			intro = "winner are :";
+		} else {
+			intro = "winner is :";
 		}
+	}
+	intro = intro + "<div style='text-align: center;'>";
+	if (win) {
+		drawWinPlayer(intro + winner.replace(/\<\/br>/, "") + "</div>");
 	}
 }
 
