@@ -260,36 +260,20 @@ function finish() {
 	var indexArray = allIndexOf(minScore, min);
 	var lenTab = indexArray.length;
 	
-	if (currentRound == 21) {
-		win = true;
-		if (lenTab > 1) {
-			for (var i = 0; i < lenTab; i++) {
-				winner = winner + "</br>" + testScore[indexArray[i]].split("|")[0];
-			}
-			intro = "winner are :";
+	for (var i = 0; i < lenTab; i++) {
+		if ((getLastValue(testScore[indexArray[i]].split("|")) == 21) || (currentRound == 21)) {
+			win = true;
 		}
-		else {
-			winner = testScore[indexArray[0]].split("|")[0];
-			intro = "winner is :";
-		}
+		winner = winner + "</br>" + testScore[indexArray[i]].split("|")[0];
 	}
-	else {
-		var count = 0;
-		for (var i = 0; i < lenTab; i++) {
-			if (getLastValue(testScore[indexArray[i]].split("|")) == 21) {
-				win = true;
-			}
-			count = count + 1;
-			winner = winner + "</br>" + testScore[indexArray[i]].split("|")[0];
-		}
-		if (count > 1) {
+	
+	if (win) {
+		if (i > 1) {
 			intro = "winner are :";
 		} else {
 			intro = "winner is :";
 		}
-	}
-	intro = intro + "<div style='text-align: center;'>";
-	if (win) {
+		intro = intro + "<div style='text-align: center;'>";
 		drawWinPlayer(intro + winner.replace(/\<\/br>/, "") + "</div>");
 	}
 }
