@@ -1,3 +1,6 @@
+//"rgb(0, 0, 0)";
+colourEnded = "black";
+
 $(function() {
 	init();
 	
@@ -53,29 +56,29 @@ $(function() {
 			updateScore("null", "null", "0");
 			
 			var currPlayer = getLastValue(tabCurrentPlayer);
-			var currRound = parseInt(getLastValue(tabCurrentRound), 10);
+			var currRound = parseInt(getLastValue(tabCurrentRound));
 			var nbJoueur = getNbJoueur();
 			
-			$(".Joueur_" + currPlayer).each(function(i, obj) {
+			$("div.Joueur_" + currPlayer).each(function(i, obj) {
 				var currentCSS = $(obj).css("background-color");
 				if (currentCSS !== "rgb(0, 0, 0)") {
 					$(obj).css({
-						"background-color": ""
+						"background-color": colourBackground
 					});
 				}
 			});
-			if (parseInt(currPlayer, 10) == nbJoueur) {
+			if (parseInt(currPlayer) == nbJoueur) {
 				currPlayer = "1";
 				currRound = currRound + 1;
 				$("#round").text(currRound);
 			} else {
-				currPlayer = parseInt(currPlayer, 10) + 1;
+				currPlayer = parseInt(currPlayer) + 1;
 			}
-			$(".Joueur_" + currPlayer).each(function(i, obj) {
+			$("div.Joueur_" + currPlayer).each(function(i, obj) {
 				var currentCSS = $(obj).css("background-color");
 				if (currentCSS !== "rgb(0, 0, 0)") {
 					$(obj).css({
-						"background-color": "#FF8800"
+						"background-color": colourSelected
 					});
 				}
 			});
@@ -129,6 +132,34 @@ $(function() {
 		tabColour[joueur] = value;
 		setLocalStorage('colour', tabColour);
 	})
+	
+	$(".colour-ihm div input").change(function() {
+		var tabColour = {};
+		tabColour = getLocalStorage('colour');
+		var id = $(this).attr("id");
+		colour = $('#' + id).val();
+		tabColour[id] = colour;
+		switch (id) {
+			case 'colourPrevious':
+				colourPrevious = colour;
+				$('.Joueur_0.Ligne_score, .Joueur_0.Ligne_nom').css('background-color', colourPrevious);
+				break;
+			case 'colourNext':
+				colourNext = colour;
+				$('.Joueur_0.Ligne_20, .Joueur_0.Ligne_19, .Joueur_0.Ligne_18, .Joueur_0.Ligne_17, .Joueur_0.Ligne_16, .Joueur_0.Ligne_15, .Joueur_0.Ligne_Bull').css('background-color', colourNext);
+				break;
+			case 'colourSelected':
+				colourSelected = colour;
+				break;
+			case 'colourBackground':
+				colourBackground = colour;
+				$('div.Joueur_1, div.Joueur_2, div.Joueur_3, div.Joueur_4').css('background-color', colourBackground);
+				break;
+			default:
+				//
+		}
+		setLocalStorage('colour', tabColour);
+	})
 
 	$('.case').click(function() {
 		var currentPlayer = getLastValue(getLocalStorage("currentPlayer"));
@@ -174,7 +205,6 @@ $(function() {
 $(window).on("load", function () {
 	$('.container').css("display", "");
 	$('.table-responsive').css("display", "flex");
-	// $('.loader').css("display", "none");
 	$('.loader').fadeOut("slow");
 });
 
@@ -195,11 +225,23 @@ function init() {
 		}
 		var value = $('.colour-choice .Joueur_1').val();
 		tabColour['Joueur_1'] = value;
+		colourPrevious = $('#colourPrevious').val();
+		colourNext = $('#colourNext').val();
+		colourBackground = $('#colourBackground').val();
+		colourSelected = $('#colourSelected').val();
+		tabColour['colourPrevious'] = colourPrevious;
+		tabColour['colourNext'] = colourNext;
+		tabColour['colourBackground'] = colourBackground;
+		tabColour['colourSelected'] = colourSelected;
+		$('div.Joueur_1, div.Joueur_2, div.Joueur_3, div.Joueur_4').css('background-color', colourBackground);
+		$('.Joueur_0.Ligne_20, .Joueur_0.Ligne_19, .Joueur_0.Ligne_18, .Joueur_0.Ligne_17, .Joueur_0.Ligne_16, .Joueur_0.Ligne_15, .Joueur_0.Ligne_Bull').css('background-color', colourNext);
+		$('.Joueur_0.Ligne_score, .Joueur_0.Ligne_nom').css('background-color', colourPrevious);
 		setLocalStorage('colour', tabColour);
 	}
 	else {
 		path = path.replace("/?", "");
 		var listPlayer = path.split("&");
+		tabColour = getLocalStorage('colour');
 		for (var i = 0; i < listPlayer.length; i++) {
 			var cle = "Joueur_" + parseInt(i + 1);
 			var nomJoueur = sanitize(decodeURIComponent(listPlayer[i].split("=")[1]));
@@ -211,9 +253,15 @@ function init() {
 			setTeam();
 			var monJoueur = new Joueur(nomJoueur, ["0;0;0.00"], [0], [0], [0], [0], [0], [0], [0], [0]);
 			tabScore[cle] = monJoueur;
-			tabColour = getLocalStorage('colour');
-			$('.colour-choice .' + cle).val(tabColour[cle]);
+			//$('.colour-choice .' + cle).val(tabColour[cle]);
 		}
+		colourPrevious = tabColour['colourPrevious'];
+		colourNext = tabColour['colourNext'];
+		colourBackground = tabColour['colourBackground'];
+		colourSelected = tabColour['colourSelected'];
+		$('div.Joueur_1, div.Joueur_2, div.Joueur_3, div.Joueur_4').css('background-color', colourBackground);
+		$('.Joueur_0.Ligne_20, .Joueur_0.Ligne_19, .Joueur_0.Ligne_18, .Joueur_0.Ligne_17, .Joueur_0.Ligne_16, .Joueur_0.Ligne_15, .Joueur_0.Ligne_Bull').css('background-color', colourNext);
+		$('.Joueur_0.Ligne_score, .Joueur_0.Ligne_nom').css('background-color', colourPrevious);
 		nbJoueur = i;
 		startGame();
 		history.pushState({Title: "accueil", Url: "/"}, "accueil", "/");
@@ -222,7 +270,7 @@ function init() {
 	setTabScore(tabScore);
 	setNbJoueur(nbJoueur);
 	
-	for (var i = 1; i < 5; i++) {
+	for (var i = 0; i < 5; i++) {
 		var chaine = ".Joueur_" + i;
 		if (i > parseInt(nbJoueur)) {
 			$(chaine).css("display", "none");
@@ -422,8 +470,8 @@ function startGame() {
 	$('.mymodal').css("display", "none");
 	$('.table-responsive').css("pointer-events", "initial");
 	$('.table-responsive').css("cursor", "initial");
-	$(".Joueur_1").css({
-		"background-color": "#FF8800"
+	$("div.Joueur_1").css({
+		"background-color": colourSelected
 	});
 	setLocalStorage("currentPlayer", ["1"]);
 	setLocalStorage("currentRound", ["1"]);
@@ -553,12 +601,12 @@ function refreshScreen() {
 		
 		var nomPlayer = "Joueur_" + currentPlayer;
 		if (joueur === nomPlayer) {
-			$("." + joueur).css({
-				"background-color": "#FF8800"
+			$("div." + joueur).css({
+				"background-color": colourSelected
 			});
 		} else {
 			$("." + joueur).css({
-				"background-color": ""
+				"background-color": colourBackground
 			});
 		}
 	}
@@ -584,22 +632,28 @@ function griserLigne(idRow) {
 		}
 	}
 	if (griser) {
-		$(".Ligne_" + idRow).css({
-			"background-color": "black"
+		$(".Ligne_" + idRow + "[style*='display: flex;']").css({
+			"background-color": colourEnded
 		});
 	} else {
 		var currentPlayer = getLastValue(getLocalStorage("currentPlayer"));
 		var currentNamePlayer = "Joueur_" + currentPlayer;
-		$(".Ligne_" + idRow).each(function(i, obj) {
+		$(".Ligne_" + idRow + "[style*='display: flex;']").each(function(i, obj) {
 			var currentClassPlayer = "Joueur_" + i;
 			if (currentClassPlayer === currentNamePlayer) {
 				$(obj).css({
-					"background-color": "#FF8800"
+					"background-color": colourSelected
 				});
 			} else {
-				$(obj).css({
-					"background-color": ""
-				});
+				if (i > 0) {
+					$(obj).css({
+						"background-color": colourBackground
+					});
+				} else {
+					$(obj).css({
+						"background-color": colourNext
+					});
+				}
 			}
 		});
 	}

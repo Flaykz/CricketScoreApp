@@ -122,6 +122,13 @@ html(lang="fr", dir="ltr")
                 span.glyphicon.glyphicon-plus Add Player
               button(id="deletePlayer", aria-label="Enlever joueur") 
                 span.glyphicon.glyphicon-minus Delete Player
+            div.colour-ihm
+              div.colour-ihm-control
+                input(id='colourPrevious', type='color', value="#6464ec")
+                input(id='colourNext', type='color', value="#ce4242")
+              div.colour-ihm-font
+                input(id='colourBackground', type='color', value="#9e9e9e")
+                input(id='colourSelected', type='color', value="#FF8800")
             div.mymodal-footer
               button(data-dismiss="modal", id="startGame", aria-label="Lancer la partie") Start game
     div.loader
