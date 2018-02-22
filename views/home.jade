@@ -53,6 +53,7 @@ html(lang="fr", dir="ltr")
       }
       .mymodal-body {
         padding: 15px;
+        display: flex;
         border-bottom: 1px solid #e5e5e5;
       }
       .mymodal-footer {
@@ -90,11 +91,31 @@ html(lang="fr", dir="ltr")
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
       }
-      .colour-choice {
+      .colour-choice, .colour-ihm {
         display: flex;
+        padding-left: 15px;
+        padding-right: 15px;
+        border-bottom: 1px solid #e5e5e5;
+      }
+      .colour-ihm div {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
       }
       .Joueur_2, .Joueur_3, .Joueur_4 {
         display: none;
+      }
+      
+      input[type="color"] {
+        border: none;
+      }
+      
+      input[type="color"]::-webkit-color-swatch-wrapper {
+        padding: 0;
+      }
+      
+      input[type="color"]::-webkit-color-swatch {
+        border: none;
       }
       
     link(rel="icon", type="image/png", href="./favicon.png")
@@ -119,9 +140,9 @@ html(lang="fr", dir="ltr")
                 - countColor++;
             div.mymodal-body
               button(id="addPlayer", aria-label="Ajouter joueur") 
-                span.glyphicon.glyphicon-plus Add Player
+                span.glyphicon.glyphicon-plus Add
               button(id="deletePlayer", aria-label="Enlever joueur") 
-                span.glyphicon.glyphicon-minus Delete Player
+                span.glyphicon.glyphicon-minus Del
             div.colour-ihm
               div.colour-ihm-control
                 input(id='colourPrevious', type='color', value="#6464ec")
