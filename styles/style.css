@@ -75,6 +75,10 @@ html, body, .table-responsive {
 [contenteditable="true"] {
     white-space: nowrap;
     overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
 }
 
 [contenteditable="true"] br {
