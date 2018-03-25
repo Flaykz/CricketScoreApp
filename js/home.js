@@ -12,6 +12,11 @@ css2.type = 'text/css';
 var link2 = document.getElementsByTagName('link')[0];
 link2.parentNode.insertBefore(css2, link2);
 
+if (navigator.vendor ==  "Apple Computer, Inc.") {
+    document.getElementsByClassName('colour-choice').style.display = "none";
+    document.getElementsByClassName('colour-ihm').style.display = "none";
+}
+
 if('serviceWorker' in navigator) {
     window.addEventListener("load", function () {
         navigator.serviceWorker.register('/sw.js').then(function(registration) { 
@@ -46,8 +51,6 @@ if('serviceWorker' in navigator) {
         window.addEventListener('offline', updateOnlineStatus);
     });
 } else {
-  document.getElementsByClassName('colour-choice').style.display = "none";
-  document.getElementsByClassName('colour-ihm').style.display = "none";
 //   window.showToast("Your browser doesn't support Service Worker", 0);
   window.showToast("Your browser sucks, get a real one like chrome !", 0);
 }
