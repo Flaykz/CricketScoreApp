@@ -168,6 +168,9 @@ $(function() {
 		var idRow = $(this).children().attr("id").split("_")[0];
 		var idColumn = $(this).children().attr("id").substr(-8, 8);
 		if (idColumn == chaine) {
+			$('.' + chaine).fadeTo(25, 0.6, function () {
+				$('.' + chaine).fadeTo(25, 1);
+			});
 			var point = parseInt($(this).children().attr("svgid"), 10);
 			point = point + 1;
 			switch (point) {
