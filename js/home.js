@@ -46,5 +46,8 @@ if('serviceWorker' in navigator) {
         window.addEventListener('offline', updateOnlineStatus);
     });
 } else {
-  window.showToast("Your browser doesn't support Service Worker", 0);
+  document.getElementsByClassName('colour-choice').style.display = "none";
+  document.getElementsByClassName('colour-ihm').style.display = "none";
+//   window.showToast("Your browser doesn't support Service Worker", 0);
+  window.showToast("Your browser sucks, get a real one like chrome !", 0);
 }
