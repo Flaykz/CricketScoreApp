@@ -45,6 +45,8 @@ $(function() {
 		}
 	})
 	$("#startGame").click(function() {
+		var noSleep = new NoSleep();
+		noSleep.enable();
 		startGame();
 	})
 
@@ -168,8 +170,8 @@ $(function() {
 		var idRow = $(this).children().attr("id").split("_")[0];
 		var idColumn = $(this).children().attr("id").substr(-8, 8);
 		if (idColumn == chaine) {
-			$('.' + chaine).fadeTo(25, 0.6, function () {
-				$('.' + chaine).fadeTo(25, 1);
+			$('.' + chaine).fadeTo(10, 0.6, function () {
+				$('.' + chaine).fadeTo(10, 1);
 			});
 			var point = parseInt($(this).children().attr("svgid"), 10);
 			point = point + 1;
@@ -326,6 +328,8 @@ function finish() {
 		}
 		intro = intro + "<div style='text-align: center;'>";
 		drawWinPlayer(intro + winner.replace(/\<\/br>/, "") + "</div>");
+		var noSleep = new NoSleep();
+		noSleep.disable();
 	}
 }
 
