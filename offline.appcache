@@ -1,0 +1,25 @@
+CACHE MANIFEST
+
+# CricketScoreAPP AppCache v1
+
+CACHE:
+.
+config.js
+js/home.js
+styles/style.css
+https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css
+models/model.js
+controllers/controller.js
+https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js
+https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js
+views/home.jade
+views/load-appcache.html
+images/launcher-icon-1x.png
+images/launcher-icon-2x.png
+images/launcher-icon-4x.png
+images/launcher-icon-8x.png
+favicon.png
+NETWORK:
+*
+FALLBACK:
+/ images/dart-board-1614051_1280.png

@@ -51,6 +51,23 @@ if('serviceWorker' in navigator) {
         window.addEventListener('offline', updateOnlineStatus);
     });
 } else {
-//   window.showToast("Your browser doesn't support Service Worker", 0);
-  window.showToast("Your browser sucks, get a real one like chrome !", 0);
+    //   window.showToast("Your browser doesn't support Service Worker", 0);
+    window.showToast("Your browser sucks, get a real one like chrome !", 0);
+    if ('applicationCache' in window) {
+        var iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        iframe.src = 'views/load-appcache.html';
+        document.body.appendChild(iframe);
+        //Check if a new cache is available on page load.
+        window.addEventListener('load', function( ) {
+            window.applicationCache.addEventListener('updateready', function( ) {
+                if (window.applicationCache.status === window.applicationCache.UPDATEREADY) {
+                    window.applicationCache.swapCache();
+                    window.location.reload( true );
+                } else {
+                    // Manifest didn't changed. Nothing new to server.
+                }
+            }, false);
+        }, false);
+    }
 }
