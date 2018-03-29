@@ -13,8 +13,8 @@ var link2 = document.getElementsByTagName('link')[0];
 link2.parentNode.insertBefore(css2, link2);
 
 if (navigator.vendor ==  "Apple Computer, Inc.") {
-    document.getElementsByClassName('colour-choice').style.display = "none";
-    document.getElementsByClassName('colour-ihm').style.display = "none";
+    document.getElementsByClassName('colour-choice')[0].style.display = "none";
+    document.getElementsByClassName('colour-ihm')[0].style.display = "none";
 }
 
 if('serviceWorker' in navigator) {

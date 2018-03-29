@@ -18,6 +18,8 @@ $(function() {
 			setTabScore(tabScore);
 			setNbJoueur(nbJoueur);
 			$("." + chaine).css("display", "flex");
+			var maxWidth = 100 / (nbJoueur + 1);
+			$(".col").css("max-width", maxWidth + "vw");
 			$('.mymodal-title').text("Nombre de joueurs : " + nbJoueur);
 			var value = $('.colour-choice .' + chaine).val();
 			var tabColour = {};
@@ -39,6 +41,8 @@ $(function() {
 			setNbJoueur(nbJoueur);
 			delete tabScore[chaine];
 			setTabScore(tabScore);
+			var maxWidth = 100 / (nbJoueur + 1);
+			$(".col").css("max-width", maxWidth + "vw");
 			$('.mymodal-title').text("Nombre de joueurs : " + nbJoueur);
 		} else {
 			showToast("Sorry!! Can't remove first player!", 2);

@@ -78,7 +78,11 @@ html, body, .table-responsive {
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: center;
+}
+
+.team1, .team2 {
+    margin: 0 auto 0;
 }
 
 [contenteditable="true"] br {
