@@ -52,7 +52,7 @@ if('serviceWorker' in navigator) {
     });
 } else {
     //   window.showToast("Your browser doesn't support Service Worker", 0);
-    window.showToast("Your browser sucks, get a real one like chrome !", 0);
+    window.showToast("Safari sucks (service worker fail) but anyway, maybe i can do some magic...", 0);
     if ('applicationCache' in window) {
         var iframe = document.createElement('iframe');
         iframe.style.display = 'none';

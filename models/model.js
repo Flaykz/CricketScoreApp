@@ -2,8 +2,6 @@
 colourEnded = "black";
 
 $(function() {
-	init();
-	
 	$('#addPlayer').click(function() {
 		var tabScore = getTabScore();
 		var nbJoueur = getNbJoueur();
@@ -212,9 +210,11 @@ $(function() {
 });
 
 $(window).on("load", function () {
+	$('.mymodal').css("display", "block");
 	$('.container').css("display", "");
 	$('.table-responsive').css("display", "flex");
 	$('.loader').fadeOut("slow");
+	init();
 });
 
 function init() {
@@ -226,26 +226,57 @@ function init() {
 	var tabColour = {};
 	
 	if (path == "/") {
-		var monJoueur = new Joueur("Joueur_1", ["0;0;0.00"], [0], [0], [0], [0], [0], [0], [0], [0]);
-		tabScore["Joueur_1"] = monJoueur;
-		for (var i = 1; i < 5; i++) {
-			var nomJoueur = "Joueur_" + i;
-			$(".joueur[name='" + nomJoueur + "']").html(nomJoueur);
+		if (getLocalStorage("currentRound").length > 1) {
+			var nbJoueur = getNbJoueur();
+			var tabScore = getTabScore();
+			tabColour = getLocalStorage('colour');
+			colourPrevious = tabColour['colourPrevious'];
+			colourNext = tabColour['colourNext'];
+			colourBackground = tabColour['colourBackground'];
+			colourSelected = tabColour['colourSelected'];
+			$('div.Joueur_1, div.Joueur_2, div.Joueur_3, div.Joueur_4').css('background-color', colourBackground);
+			$('.Joueur_0.Ligne_20, .Joueur_0.Ligne_19, .Joueur_0.Ligne_18, .Joueur_0.Ligne_17, .Joueur_0.Ligne_16, .Joueur_0.Ligne_15, .Joueur_0.Ligne_Bull').css('background-color', colourNext);
+			$('.Joueur_0.Ligne_score, .Joueur_0.Ligne_nom').css('background-color', colourPrevious);
+			$('.mymodal').css("display", "none");
+			refreshScreen();
+			var modalStart = "<div class='mymodal-dialog'><div class='mymodal-content'><div class='mymodal-body'>";
+			var modalMid = "Continue this game ?"
+			var modalEnd = "</div><div class='mymodal-footer'><button id='oui' aria-label='Oui'>Yes</button><button id='non' aria-label='Non'>No</button></div></div></div>";
+			$(".modalEndGame").html(modalStart + modalMid + modalEnd);
+			$(".modalEndGame").css("display", "block");
+			$("#oui").on("click",function() {
+				$(".modalEndGame").css("display", "none");
+				$('.table-responsive').css("pointer-events", "initial");
+				$('.table-responsive').css("cursor", "initial");
+			});
+			$("#non").on("click",function() {
+				var url = "https://" + window.location.hostname;
+				setLocalStorage("currentRound", ["1"]);
+				window.location.assign(url);
+			});
+		} else {
+			var monJoueur = new Joueur("Joueur_1", ["0;0;0.00"], [0], [0], [0], [0], [0], [0], [0], [0]);
+			tabScore["Joueur_1"] = monJoueur;
+			for (var i = 1; i < 5; i++) {
+				var nomJoueur = "Joueur_" + i;
+				$(".joueur[name='" + nomJoueur + "']").html(nomJoueur);
+			}
+			var value = $('.colour-choice .Joueur_1').val();
+			tabColour['Joueur_1'] = value;
+			colourPrevious = $('#colourPrevious').val();
+			colourNext = $('#colourNext').val();
+			colourBackground = $('#colourBackground').val();
+			colourSelected = $('#colourSelected').val();
+			tabColour['colourPrevious'] = colourPrevious;
+			tabColour['colourNext'] = colourNext;
+			tabColour['colourBackground'] = colourBackground;
+			tabColour['colourSelected'] = colourSelected;
+			$('div.Joueur_1, div.Joueur_2, div.Joueur_3, div.Joueur_4').css('background-color', colourBackground);
+			$('.Joueur_0.Ligne_20, .Joueur_0.Ligne_19, .Joueur_0.Ligne_18, .Joueur_0.Ligne_17, .Joueur_0.Ligne_16, .Joueur_0.Ligne_15, .Joueur_0.Ligne_Bull').css('background-color', colourNext);
+			$('.Joueur_0.Ligne_score, .Joueur_0.Ligne_nom').css('background-color', colourPrevious);
+			setLocalStorage('colour', tabColour);
 		}
-		var value = $('.colour-choice .Joueur_1').val();
-		tabColour['Joueur_1'] = value;
-		colourPrevious = $('#colourPrevious').val();
-		colourNext = $('#colourNext').val();
-		colourBackground = $('#colourBackground').val();
-		colourSelected = $('#colourSelected').val();
-		tabColour['colourPrevious'] = colourPrevious;
-		tabColour['colourNext'] = colourNext;
-		tabColour['colourBackground'] = colourBackground;
-		tabColour['colourSelected'] = colourSelected;
-		$('div.Joueur_1, div.Joueur_2, div.Joueur_3, div.Joueur_4').css('background-color', colourBackground);
-		$('.Joueur_0.Ligne_20, .Joueur_0.Ligne_19, .Joueur_0.Ligne_18, .Joueur_0.Ligne_17, .Joueur_0.Ligne_16, .Joueur_0.Ligne_15, .Joueur_0.Ligne_Bull').css('background-color', colourNext);
-		$('.Joueur_0.Ligne_score, .Joueur_0.Ligne_nom').css('background-color', colourPrevious);
-		setLocalStorage('colour', tabColour);
+		
 	}
 	else {
 		path = path.replace("/?", "");
@@ -461,6 +492,7 @@ function drawWinPlayer(winner) {
 	$(".modalEndGame").css("display", "block");
 	var url = "https://" + window.location.hostname;
 	$("#restartGame").on("click",function() {
+		setLocalStorage("currentRound", ["1"]);
 		window.location.assign(url);
 	});
 	$("#revengeGame").on("click",function() {
@@ -620,9 +652,10 @@ function refreshScreen() {
 				"background-color": colourBackground
 			});
 		}
+		$(".joueur[name='" + joueur + "']").html(tabScore[joueur].nom);
 	}
 	
-	var dict = {"20": "", "19": "", "18": "", "17": "", "16": "",	"15": "", "Bull": ""};
+	var dict = {"20": "", "19": "", "18": "", "17": "", "16": "","15": "", "Bull": ""};
 	
 	Object.keys(dict).forEach(function(key) {
 		griserLigne(key);
