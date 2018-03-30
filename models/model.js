@@ -495,8 +495,8 @@ function drawWinPlayer(winner) {
 	$(".modalEndGame").html(modalStart + winner + modalEnd);
 	$(".modalEndGame").css("display", "block");
 	var url = "https://" + window.location.hostname;
+	setLocalStorage("currentRound", ["1"]);
 	$("#restartGame").on("click",function() {
-		setLocalStorage("currentRound", ["1"]);
 		window.location.assign(url);
 	});
 	$("#revengeGame").on("click",function() {
