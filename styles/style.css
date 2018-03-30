@@ -43,6 +43,7 @@ html, body, .table-responsive {
 .Joueur_0 {
     max-width: 30vw;
     font-size: 5vmin;
+    user-select: none;
 }
 
 .toast {

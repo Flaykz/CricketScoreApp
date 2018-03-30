@@ -164,8 +164,7 @@ $(function() {
 		}
 		setLocalStorage('colour', tabColour);
 	})
-
-	$('.case').click(function() {
+	$('.case').click(function(e) {
 		var currentPlayer = getLastValue(getLocalStorage("currentPlayer"));
 		var currentRound = getLastValue(getLocalStorage("currentRound"));
 		var chaine = "Joueur_" + currentPlayer;
