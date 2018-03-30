@@ -226,6 +226,10 @@ function init() {
 	var tabColour = {};
 	
 	if (path == "/") {
+		currentRound = getLocalStorage("currentRound");
+		if (currentRound == null) {
+			setLocalStorage("currentRound", ["1"]);
+		}
 		if (getLocalStorage("currentRound").length > 1) {
 			var nbJoueur = getNbJoueur();
 			var tabScore = getTabScore();
