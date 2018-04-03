@@ -63,7 +63,8 @@ if('serviceWorker' in navigator) {
             window.applicationCache.addEventListener('updateready', function( ) {
                 if (window.applicationCache.status === window.applicationCache.UPDATEREADY) {
                     window.applicationCache.swapCache();
-                    window.location.reload( true );
+                    window.showToast('New content available, reload the page to get it', 2);
+                    // window.location.reload( true );
                 } else {
                     // Manifest didn't changed. Nothing new to server.
                 }
