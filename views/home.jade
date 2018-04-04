@@ -172,15 +172,20 @@ html(lang="fr", dir="ltr")
                     div.joueur(name="Joueur_#{countName}", contenteditable="true") #{name}
                     span(id="Stats_Joueur_#{countName}") 0.00
                 else 
-                  div.col.Ligne_nom(class="Joueur_#{countName}")
-                    span(id="round") 1
+                  div.col.Ligne_nom(class="Joueur_#{countName} darts")
+                    span(id="d1")
+                      img(class="dart", src="/images/dart-o.png")
+                    span(id="d2")
+                      img(class="dart", src="/images/dart.png")
+                    span(id="d3")
+                      img(class="dart", src="/images/dart.png")
               when 1
                 if countName > 0
                   div.col.Ligne_score(class="Joueur_#{countName}")
                     span(id="Joueur_#{countName}") 0
                 else 
                   div.col.Ligne_score(class="Joueur_#{countName}")
-                    span #{item}
+                    span(id="round") 1
               default
                 if countName > 0
                   div.col.case(class="Joueur_#{countName} Ligne_#{item}")

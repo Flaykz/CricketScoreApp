@@ -98,3 +98,12 @@ html, body, .table-responsive {
 .colour-ihm {
     display: flex;
 }
+
+.darts {
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.dart {
+    width: 3vw;
+}

@@ -56,44 +56,64 @@ $(function() {
 		var row = $(this).attr("class");
 		var tabCurrentPlayer = getLocalStorage("currentPlayer");
 		var tabCurrentRound = getLocalStorage("currentRound");
+		var tabCurrentDart = getLocalStorage("currentDart");
 		if (row.match("Ligne_(20|19|18|17|16|15|Bull)")) {
 			updateScore("null", "null", "0");
 			
 			var currPlayer = getLastValue(tabCurrentPlayer);
 			var currRound = parseInt(getLastValue(tabCurrentRound));
+			var currDart = parseInt(getLastValue(tabCurrentDart));
+			
 			var nbJoueur = getNbJoueur();
 			
-			$("div.Joueur_" + currPlayer).each(function(i, obj) {
-				var currentCSS = $(obj).css("background-color");
-				if (currentCSS !== "rgb(0, 0, 0)") {
-					$(obj).css({
-						"background-color": colourBackground
-					});
+			if (currDart == 3) {
+				$('.darts span').each(function(i, obj) {
+					if (i == 0) {
+						$(obj).html('<img src="/images/dart-o.png" class="dart">');
+					} else {
+						$(obj).html('<img src="/images/dart.png" class="dart">');
+					}
+				});
+				$("div.Joueur_" + currPlayer).each(function(i, obj) {
+					var currentCSS = $(obj).css("background-color");
+					if (currentCSS !== "rgb(0, 0, 0)") {
+						$(obj).css({
+							"background-color": colourBackground
+						});
+					}
+				});
+				if (parseInt(currPlayer) == nbJoueur) {
+					currPlayer = "1";
+					currRound = currRound + 1;
+					$("#round").text(currRound);
+				} else {
+					currPlayer = parseInt(currPlayer) + 1;
 				}
-			});
-			if (parseInt(currPlayer) == nbJoueur) {
-				currPlayer = "1";
-				currRound = currRound + 1;
-				$("#round").text(currRound);
-			} else {
-				currPlayer = parseInt(currPlayer) + 1;
+				$("div.Joueur_" + currPlayer).each(function(i, obj) {
+					var currentCSS = $(obj).css("background-color");
+					if (currentCSS !== "rgb(0, 0, 0)") {
+						$(obj).css({
+							"background-color": colourSelected
+						});
+					}
+				});
 			}
-			$("div.Joueur_" + currPlayer).each(function(i, obj) {
-				var currentCSS = $(obj).css("background-color");
-				if (currentCSS !== "rgb(0, 0, 0)") {
-					$(obj).css({
-						"background-color": colourSelected
-					});
+			$('.darts span').each(function(i, obj) {
+				if ((i + 1) == (currDart + 1)) {
+					$(obj).html('<img src="/images/dart-o.png" class="dart">');
 				}
 			});
-			
+			currDart = 0;
 			addLocalStorage("currentRound", currRound);
 			addLocalStorage("currentPlayer", currPlayer);
+			addLocalStorage("currentDart", currDart);
 		}
 		else {
 			if (tabCurrentRound.length > 1) {
 				tabCurrentRound.pop();
+				tabCurrentDart.pop();
 				setLocalStorage("currentRound", tabCurrentRound);
+				setLocalStorage("currentDart", tabCurrentDart);
 				if (tabCurrentPlayer.length > 1) {
 					tabCurrentPlayer.pop();
 					setLocalStorage("currentPlayer", tabCurrentPlayer);
@@ -167,15 +187,32 @@ $(function() {
 	$('.case').click(function(e) {
 		var currentPlayer = getLastValue(getLocalStorage("currentPlayer"));
 		var currentRound = getLastValue(getLocalStorage("currentRound"));
+		var tabCurrentDart = getLocalStorage("currentDart");
+		var currentDart = getLastValue(tabCurrentDart);
 		var chaine = "Joueur_" + currentPlayer;
 		var idRow = $(this).children().attr("id").split("_")[0];
 		var idColumn = $(this).children().attr("id").substr(-8, 8);
+		var prefix = '<svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">'
+		var suffix = '</svg>'
 		if (idColumn == chaine) {
 			$('.' + chaine).fadeTo(10, 0.6, function () {
 				$('.' + chaine).fadeTo(10, 1);
 			});
 			var point = parseInt($(this).children().attr("svgid"), 10);
 			point = point + 1;
+			if (currentDart == 0) {
+				var previousDart = parseInt(getLastValueIndex(tabCurrentDart, 2));
+				if (previousDart == 3) {
+					currentDart = 1;
+				} else {
+					currentDart = previousDart + 1;
+				}
+			}
+			$('.darts span').each(function(i, obj) {
+				if ((i + 1) == currentDart) {
+					$(obj).html(prefix + drawSVG(point, chaine) + suffix + ' ' + idRow);
+				}
+			});
 			switch (point) {
 				case 1:
 				case 2:
@@ -188,6 +225,7 @@ $(function() {
 			}
 			addLocalStorage("currentRound", currentRound);
 			addLocalStorage("currentPlayer", currentPlayer);
+			addLocalStorage("currentDart", currentDart);
 			updateScore(idRow, idColumn, point);
 		}
 		else {
@@ -226,8 +264,12 @@ function init() {
 	
 	if (path == "/") {
 		currentRound = getLocalStorage("currentRound");
+		currentDart = getLocalStorage("currentDart");
 		if (currentRound == null) {
 			setLocalStorage("currentRound", ["1"]);
+		}
+		if (currentRound == null) {
+			setLocalStorage("currentDart", ["0"]);
 		}
 		if (getLocalStorage("currentRound").length > 1) {
 			var nbJoueur = getNbJoueur();
@@ -255,6 +297,7 @@ function init() {
 			$("#non").on("click",function() {
 				var url = "https://" + window.location.hostname;
 				setLocalStorage("currentRound", ["1"]);
+				setLocalStorage("currentDart", ["1"]);
 				window.location.assign(url);
 			});
 		} else {
@@ -431,10 +474,18 @@ function getLocalStorage(nomVar) {
 }
 
 function getLastValue(arr) {
-	if (arr.length > 1) {
-		return arr[arr.length - 1];
+	return getLastValueIndex(arr, 1);
+}
+
+function getLastValueIndex(arr, index) {
+	if (arr != null) {
+		if (arr.length > index) {
+			return arr[arr.length - index];
+		} else {
+			return arr[arr.length - 1];
+		}
 	} else {
-		return arr[0];
+		return 0;
 	}
 }
 
@@ -495,6 +546,7 @@ function drawWinPlayer(winner) {
 	$(".modalEndGame").css("display", "block");
 	var url = "https://" + window.location.hostname;
 	setLocalStorage("currentRound", ["1"]);
+	setLocalStorage("currentDart", ["0"]);
 	$("#restartGame").on("click",function() {
 		window.location.assign(url);
 	});
@@ -521,12 +573,14 @@ function startGame() {
 	});
 	setLocalStorage("currentPlayer", ["1"]);
 	setLocalStorage("currentRound", ["1"]);
+	setLocalStorage("currentDart", ["0"]);
 }
 
 function updateScore(idRow, idColumn, point) {
 	var tabScore = getTabScore();
 	var currentPlayer = getLastValue(getLocalStorage("currentPlayer"));
 	var currentRound = getLastValue(getLocalStorage("currentRound"));
+	var currentDart = getLastValue(getLocalStorage("currentDart"));
 	var nbJoueur = getLocalStorage("nbJoueur");
 	var dicPoint = {"s20": 20, "s19": 19, "s18": 18, "s17": 17, "s16": 16, "s15": 15, "sbull": 25};
 	var srow = "s" + idRow.toLowerCase();
@@ -617,6 +671,7 @@ function refreshScreen() {
 	var tabScore = getTabScore();
 	var currentPlayer = getLastValue(getLocalStorage("currentPlayer"));
 	var currentRound = getLastValue(getLocalStorage("currentRound"));
+	var currentDart = getLastValue(getLocalStorage("currentDart"));
 	
 	$("#round").text(currentRound);
 	
@@ -730,6 +785,15 @@ function drawSVG(svgid, joueur) {
 			break;
 		default:
 			return "";
+	}
+}
+
+function drawDart(obj, d1, d2, d3) {
+	switch (d1) {
+		case "":
+			$(obj).html('<img src="/images/dart.png" class="dart">');
+		default:
+			$(obj).html(d1);
 	}
 }
 
