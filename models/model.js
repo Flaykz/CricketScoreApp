@@ -63,17 +63,45 @@ $(function() {
 			var currPlayer = getLastValue(tabCurrentPlayer);
 			var currRound = parseInt(getLastValue(tabCurrentRound));
 			var currDart = parseInt(getLastValue(tabCurrentDart));
-			
 			var nbJoueur = getNbJoueur();
 			
-			if (currDart == 3) {
-				$('.darts span').each(function(i, obj) {
-					if (i == 0) {
-						$(obj).html('<img src="/images/dart-o.png" class="dart">');
+			var d1Value = $('#d1').text();
+			var d2Value = $('#d2').text();
+			var d3Value = $('#d3').text();
+			
+			if (currDart == 0) {
+				if (d1Value == "") {
+					$('#d1').html('MISS');
+					currDart = 2;
+				} else {
+					if (d2Value == "") {
+						$('#d2').html('MISS');
+						currDart = 3;
 					} else {
+						if (d3Value == "") {
+							$('#d3').html('MISS');
+							d3Value = $('#d3').text();
+							currDart = 1;
+						}
+					}
+				}
+			} else {
+				currDart = currDart + 1;
+				if (currDart == 4) {
+					currDart = 1;
+				}
+			}
+			
+			$('.darts span').each(function(i, obj) {
+				if ((i + 1) == currDart) {
+					$(obj).html('<img src="/images/dart-o.png" class="dart">');
+				} else {
+					if ((i + 1) > currDart) {
 						$(obj).html('<img src="/images/dart.png" class="dart">');
 					}
-				});
+				}
+			});
+			if (d3Value != "") {
 				$("div.Joueur_" + currPlayer).each(function(i, obj) {
 					var currentCSS = $(obj).css("background-color");
 					if (currentCSS !== "rgb(0, 0, 0)") {
@@ -98,11 +126,6 @@ $(function() {
 					}
 				});
 			}
-			$('.darts span').each(function(i, obj) {
-				if ((i + 1) == (currDart + 1)) {
-					$(obj).html('<img src="/images/dart-o.png" class="dart">');
-				}
-			});
 			currDart = 0;
 			addLocalStorage("currentRound", currRound);
 			addLocalStorage("currentPlayer", currPlayer);
@@ -200,17 +223,34 @@ $(function() {
 			});
 			var point = parseInt($(this).children().attr("svgid"), 10);
 			point = point + 1;
-			if (currentDart == 0) {
-				var previousDart = parseInt(getLastValueIndex(tabCurrentDart, 2));
-				if (previousDart == 3) {
-					currentDart = 1;
+			
+			var d1Value = $('#d1').html();
+			var d2Value = $('#d2').html();
+			var d3Value = $('#d3').html();
+			if (d1Value == '<img src="/images/dart-o.png" class="dart">') {
+				currentDart = 1;
+			} else {
+				if (d2Value == '<img src="/images/dart-o.png" class="dart">') {
+					currentDart = 2;
 				} else {
-					currentDart = previousDart + 1;
+					if (d3Value == '<img src="/images/dart-o.png" class="dart">') {
+						currentDart = 3;
+					}
 				}
+			}
+			var nb = 0;
+			if (parseInt(getLastValueIndex(tabCurrentDart, 1)) == 0) {
+				nb = 1;
+			} else {
+				if (parseInt(getLastValueIndex(tabCurrentDart, 2)) == 0) {
+					nb = 2;
+				} else {
+					nb = 3;
+				}	
 			}
 			$('.darts span').each(function(i, obj) {
 				if ((i + 1) == currentDart) {
-					$(obj).html(prefix + drawSVG(point, chaine) + suffix + ' ' + idRow);
+					$(obj).html(prefix + drawSVG(nb, chaine) + suffix + ' ' + idRow);
 				}
 			});
 			switch (point) {
@@ -479,7 +519,7 @@ function getLastValue(arr) {
 
 function getLastValueIndex(arr, index) {
 	if (arr != null) {
-		if (arr.length > index) {
+		if (arr.length >= index) {
 			return arr[arr.length - index];
 		} else {
 			return arr[arr.length - 1];
