@@ -110,6 +110,6 @@ html, body, .table-responsive {
 }
 
 .darts span svg {
-    height: 10vh;
+    height: 5vmin;
     vertical-align: middle;
 }
