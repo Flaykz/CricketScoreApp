@@ -1,4 +1,4 @@
-var version = 'v1:6:3';
+var version = 'v2:0:0';
 var CACHE_NAME = 'cricket-cache';
 var urlsToCache = [
   '/',
@@ -17,7 +17,9 @@ var urlsToCache = [
   '/images/launcher-icon-1x.png',
   '/images/launcher-icon-2x.png',
   '/images/launcher-icon-4x.png',
-  '/images/launcher-icon-8x.png'
+  '/images/launcher-icon-8x.png',
+  '/images/dart-o.png',
+  '/images/dart.png'
 ];
 
 self.addEventListener('install', function(event) {

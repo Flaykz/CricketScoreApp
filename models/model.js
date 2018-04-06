@@ -1,3 +1,4 @@
+/*global $*/
 //"rgb(0, 0, 0)";
 colourEnded = "black";
 
@@ -57,86 +58,18 @@ $(function() {
 		var tabCurrentPlayer = getLocalStorage("currentPlayer");
 		var tabCurrentRound = getLocalStorage("currentRound");
 		var tabCurrentDart = getLocalStorage("currentDart");
+		var tabCurrentMiss = getLocalStorage("currentMiss");
 		if (row.match("Ligne_(20|19|18|17|16|15|Bull)")) {
-			updateScore("null", "null", "0");
-			
-			var currPlayer = getLastValue(tabCurrentPlayer);
-			var currRound = parseInt(getLastValue(tabCurrentRound));
-			var currDart = parseInt(getLastValue(tabCurrentDart));
-			var nbJoueur = getNbJoueur();
-			
-			var d1Value = $('#d1').text();
-			var d2Value = $('#d2').text();
-			var d3Value = $('#d3').text();
-			
-			if (currDart == 0) {
-				if (d1Value == "") {
-					$('#d1').html('MISS');
-					currDart = 2;
-				} else {
-					if (d2Value == "") {
-						$('#d2').html('MISS');
-						currDart = 3;
-					} else {
-						if (d3Value == "") {
-							$('#d3').html('MISS');
-							d3Value = $('#d3').text();
-							currDart = 1;
-						}
-					}
-				}
-			} else {
-				currDart = currDart + 1;
-				if (currDart == 4) {
-					currDart = 1;
-				}
-			}
-			
-			$('.darts span').each(function(i, obj) {
-				if ((i + 1) == currDart) {
-					$(obj).html('<img src="/images/dart-o.png" class="dart">');
-				} else {
-					if ((i + 1) > currDart) {
-						$(obj).html('<img src="/images/dart.png" class="dart">');
-					}
-				}
-			});
-			if (d3Value != "") {
-				$("div.Joueur_" + currPlayer).each(function(i, obj) {
-					var currentCSS = $(obj).css("background-color");
-					if (currentCSS !== "rgb(0, 0, 0)") {
-						$(obj).css({
-							"background-color": colourBackground
-						});
-					}
-				});
-				if (parseInt(currPlayer) == nbJoueur) {
-					currPlayer = "1";
-					currRound = currRound + 1;
-					$("#round").text(currRound);
-				} else {
-					currPlayer = parseInt(currPlayer) + 1;
-				}
-				$("div.Joueur_" + currPlayer).each(function(i, obj) {
-					var currentCSS = $(obj).css("background-color");
-					if (currentCSS !== "rgb(0, 0, 0)") {
-						$(obj).css({
-							"background-color": colourSelected
-						});
-					}
-				});
-			}
-			currDart = 0;
-			addLocalStorage("currentRound", currRound);
-			addLocalStorage("currentPlayer", currPlayer);
-			addLocalStorage("currentDart", currDart);
+			next();
 		}
 		else {
 			if (tabCurrentRound.length > 1) {
 				tabCurrentRound.pop();
 				tabCurrentDart.pop();
+				tabCurrentMiss.pop();
 				setLocalStorage("currentRound", tabCurrentRound);
 				setLocalStorage("currentDart", tabCurrentDart);
+				setLocalStorage("currentMiss", tabCurrentMiss);	
 				if (tabCurrentPlayer.length > 1) {
 					tabCurrentPlayer.pop();
 					setLocalStorage("currentPlayer", tabCurrentPlayer);
@@ -184,7 +117,7 @@ $(function() {
 		var tabColour = {};
 		tabColour = getLocalStorage('colour');
 		var id = $(this).attr("id");
-		colour = $('#' + id).val();
+		var colour = $('#' + id).val();
 		tabColour[id] = colour;
 		switch (id) {
 			case 'colourPrevious':
@@ -211,62 +144,90 @@ $(function() {
 		var currentPlayer = getLastValue(getLocalStorage("currentPlayer"));
 		var currentRound = getLastValue(getLocalStorage("currentRound"));
 		var tabCurrentDart = getLocalStorage("currentDart");
-		var currentDart = getLastValue(tabCurrentDart);
+		var currentDart = parseInt(getLastValue(tabCurrentDart));
+		var currentMiss = getLastValue(getLocalStorage("currentMiss"));
 		var chaine = "Joueur_" + currentPlayer;
 		var idRow = $(this).children().attr("id").split("_")[0];
 		var idColumn = $(this).children().attr("id").substr(-8, 8);
-		var prefix = '<svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">'
-		var suffix = '</svg>'
+		var prefix = '<svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">';
+		var suffix = '</svg>';
+		var doSomething = true;
 		if (idColumn == chaine) {
-			$('.' + chaine).fadeTo(10, 0.6, function () {
-				$('.' + chaine).fadeTo(10, 1);
-			});
-			var point = parseInt($(this).children().attr("svgid"), 10);
-			point = point + 1;
-			
-			var d1Value = $('#d1').html();
-			var d2Value = $('#d2').html();
-			var d3Value = $('#d3').html();
-			if (d1Value == '<img src="/images/dart-o.png" class="dart">') {
-				currentDart = 1;
-			} else {
-				if (d2Value == '<img src="/images/dart-o.png" class="dart">') {
-					currentDart = 2;
-				} else {
-					if (d3Value == '<img src="/images/dart-o.png" class="dart">') {
-						currentDart = 3;
+			if (!isNaN(parseInt(getLastValueIndex(tabCurrentDart, 1)))) {
+				if ((currentMiss != idRow) && (currentMiss != "")) {
+					var previousPlayer = currentPlayer;
+					next();
+					var currentPlayer = getLastValue(getLocalStorage("currentPlayer"));
+					if (previousPlayer != currentPlayer) {
+						doSomething = false;
+						showToast("you can't play a 4th dart, let's pass to the next player", 1);
 					}
+					var currentRound = getLastValue(getLocalStorage("currentRound"));
+					var tabCurrentDart = getLocalStorage("currentDart");
+					var currentDart = parseInt(getLastValue(tabCurrentDart));
+					var chaine = "Joueur_" + currentPlayer;
 				}
 			}
 			var nb = 0;
-			if (parseInt(getLastValueIndex(tabCurrentDart, 1)) == 0) {
+			if (isNaN(parseInt(getLastValueIndex(tabCurrentDart, 1)))) {
 				nb = 1;
 			} else {
-				if (parseInt(getLastValueIndex(tabCurrentDart, 2)) == 0) {
+				if (isNaN(parseInt(getLastValueIndex(tabCurrentDart, 2)))) {
 					nb = 2;
 				} else {
-					nb = 3;
+					if (isNaN(parseInt(getLastValueIndex(tabCurrentDart, 3)))) {
+						nb = 3;
+					} else {
+						nb = 4;
+					}
 				}	
 			}
-			$('.darts span').each(function(i, obj) {
-				if ((i + 1) == currentDart) {
-					$(obj).html(prefix + drawSVG(nb, chaine) + suffix + ' ' + idRow);
+			if (nb == 4) {
+				var previousPlayer = currentPlayer;
+				next();
+				var currentPlayer = getLastValue(getLocalStorage("currentPlayer"));
+				if (previousPlayer != currentPlayer) {
+					doSomething = false;
+					showToast("you can't play a 4th dart, let's pass to the next player", 1);
 				}
-			});
-			switch (point) {
-				case 1:
-				case 2:
-				case 3:
-					$(this).children().attr("svgid", point);
-					$(this).children().html(drawSVG(point, chaine));
-					break;
-				default:
-					point = 0;
+				var currentRound = getLastValue(getLocalStorage("currentRound"));
+				var tabCurrentDart = getLocalStorage("currentDart");
+				var currentDart = parseInt(getLastValue(tabCurrentDart));
+				var chaine = "Joueur_" + currentPlayer;
 			}
-			addLocalStorage("currentRound", currentRound);
-			addLocalStorage("currentPlayer", currentPlayer);
-			addLocalStorage("currentDart", currentDart);
-			updateScore(idRow, idColumn, point);
+			if (doSomething) {
+				$('.' + chaine).fadeTo(10, 0.6, function () {
+					$('.' + chaine).fadeTo(10, 1);
+				});
+				var point = parseInt($(this).children().attr("svgid"), 10);
+				point = point + 1;
+				var previousDart = parseInt(getLastValueIndex(tabCurrentDart, 2));
+				if (isNaN(currentDart)) {
+					if (isNaN(previousDart)) {
+						previousDart = 0;
+					} 
+					currentDart = previousDart + 1;
+					if (currentDart == 4) {
+						currentDart = 1;
+					}
+				}
+				switch (point) {
+					case 1:
+					case 2:
+					case 3:
+						$(this).children().attr("svgid", point);
+						$(this).children().html(drawSVG(point, chaine));
+						break;
+					default:
+						point = 0;
+				}
+				addLocalStorage("currentRound", currentRound);
+				addLocalStorage("currentPlayer", currentPlayer);
+				addLocalStorage("currentDart", currentDart);
+				addLocalStorage("currentMiss", idRow);
+				updateScore(idRow, idColumn, point);
+				refreshScreen();
+			}
 		}
 		else {
 			showToast("You must click on the column of the actual player (orange), to switch, click on Red", 0);
@@ -303,13 +264,17 @@ function init() {
 	var tabColour = {};
 	
 	if (path == "/") {
-		currentRound = getLocalStorage("currentRound");
-		currentDart = getLocalStorage("currentDart");
+		var currentRound = getLocalStorage("currentRound");
+		var currentDart = getLocalStorage("currentDart");
+		var currentMiss = getLocalStorage("currentMiss");
 		if (currentRound == null) {
 			setLocalStorage("currentRound", ["1"]);
 		}
-		if (currentRound == null) {
-			setLocalStorage("currentDart", ["0"]);
+		if (currentDart == null) {
+			setLocalStorage("currentDart", [""]);
+		}
+		if (currentMiss == null) {
+			setLocalStorage("currentMiss", [""]);
 		}
 		if (getLocalStorage("currentRound").length > 1) {
 			var nbJoueur = getNbJoueur();
@@ -337,7 +302,8 @@ function init() {
 			$("#non").on("click",function() {
 				var url = "https://" + window.location.hostname;
 				setLocalStorage("currentRound", ["1"]);
-				setLocalStorage("currentDart", ["1"]);
+				setLocalStorage("currentDart", [""]);
+				setLocalStorage("currentMiss", [""]);
 				window.location.assign(url);
 			});
 		} else {
@@ -577,6 +543,84 @@ function sanitize(input) {
 	return sanitized;
 }
 
+function next() {
+	var tabCurrentPlayer = getLocalStorage("currentPlayer");
+	var tabCurrentRound = getLocalStorage("currentRound");
+	var tabCurrentDart = getLocalStorage("currentDart");
+	var tabCurrentMiss = getLocalStorage("currentMiss");
+	var currPlayer = getLastValue(tabCurrentPlayer);
+	var currRound = parseInt(getLastValue(tabCurrentRound));
+	var currDart = parseInt(getLastValue(tabCurrentDart));
+	var currMiss = getLastValue(tabCurrentMiss);
+	var nbJoueur = getNbJoueur();
+	
+	if (isNaN(currDart)) {
+		var previousDart = parseInt(getLastValueIndex(tabCurrentDart, 2));
+		if (isNaN(previousDart)) {
+			previousDart = 0;
+		}
+		var currDart = previousDart + 1;
+		if (currDart == 4) {
+			currDart = 1;
+		}
+		$('.darts span').each(function(i, obj) {
+			if ((i + 1) == currDart) {
+				$(obj).html('MISS');
+				addLocalStorage("currentDart", currDart);
+				addLocalStorage("currentRound", currRound);
+				addLocalStorage("currentPlayer", currPlayer);
+				addLocalStorage("currentMiss", "MISS");
+				updateScore("null", "null", "0");
+			}
+		});
+	} 
+	
+	currDart = currDart + 1;
+	if (currDart == 4) {
+		currDart = 1;
+	}
+	$('.darts span').each(function(i, obj) {
+		if ((i + 1) == currDart) {
+			$(obj).html('<img src="/images/dart-o.png" class="dart">');
+		} else {
+			if ((i + 1) > currDart) {
+				$(obj).html('<img src="/images/dart.png" class="dart">');
+			}
+		}
+	});
+	if (currDart == 1) {
+		$("div.Joueur_" + currPlayer).each(function(i, obj) {
+			var currentCSS = $(obj).css("background-color");
+			if (currentCSS !== "rgb(0, 0, 0)") {
+				$(obj).css({
+					"background-color": colourBackground
+				});
+			}
+		});
+		if (parseInt(currPlayer) == nbJoueur) {
+			currPlayer = "1";
+			currRound = currRound + 1;
+			$("#round").text(currRound);
+		} else {
+			currPlayer = parseInt(currPlayer) + 1;
+		}
+		$("div.Joueur_" + currPlayer).each(function(i, obj) {
+			var currentCSS = $(obj).css("background-color");
+			if (currentCSS !== "rgb(0, 0, 0)") {
+				$(obj).css({
+					"background-color": colourSelected
+				});
+			}
+		});
+	}
+	currDart = "";
+	addLocalStorage("currentRound", currRound);
+	addLocalStorage("currentPlayer", currPlayer);
+	addLocalStorage("currentDart", currDart);
+	addLocalStorage("currentMiss", "");
+	updateScore("null", "null", "0");
+}
+
 function drawWinPlayer(winner) {
 	$('.table-responsive').css("pointer-events", "none");
 	$('.table-responsive').css("cursor", "default");
@@ -586,7 +630,7 @@ function drawWinPlayer(winner) {
 	$(".modalEndGame").css("display", "block");
 	var url = "https://" + window.location.hostname;
 	setLocalStorage("currentRound", ["1"]);
-	setLocalStorage("currentDart", ["0"]);
+	setLocalStorage("currentDart", [""]);
 	$("#restartGame").on("click",function() {
 		window.location.assign(url);
 	});
@@ -613,14 +657,14 @@ function startGame() {
 	});
 	setLocalStorage("currentPlayer", ["1"]);
 	setLocalStorage("currentRound", ["1"]);
-	setLocalStorage("currentDart", ["0"]);
+	setLocalStorage("currentDart", [""]);
+	setLocalStorage("currentMiss", [""]);
 }
 
 function updateScore(idRow, idColumn, point) {
 	var tabScore = getTabScore();
 	var currentPlayer = getLastValue(getLocalStorage("currentPlayer"));
 	var currentRound = getLastValue(getLocalStorage("currentRound"));
-	var currentDart = getLastValue(getLocalStorage("currentDart"));
 	var nbJoueur = getLocalStorage("nbJoueur");
 	var dicPoint = {"s20": 20, "s19": 19, "s18": 18, "s17": 17, "s16": 16, "s15": 15, "sbull": 25};
 	var srow = "s" + idRow.toLowerCase();
@@ -711,9 +755,64 @@ function refreshScreen() {
 	var tabScore = getTabScore();
 	var currentPlayer = getLastValue(getLocalStorage("currentPlayer"));
 	var currentRound = getLastValue(getLocalStorage("currentRound"));
-	var currentDart = getLastValue(getLocalStorage("currentDart"));
-	
+	var tabCurrentDart = getLocalStorage("currentDart");
+	var tabCurrentMiss = getLocalStorage("currentMiss");
+	var currentDart = parseInt(getLastValue(tabCurrentDart));
+	var currentMiss = getLastValue(tabCurrentMiss);
+	var previousDart = parseInt(getLastValueIndex(tabCurrentDart, 2));
+	var nomPlayer = "Joueur_" + currentPlayer;
+	var prefix = '<svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">'
+	var suffix = '</svg>'
 	$("#round").text(currentRound);
+	
+	if (isNaN(currentDart)) {
+		if (isNaN(previousDart)) {
+			previousDart = 0;
+		} 
+		currentDart = previousDart + 1;
+		if (currentDart == 4) {
+			currentDart = 1;
+		}
+	}
+	
+	var index = 1;
+	var processingDart = currentDart;
+	while (processingDart != 0) {
+		var nb = 0;
+		var pt = "";
+		if (!isNaN(parseInt(getLastValueIndex(tabCurrentDart, index)))) {
+			pt = getLastValueIndex(tabCurrentMiss, index);
+			nb = 1;
+			index = index + 1;
+			if (!isNaN(parseInt(getLastValueIndex(tabCurrentDart, index)))) {
+				nb = 2;
+				index = index + 1;
+				if (!isNaN(parseInt(getLastValueIndex(tabCurrentDart, index)))) {
+					nb = 3;
+					index = index + 1;
+				}
+			}
+		}
+		$('.darts span').each(function(i, obj) {
+			if ((i + 1) == processingDart) {
+				if (nb == 0) {
+					$(obj).html('<img src="/images/dart-o.png" class="dart">');
+				} else {
+					if (getLastValueIndex(tabCurrentMiss, (index - 1)) == "MISS") {
+						$(obj).html("MISS");
+					} else {
+						$(obj).html(prefix + drawSVG(nb, nomPlayer) + suffix + ' ' + pt);
+					}
+				}
+			} else {
+				if ((i + 1) > currentDart) {
+					$(obj).html('<img src="/images/dart.png" class="dart">');
+				}
+			}
+		});
+		index = index + 1
+		processingDart = processingDart - 1;
+	}
 	
 	for (var joueur in tabScore) {
 		for (var row in tabScore[joueur]) {
@@ -740,7 +839,6 @@ function refreshScreen() {
 			}
 		}
 		
-		var nomPlayer = "Joueur_" + currentPlayer;
 		if (joueur === nomPlayer) {
 			$("div." + joueur).css({
 				"background-color": colourSelected

@@ -1,6 +1,6 @@
 CACHE MANIFEST
 
-# CricketScoreAPP AppCache v1.6.3
+# CricketScoreAPP AppCache v2.0.0
 
 CACHE:
 .
@@ -18,6 +18,8 @@ images/launcher-icon-1x.png
 images/launcher-icon-2x.png
 images/launcher-icon-4x.png
 images/launcher-icon-8x.png
+images/dart-o.png
+images/dart.png
 favicon.png
 NETWORK:
 *

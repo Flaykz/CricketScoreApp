@@ -1,6 +1,6 @@
 {
   "name": "cricketscoreapp",
-  "version": "1.6.3",
+  "version": "2.0.0",
   "description": "WebApp alllowing to calculate score during a cricket party",
   "main": "server.js",
   "scripts": {
