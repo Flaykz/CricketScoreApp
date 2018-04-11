@@ -741,7 +741,7 @@ function updateScore(idRow, idColumn, point) {
 	if (point == 3) {
 		griserLigne(idRow);
 	}
-	if ((parseInt(currentPlayer, 10) == nbJoueur) && (currentRound == 20)) {
+	if ((parseInt(currentPlayer, 10) == nbJoueur) && (currentRound == 20) && (idColumn == "null")) {
 		addLocalStorage("currentRound", 21);
 		currentRound = 21;
 	}
