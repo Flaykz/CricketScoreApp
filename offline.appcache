@@ -5,7 +5,12 @@ CACHE MANIFEST
 CACHE:
 .
 config.js
+favicon.png
+manifest.json
+sw.js
+package.json
 js/home.js
+js/nosleep.js
 styles/style.css
 https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css
 models/model.js
@@ -20,7 +25,6 @@ images/launcher-icon-4x.png
 images/launcher-icon-8x.png
 images/dart-o.png
 images/dart.png
-favicon.png
 NETWORK:
 *
 FALLBACK:
