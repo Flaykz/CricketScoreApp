@@ -6,7 +6,7 @@ var urlsToCache = [
   '/manifest.json',
   '/config.js',
   '/favicon.png',
-  'offline.appcache',
+  '/offline.appcache',
   '/js/home.js',
   '/js/nosleep.js',
   '/styles/style.css',
