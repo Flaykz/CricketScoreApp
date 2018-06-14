@@ -1,11 +1,14 @@
-var version = 'v1:6:3';
+var version = 'v1:6:4';
 var CACHE_NAME = 'cricket-cache';
 var urlsToCache = [
   '/',
   '/sw.js',
   '/manifest.json',
   '/config.js',
+  '/favicon.png',
+  'offline.appcache',
   '/js/home.js',
+  '/js/nosleep.js',
   '/styles/style.css',
   'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css',
   '/models/model.js',
@@ -13,7 +16,7 @@ var urlsToCache = [
   'https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js',
   'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js',
   '/views/home.jade',
-  '/favicon.png',
+  '/views/load-appcache.html',
   '/images/launcher-icon-1x.png',
   '/images/launcher-icon-2x.png',
   '/images/launcher-icon-4x.png',

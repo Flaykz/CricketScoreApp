@@ -1,11 +1,16 @@
 CACHE MANIFEST
 
-# CricketScoreAPP AppCache v1.6.3
+# CricketScoreAPP AppCache v1.6.4
 
 CACHE:
 .
 config.js
+favicon.png
+manifest.json
+package.json
+sw.js
 js/home.js
+js/nosleep.js
 styles/style.css
 https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css
 models/model.js
@@ -18,7 +23,6 @@ images/launcher-icon-1x.png
 images/launcher-icon-2x.png
 images/launcher-icon-4x.png
 images/launcher-icon-8x.png
-favicon.png
 NETWORK:
 *
 FALLBACK:
