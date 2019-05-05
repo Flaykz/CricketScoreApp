@@ -1,5 +1,5 @@
-var version = 'v1:6:4';
-var CACHE_NAME = 'cricket-cache';
+var version = 'v1.6.6';
+var CACHE_NAME = 'CricketScore-cache';
 var urlsToCache = [
   '/',
   '/sw.js',
