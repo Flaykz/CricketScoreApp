@@ -1,6 +1,6 @@
 {
-    "short_name": "CricketApp",
-    "name": "Cricket Web App to count your score",
+    "short_name": "CricketScore",
+    "name": "WebApp alllowing to calculate score during a cricket party",
     "icons": [
         {
           "src": "/images/launcher-icon-1x.png",

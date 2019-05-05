@@ -1,28 +1,16 @@
 #!/usr/bin/env nodejs
+
 var express = require('express');
 var fs = require('fs');
 var app = express();
-// var morgan = require("morgan");
 var path = require('path');
 var compression = require("compression");
 var helmet = require('helmet');
-// var winston = require('winston');
-// require('winston-loggly-bulk');
 
 var config = require('./config.js').get(process.env.NODE_ENV);
 
-// winston.add(winston.transports.Loggly, {
-//   inputToken: "e8197590-688f-4378-85fb-e440ddee9c6a",
-//   subdomain: "flaykz",
-//   tags: config.title,
-//   json: true
-// });
-
 app.set('views', './views');
 app.set('view engine', 'jade');
-
-// var accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), {flags: 'a'});
-// app.use(morgan(':date[clf] :remote-addr ":method :url HTTP/:http-version" :status :req[header] :response-time ms ":referrer" - ":user-agent"', {stream: accessLogStream}));
 
 app.use(compression());
 app.use(helmet());
@@ -37,5 +25,40 @@ fs.readdirSync('./controllers').forEach(function (file) {
   }
 });
 
-// winston.log("Lancement de l'application en environement de " + process.env.NODE_ENV + " sur le port : " + config.PORT);
+function walkDir(path) {
+  fs.readdirSync('.' + path).forEach(function(file) {
+    if (fs.lstatSync('.' + path + '/' + file).isDirectory()) {
+      walkDir(path + '/' + file);
+    }
+    else {
+      listFilesToCache.push(path + '/' + file);
+    }
+  });
+}
+
+var listFilesToCache = [];
+var listPath = ['/images', '/models', '/styles', '/js', '/views', '/controllers'];
+for (let path of listPath) {
+  walkDir(path);
+}
+
+var urlsToCacheInSw = [
+  '/',
+  '/favicon.png',
+  '/offline.appcache',
+  'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css',
+  'https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js',
+  'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js',
+  'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment-with-locales.min.js',
+];
+
+listFilesToCache = [listFilesToCache, ...urlsToCacheInSw];
+
+var listFiles = listFilesToCache.toString().replace(/,/g, "',\r\n\t'");
+var listFiles = "[\r\n\t'" + listFiles + "'\r\n]";
+
+var data = fs.readFileSync('sw.js', 'utf-8');
+var newValue = data.replace(/(var urlsToCache = )(\[\n(?:.*\n)*\])(;)/g, '$1' + listFiles + '$3');
+fs.writeFileSync('sw.js', newValue, 'utf-8');
+
 app.listen(config.PORT,"localhost");
