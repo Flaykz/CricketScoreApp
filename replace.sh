@@ -2,7 +2,7 @@
 APP="CricketScore"
 APP_DESCR="WebApp alllowing to calculate score during a cricket party"
 PORT="8087"
-VERSION="1\.6\.5"
+VERSION="1\.6\.6"
 GITHUB="Flaykz\/CricketWebApp"
 
 sed -i "s/\"title\": \".*\"/\"title\": \"$APP\"/g" config.js
